@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>检查TtsWebApp的my-MM语言显示</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <h1>检查TtsWebApp的my-MM语言显示</h1>
+    <div id="result"></div>
+
+    <script>
+        $(document).ready(function() {
+            loadVoices();
+        });
+        
+        function loadVoices() {
+            // 直接调用TtsWebApp的GetVoices接口
+            $.get('/Tts/GetVoices', function(data) {
+                voices = data;
+                checkMyMMLanguage();
+            }).fail(function() {
+                $('#result').html('加载语音列表失败');
+            });
+        }
+        
+        function checkMyMMLanguage() {
+            const languages = [...new Set(voices.map(v => v.Locale))];
+            
+            // 创建一个语言代码到LocaleName的映射
+            const localeNameMap = {};
+            voices.forEach(voice => {
+                if (!localeNameMap[voice.Locale] && voice.LocaleName) {
+                    localeNameMap[voice.Locale] = voice.LocaleName;
+                }
+            });
+            
+            // 检查my-MM语言
+            const myMMLanguage = languages.find(lang => lang === 'my-MM');
+            let resultHtml = '<h2>测试结果:</h2>';
+            
+            if (myMMLanguage) {
+                const displayName = localeNameMap[myMMLanguage] || myMMLanguage;
+                resultHtml += `<p>找到my-MM语言:</p>`;
+                resultHtml += `<ul>`;
+                resultHtml += `<li>语言代码: ${myMMLanguage}</li>`;
+                resultHtml += `<li>显示名称: ${displayName}</li>`;
+                resultHtml += `</ul>`;
+                
+                // 获取my-MM语言的所有配音员
+                const myMMVoices = voices.filter(v => v.Locale === 'my-MM');
+                resultHtml += `<p>my-MM语言的配音员:</p>`;
+                resultHtml += `<ul>`;
+                myMMVoices.forEach(voice => {
+                    resultHtml += `<li>${voice.ShortName} (${voice.Gender}) - LocaleName: ${voice.LocaleName}</li>`;
+                });
+                resultHtml += `</ul>`;
+            } else {
+                resultHtml += `<p>未找到my-MM语言</p>`;
+            }
+            
+            $('#result').html(resultHtml);
+        }
+    </script>
+</body>
+</html>

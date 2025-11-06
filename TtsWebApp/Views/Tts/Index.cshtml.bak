@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>VoiceGen - AI Text to Speech</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#5b13ec",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#161022",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings:
+                'FILL' 0,
+                'wght' 400,
+                'GRAD' 0,
+                'opsz' 24
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display">
+<div class="relative flex min-h-screen w-full flex-col overflow-x-hidden">
+<!-- Header Bar -->
+<header class="sticky top-0 z-50 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-sm">
+<div class="container mx-auto">
+<div class="flex items-center p-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-3xl">audiotrack</span>
+<h2 class="text-slate-900 dark:text-white text-xl font-bold leading-tight tracking-[-0.015em]">VoiceGen</h2>
+</div>
+<div class="hidden md:flex items-center gap-8 ml-10">
+<a class="text-slate-700 dark:text-slate-300 text-sm font-medium hover:text-primary dark:hover:text-white" href="#">Features</a>
+<a class="text-slate-700 dark:text-slate-300 text-sm font-medium hover:text-primary dark:hover:text-white" href="#">Pricing</a>
+<a class="text-slate-700 dark:text-slate-300 text-sm font-medium hover:text-primary dark:hover:text-white" href="#">API</a>
+</div>
+<div class="flex-1"></div>
+<div class="flex items-center gap-4">
+<a class="text-slate-800 dark:text-slate-200 text-sm font-medium leading-normal tracking-[0.015em] shrink-0 hover:text-primary dark:hover:text-white" href="#">Login</a>
+<button class="hidden sm:flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-9 px-4 bg-primary text-white text-sm font-bold leading-normal tracking-[0.015em]">
+<span class="truncate">Sign Up</span>
+</button>
+</div>
+</div>
+</div>
+</header>
+<main>
+<!-- Hero Section / Core Tool -->
+<section class="py-16 px-4">
+<div class="container mx-auto flex flex-col items-center text-center gap-4">
+<h1 class="text-slate-900 dark:text-white text-4xl md:text-5xl font-bold leading-tight tracking-[-0.033em] max-w-3xl">
+                        Instantly Convert Text into Natural, Fluent Speech
+                    </h1>
+<h2 class="text-slate-600 dark:text-slate-400 text-base md:text-lg font-normal leading-normal max-w-2xl">
+                        Powered by advanced AI, create high-quality audio for your videos, podcasts, and presentations in seconds.
+                    </h2>
+</div>
+<div class="container mx-auto mt-12 p-4 sm:p-6 md:p-8 bg-white/50 dark:bg-white/5 border border-slate-200 dark:border-slate-800 rounded-xl max-w-5xl">
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+<div class="lg:col-span-2">
+<label class="flex flex-col w-full">
+<div class="flex justify-between items-center pb-2">
+<p class="text-slate-800 dark:text-slate-200 text-base font-medium leading-normal">Enter your text here</p>
+<p class="text-slate-500 dark:text-slate-400 text-xs">0 / 1000</p>
+</div>
+<textarea class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-slate-900 dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary border-slate-300 dark:border-slate-700 bg-background-light dark:bg-background-dark min-h-64 placeholder:text-slate-400 dark:placeholder:text-slate-500 p-4 text-base font-normal leading-normal" placeholder="Paste or type your text here..."></textarea>
+</label>
+</div>
+<div class="flex flex-col gap-6">
+<div>
+<label class="block text-slate-800 dark:text-slate-200 text-base font-medium leading-normal pb-2" for="language">Language</label>
+<select class="form-select w-full rounded-lg text-slate-900 dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary border-slate-300 dark:border-slate-700 bg-background-light dark:bg-background-dark placeholder:text-slate-400 dark:placeholder:text-slate-500" id="language" name="language">
+<option>English (US)</option>
+<option>English (UK)</option>
+<option>Spanish</option>
+<option>French</option>
+</select>
+</div>
+<div>
+<p class="text-slate-800 dark:text-slate-200 text-base font-medium leading-normal pb-2">Voice</p>
+<div class="grid grid-cols-3 gap-2">
+<button class="flex flex-col items-center justify-center p-2 rounded-lg border-2 border-primary bg-primary/20">
+<span class="material-symbols-outlined text-primary text-3xl">man</span>
+<p class="text-primary text-sm font-bold">David</p>
+</button>
+<button class="flex flex-col items-center justify-center p-2 rounded-lg border-2 border-slate-300 dark:border-slate-700 hover:border-primary/50 dark:hover:border-primary/50">
+<span class="material-symbols-outlined text-slate-600 dark:text-slate-300 text-3xl">woman</span>
+<p class="text-slate-600 dark:text-slate-300 text-sm">Sarah</p>
+</button>
+<button class="flex flex-col items-center justify-center p-2 rounded-lg border-2 border-slate-300 dark:border-slate-700 hover:border-primary/50 dark:hover:border-primary/50">
+<span class="material-symbols-outlined text-slate-600 dark:text-slate-300 text-3xl">child_care</span>
+<p class="text-slate-600 dark:text-slate-300 text-sm">Leo</p>
+</button>
+</div>
+</div>
+<div>
+<label class="block text-slate-800 dark:text-slate-200 text-base font-medium leading-normal pb-2" for="speed">Speed</label>
+<input class="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-primary" id="speed" max="2" min="0.5" step="0.1" type="range" value="1"/>
+</div>
+</div>
+</div>
+<div class="mt-8 flex flex-col md:flex-row gap-4 items-center">
+<button class="flex w-full md:w-auto min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-5 bg-primary text-white text-base font-bold leading-normal tracking-[0.015em]">
+<span class="material-symbols-outlined mr-2">graphic_eq</span>
+<span class="truncate">Generate Speech</span>
+</button>
+<div class="flex items-center w-full grow bg-slate-200 dark:bg-slate-800 rounded-lg p-2">
+<button class="flex items-center justify-center size-8 rounded-full bg-slate-400 dark:bg-slate-600 text-white">
+<span class="material-symbols-outlined text-xl">play_arrow</span>
+</button>
+<div class="flex-grow h-1 bg-slate-300 dark:bg-slate-600 mx-3 rounded-full"></div>
+<p class="text-sm text-slate-600 dark:text-slate-400">0:00 / 0:00</p>
+<button class="flex items-center justify-center size-8 ml-3 text-slate-600 dark:text-slate-400">
+<span class="material-symbols-outlined text-xl">download</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Features Section -->
+<section class="py-16 px-4 bg-white/50 dark:bg-white/5">
+<div class="container mx-auto">
+<div class="text-center mb-12">
+<h2 class="text-3xl font-bold text-slate-900 dark:text-white">Why Choose Us</h2>
+<p class="text-slate-600 dark:text-slate-400 mt-2">Discover the features that make our TTS service stand out.</p>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+<div class="flex flex-col items-center text-center p-6">
+<div class="flex items-center justify-center size-14 rounded-xl bg-primary/20 mb-4">
+<span class="material-symbols-outlined text-primary text-3xl">language</span>
+</div>
+<p class="text-slate-900 dark:text-white text-lg font-bold leading-tight">Global Language Coverage</p>
+<p class="text-slate-600 dark:text-slate-400 mt-1 text-sm">Support for dozens of languages and dialects worldwide.</p>
+</div>
+<div class="flex flex-col items-center text-center p-6">
+<div class="flex items-center justify-center size-14 rounded-xl bg-primary/20 mb-4">
+<span class="material-symbols-outlined text-primary text-3xl">psychology</span>
+</div>
+<p class="text-slate-900 dark:text-white text-lg font-bold leading-tight">AI-Powered Natural Voices</p>
+<p class="text-slate-600 dark:text-slate-400 mt-1 text-sm">Leverage cutting-edge AI for incredibly human-like speech.</p>
+</div>
+<div class="flex flex-col items-center text-center p-6">
+<div class="flex items-center justify-center size-14 rounded-xl bg-primary/20 mb-4">
+<span class="material-symbols-outlined text-primary text-3xl">folder_zip</span>
+</div>
+<p class="text-slate-900 dark:text-white text-lg font-bold leading-tight">Multiple Audio Formats</p>
+<p class="text-slate-600 dark:text-slate-400 mt-1 text-sm">Export your audio in MP3, WAV, and other popular formats.</p>
+</div>
+<div class="flex flex-col items-center text-center p-6">
+<div class="flex items-center justify-center size-14 rounded-xl bg-primary/20 mb-4">
+<span class="material-symbols-outlined text-primary text-3xl">api</span>
+</div>
+<p class="text-slate-900 dark:text-white text-lg font-bold leading-tight">Developer API</p>
+<p class="text-slate-600 dark:text-slate-400 mt-1 text-sm">Easily integrate our powerful TTS engine into your applications.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Use Cases Section -->
+<section class="py-16 px-4">
+<div class="container mx-auto">
+<div class="text-center mb-12">
+<h2 class="text-3xl font-bold text-slate-900 dark:text-white">Perfect for Any Scenario</h2>
+<p class="text-slate-600 dark:text-slate-400 mt-2">From creative projects to business applications, we've got you covered.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+<div class="flex flex-col items-stretch justify-start rounded-xl bg-white/50 dark:bg-white/5 border border-slate-200 dark:border-slate-800 overflow-hidden">
+<div class="w-full bg-center bg-no-repeat aspect-video bg-cover" data-alt="Abstract gradient from purple to blue" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuB41Cm6c04yras0wtHKALbFPRXglc9V7R0hsNF_ab3xN_oULUqLk39JKf-CZJWgVLSoJWMEN784GUlCsDhhUnAM-UKhAdv39z9lNjmtQ_4qJRCp2aVFvc6Nx0iAkmXl0nHF3izV0pCnBzOc56pflG9OqS9639kBWVOH83aAFK-TYBboGi2NGzVmU-6-Ri4epBcWQ4cs0ik5y1ksFtTtDTmC5r3O6ekzYHVximTKIvhtYlRVfYO_844nXh_3edEKEHNEkGzAxcS8hMI');"></div>
+<div class="p-6">
+<p class="text-slate-900 dark:text-white text-lg font-bold leading-tight tracking-[-0.015em]">Video &amp; Podcast Narration</p>
+<p class="text-slate-600 dark:text-slate-400 mt-1 text-sm">Create professional voice-overs for your content without a microphone.</p>
+</div>
+</div>
+<div class="flex flex-col items-stretch justify-start rounded-xl bg-white/50 dark:bg-white/5 border border-slate-200 dark:border-slate-800 overflow-hidden">
+<div class="w-full bg-center bg-no-repeat aspect-video bg-cover" data-alt="Abstract gradient from orange to pink" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBoOLXia5DRhgQM7HQLa92DRy4PDiNGXXcPglHOIkMh9299gLAI5I8p2s1Uf6t50UPgh1DMnRqI35wlCvh1dcSuxp5FGcBMCnZYSLbxCNu4I3PsF-fwfgH2p5k0tOBx8HEX8cegPlebNk6pUTkm26J16bz5zDqiwGwiOlnySYX8nH-Por8BZWWOtu0ITQhjsum4vZB0TJudpFIMdj1cea_vBGVBPgsn1OmcNQO0RC1SrPGFABEyJ3hn0V7R8ixghzpnPCtO2-BPNsA');"></div>
+<div class="p-6">
+<p class="text-slate-900 dark:text-white text-lg font-bold leading-tight tracking-[-0.015em]">E-Learning &amp; Education</p>
+<p class="text-slate-600 dark:text-slate-400 mt-1 text-sm">Produce engaging audio materials for courses and educational content.</p>
+</div>
+</div>
+<div class="flex flex-col items-stretch justify-start rounded-xl bg-white/50 dark:bg-white/5 border border-slate-200 dark:border-slate-800 overflow-hidden">
+<div class="w-full bg-center bg-no-repeat aspect-video bg-cover" data-alt="Abstract gradient from teal to green" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCThFSId5RKku_PiwcP9ZmrOPT-cW03T5PthF_1grgm3D53SNsbgyuSNM-2u8FUBV2ZX75f4yYNGZutPwD_27jHoMTd5dhpzUX4sfoHvC2qS6nDqDz7jZGakDt_9PnI8VSGdjQ8vF2y3nmPECqO6kVX5xCHT1qW5c9lY2wvoq6i-V7mxNAeK0WuU0qGpVHYOa8nKprREPtk3Cq2IsVLz7m_E5ox9JnfuQ5h4JKVF7lexGG3c_ln4vpEQ-fpNHaJIX-WhDJHQ1gi0BY');"></div>
+<div class="p-6">
+<p class="text-slate-900 dark:text-white text-lg font-bold leading-tight tracking-[-0.015em]">Marketing &amp; Advertising</p>
+<p class="text-slate-600 dark:text-slate-400 mt-1 text-sm">Craft compelling audio ads and promotional content in minutes.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-slate-100 dark:bg-slate-900/50 py-12 px-4 mt-16">
+<div class="container mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 text-sm">
+<div class="flex flex-col gap-4 items-start">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-3xl">audiotrack</span>
+<h2 class="text-slate-900 dark:text-white text-xl font-bold">VoiceGen</h2>
+</div>
+<p class="text-slate-600 dark:text-slate-400">High-quality, AI-powered text-to-speech conversion.</p>
+</div>
+<div>
+<p class="font-bold text-slate-900 dark:text-white mb-3">Product</p>
+<ul class="space-y-2">
+<li><a class="text-slate-600 dark:text-slate-400 hover:text-primary" href="#">Features</a></li>
+<li><a class="text-slate-600 dark:text-slate-400 hover:text-primary" href="#">Pricing</a></li>
+<li><a class="text-slate-600 dark:text-slate-400 hover:text-primary" href="#">API</a></li>
+</ul>
+</div>
+<div>
+<p class="font-bold text-slate-900 dark:text-white mb-3">Company</p>
+<ul class="space-y-2">
+<li><a class="text-slate-600 dark:text-slate-400 hover:text-primary" href="#">About Us</a></li>
+<li><a class="text-slate-600 dark:text-slate-400 hover:text-primary" href="#">Contact</a></li>
+<li><a class="text-slate-600 dark:text-slate-400 hover:text-primary" href="#">Terms of Service</a></li>
+</ul>
+</div>
+<div>
+<p class="font-bold text-slate-900 dark:text-white mb-3">Connect</p>
+<ul class="space-y-2">
+<li><a class="text-slate-600 dark:text-slate-400 hover:text-primary" href="#">Twitter</a></li>
+<li><a class="text-slate-600 dark:text-slate-400 hover:text-primary" href="#">LinkedIn</a></li>
+<li><a class="text-slate-600 dark:text-slate-400 hover:text-primary" href="#">Github</a></li>
+</ul>
+</div>
+</div>
+<div class="container mx-auto mt-10 border-t border-slate-200 dark:border-slate-800 pt-6 text-center text-xs text-slate-500 dark:text-slate-400">
+<p>© 2024 VoiceGen. All rights reserved.</p>
+</div>
+</footer>
+</div>
+</body></html>

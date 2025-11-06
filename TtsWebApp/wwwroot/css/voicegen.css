@@ -1,0 +1,574 @@
+/* VoiceGen - Text to Speech UI Styles */
+
+/* ===== Google Material Icons Configuration ===== */
+.material-symbols-outlined {
+    font-variation-settings:
+        'FILL' 0,
+        'wght' 400,
+        'GRAD' 0,
+        'opsz' 24;
+}
+
+/* ===== Base Layout ===== */
+body {
+    min-height: max(884px, 100dvh);
+}
+
+/* ===== Custom Color Variables ===== */
+:root {
+    --color-primary: #5b13ec;
+    --color-background-light: #f6f6f8;
+    --color-background-dark: #161022;
+}
+
+/* ===== Header Styles ===== */
+.voicegen-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background-color: rgba(246, 246, 248, 0.8);
+    backdrop-filter: blur(8px);
+}
+
+.dark .voicegen-header {
+    background-color: rgba(22, 16, 34, 0.8);
+}
+
+.voicegen-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.voicegen-logo-icon {
+    color: var(--color-primary);
+    font-size: 1.875rem;
+}
+
+.voicegen-logo-text {
+    color: #0f172a;
+    font-size: 1.25rem;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.015em;
+}
+
+.dark .voicegen-logo-text {
+    color: white;
+}
+
+/* ===== Navigation Styles ===== */
+.voicegen-nav {
+    display: none;
+    align-items: center;
+    gap: 2rem;
+    margin-left: 2.5rem;
+}
+
+@media (min-width: 768px) {
+    .voicegen-nav {
+        display: flex;
+    }
+}
+
+.voicegen-nav-link {
+    color: #334155;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+.voicegen-nav-link:hover {
+    color: var(--color-primary);
+}
+
+.dark .voicegen-nav-link {
+    color: #cbd5e1;
+}
+
+.dark .voicegen-nav-link:hover {
+    color: white;
+}
+
+/* ===== Button Styles ===== */
+.voicegen-btn-primary {
+    display: flex;
+    min-width: 84px;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border-radius: 0.5rem;
+    height: 2.25rem;
+    padding: 0 1rem;
+    background-color: var(--color-primary);
+    color: white;
+    font-size: 0.875rem;
+    font-weight: 700;
+    line-height: 1.5;
+    letter-spacing: 0.015em;
+    transition: opacity 0.2s;
+}
+
+.voicegen-btn-primary:hover {
+    opacity: 0.9;
+}
+
+.voicegen-btn-primary-lg {
+    height: 3rem;
+    padding: 0 1.25rem;
+    font-size: 1rem;
+}
+
+/* ===== Hero Section ===== */
+.voicegen-hero-title {
+    color: #0f172a;
+    font-size: 2.25rem;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.033em;
+    max-width: 48rem;
+}
+
+@media (min-width: 768px) {
+    .voicegen-hero-title {
+        font-size: 3rem;
+    }
+}
+
+.dark .voicegen-hero-title {
+    color: white;
+}
+
+.voicegen-hero-subtitle {
+    color: #475569;
+    font-size: 1rem;
+    line-height: 1.5;
+    max-width: 32rem;
+}
+
+@media (min-width: 768px) {
+    .voicegen-hero-subtitle {
+        font-size: 1.125rem;
+    }
+}
+
+.dark .voicegen-hero-subtitle {
+    color: #94a3b8;
+}
+
+/* ===== Main Tool Card ===== */
+.voicegen-tool-card {
+    margin-top: 3rem;
+    padding: 1rem;
+    background-color: rgba(255, 255, 255, 0.5);
+    border: 1px solid #e2e8f0;
+    border-radius: 0.75rem;
+    max-width: 80rem;
+}
+
+@media (min-width: 640px) {
+    .voicegen-tool-card {
+        padding: 1.5rem;
+    }
+}
+
+@media (min-width: 768px) {
+    .voicegen-tool-card {
+        padding: 2rem;
+    }
+}
+
+.dark .voicegen-tool-card {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-color: #1e293b;
+}
+
+/* ===== Form Input Styles ===== */
+.voicegen-textarea {
+    display: flex;
+    width: 100%;
+    min-width: 0;
+    flex: 1;
+    resize: none;
+    overflow: hidden;
+    border-radius: 0.5rem;
+    color: #0f172a;
+    border: 1px solid #cbd5e1;
+    background-color: var(--color-background-light);
+    min-height: 16rem;
+    padding: 1rem;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+.voicegen-textarea:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--color-primary);
+}
+
+.voicegen-textarea::placeholder {
+    color: #94a3b8;
+}
+
+.dark .voicegen-textarea {
+    color: white;
+    border-color: #334155;
+    background-color: var(--color-background-dark);
+}
+
+.dark .voicegen-textarea::placeholder {
+    color: #64748b;
+}
+
+.voicegen-select {
+    width: 100%;
+    border-radius: 0.5rem;
+    color: #0f172a;
+    border: 1px solid #cbd5e1;
+    background-color: var(--color-background-light);
+    padding: 0.5rem 1rem;
+}
+
+.voicegen-select:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--color-primary);
+}
+
+.dark .voicegen-select {
+    color: white;
+    border-color: #334155;
+    background-color: var(--color-background-dark);
+}
+
+/* ===== Voice Selection Buttons ===== */
+.voicegen-voice-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    border: 2px solid #cbd5e1;
+    transition: border-color 0.2s;
+}
+
+.voicegen-voice-btn:hover {
+    border-color: rgba(91, 19, 236, 0.5);
+}
+
+.voicegen-voice-btn.active {
+    border-color: var(--color-primary);
+    background-color: rgba(91, 19, 236, 0.2);
+}
+
+.dark .voicegen-voice-btn {
+    border-color: #334155;
+}
+
+.dark .voicegen-voice-btn:hover {
+    border-color: rgba(91, 19, 236, 0.5);
+}
+
+.voicegen-voice-btn-icon {
+    font-size: 1.875rem;
+    color: #475569;
+}
+
+.voicegen-voice-btn.active .voicegen-voice-btn-icon {
+    color: var(--color-primary);
+}
+
+.dark .voicegen-voice-btn-icon {
+    color: #cbd5e1;
+}
+
+.voicegen-voice-btn-text {
+    font-size: 0.875rem;
+    color: #475569;
+}
+
+.voicegen-voice-btn.active .voicegen-voice-btn-text {
+    color: var(--color-primary);
+    font-weight: 700;
+}
+
+.dark .voicegen-voice-btn-text {
+    color: #cbd5e1;
+}
+
+/* ===== Range Slider ===== */
+.voicegen-range {
+    width: 100%;
+    height: 0.5rem;
+    background-color: #e2e8f0;
+    border-radius: 0.5rem;
+    appearance: none;
+    cursor: pointer;
+    accent-color: var(--color-primary);
+}
+
+.dark .voicegen-range {
+    background-color: #334155;
+}
+
+/* ===== Audio Player ===== */
+.voicegen-audio-player {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    flex-grow: 1;
+    background-color: #e2e8f0;
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+}
+
+.dark .voicegen-audio-player {
+    background-color: #1e293b;
+}
+
+.voicegen-play-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 9999px;
+    background-color: #94a3b8;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.voicegen-play-btn:hover {
+    background-color: var(--color-primary);
+}
+
+.dark .voicegen-play-btn {
+    background-color: #475569;
+}
+
+.voicegen-progress-bar {
+    flex-grow: 1;
+    height: 0.25rem;
+    background-color: #cbd5e1;
+    margin: 0 0.75rem;
+    border-radius: 9999px;
+}
+
+.dark .voicegen-progress-bar {
+    background-color: #475569;
+}
+
+.voicegen-time-display {
+    font-size: 0.875rem;
+    color: #475569;
+}
+
+.dark .voicegen-time-display {
+    color: #94a3b8;
+}
+
+.voicegen-download-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    margin-left: 0.75rem;
+    color: #475569;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.voicegen-download-btn:hover {
+    color: var(--color-primary);
+}
+
+.dark .voicegen-download-btn {
+    color: #94a3b8;
+}
+
+/* ===== Feature Cards ===== */
+.voicegen-feature-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 1.5rem;
+}
+
+.voicegen-feature-icon-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 0.75rem;
+    background-color: rgba(91, 19, 236, 0.2);
+    margin-bottom: 1rem;
+}
+
+.voicegen-feature-icon {
+    color: var(--color-primary);
+    font-size: 1.875rem;
+}
+
+.voicegen-feature-title {
+    color: #0f172a;
+    font-size: 1.125rem;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.dark .voicegen-feature-title {
+    color: white;
+}
+
+.voicegen-feature-description {
+    color: #475569;
+    margin-top: 0.25rem;
+    font-size: 0.875rem;
+}
+
+.dark .voicegen-feature-description {
+    color: #94a3b8;
+}
+
+/* ===== Use Case Cards ===== */
+.voicegen-usecase-card {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+    border-radius: 0.75rem;
+    background-color: rgba(255, 255, 255, 0.5);
+    border: 1px solid #e2e8f0;
+    overflow: hidden;
+}
+
+.dark .voicegen-usecase-card {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-color: #1e293b;
+}
+
+.voicegen-usecase-image {
+    width: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    aspect-ratio: 16 / 9;
+    background-size: cover;
+}
+
+.voicegen-usecase-content {
+    padding: 1.5rem;
+}
+
+.voicegen-usecase-title {
+    color: #0f172a;
+    font-size: 1.125rem;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.015em;
+}
+
+.dark .voicegen-usecase-title {
+    color: white;
+}
+
+.voicegen-usecase-description {
+    color: #475569;
+    margin-top: 0.25rem;
+    font-size: 0.875rem;
+}
+
+.dark .voicegen-usecase-description {
+    color: #94a3b8;
+}
+
+/* ===== Section Backgrounds ===== */
+.voicegen-section-alt {
+    background-color: rgba(255, 255, 255, 0.5);
+}
+
+.dark .voicegen-section-alt {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* ===== Footer Styles ===== */
+.voicegen-footer {
+    background-color: #f1f5f9;
+    padding: 3rem 1rem;
+    margin-top: 4rem;
+}
+
+.dark .voicegen-footer {
+    background-color: rgba(15, 23, 42, 0.5);
+}
+
+.voicegen-footer-title {
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 0.75rem;
+}
+
+.dark .voicegen-footer-title {
+    color: white;
+}
+
+.voicegen-footer-link {
+    color: #475569;
+    transition: color 0.2s;
+}
+
+.voicegen-footer-link:hover {
+    color: var(--color-primary);
+}
+
+.dark .voicegen-footer-link {
+    color: #94a3b8;
+}
+
+.voicegen-footer-divider {
+    border-top: 1px solid #e2e8f0;
+    padding-top: 1.5rem;
+    text-align: center;
+    font-size: 0.75rem;
+    color: #64748b;
+}
+
+.dark .voicegen-footer-divider {
+    border-color: #1e293b;
+    color: #94a3b8;
+}
+
+/* ===== Utility Classes ===== */
+.voicegen-container {
+    container-type: inline-size;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 1280px;
+}
+
+.voicegen-section-padding {
+    padding: 4rem 1rem;
+}
+
+.voicegen-section-title {
+    font-size: 1.875rem;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.dark .voicegen-section-title {
+    color: white;
+}
+
+.voicegen-section-subtitle {
+    color: #475569;
+    margin-top: 0.5rem;
+}
+
+.dark .voicegen-section-subtitle {
+    color: #94a3b8;
+}

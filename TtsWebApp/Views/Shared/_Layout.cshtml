@@ -1,0 +1,220 @@
+@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
+@{
+    ViewData["Title"] = ViewData["Title"] ?? "Home";
+    var siteName = Configuration["AppSettings:SiteName"] ?? "安妮语音转换";
+    var siteNameEn = Configuration["AppSettings:SiteNameEn"] ?? "Annie TTS";
+    var contactEmail = Configuration["AppSettings:ContactEmail"] ?? "contact@annietts.com";
+    var siteDescription = Configuration["AppSettings:SiteDescription"] ?? "免费在线AI文字转语音工具，支持多种语言和自然人声";
+    var siteUrl = Configuration["AppSettings:SiteUrl"] ?? "https://www.annietts.com";
+}
+<!DOCTYPE html>
+<html class="dark" lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - @siteName</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="@siteName - 免费在线AI文字转语音工具，支持多种语言和自然人声，为您的视频、播客和演示文稿创建高质量音频。" />
+    <meta name="keywords" content="文字转语音,TTS,语音合成,AI配音,在线配音,免费TTS,中文配音,语音生成器" />
+    <meta name="author" content="@siteName" />
+    <meta name="robots" content="index, follow" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="@siteName - AI文字转语音工具" />
+    <meta property="og:description" content="免费在线AI文字转语音工具，支持多种语言和自然人声" />
+    <meta property="og:site_name" content="@siteName" />
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="@siteName - AI文字转语音工具" />
+    <meta name="twitter:description" content="免费在线AI文字转语音工具，支持多种语言和自然人声" />
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://www.annietts.com" />
+    
+    <!-- Tailwind CSS - 使用国内 CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/tailwindcss@3.3.5/lib/index.min.js"></script>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    
+    <!-- Google Fonts - 使用国内镜像 -->
+    <link href="https://fonts.loli.net/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
+    <!-- 备用：Google Fonts 官方 -->
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
+    
+    <!-- Material Icons - 使用国内镜像 -->
+    <link href="https://fonts.loli.net/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+    <!-- 备用：Material Icons 官方 -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+    
+    <!-- Bootstrap (for compatibility) -->
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="~/css/voicegen.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#5b13ec",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#161022",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display">
+    <div class="relative flex min-h-screen w-full flex-col overflow-x-hidden">
+        <!-- Header Bar -->
+        <header class="sticky top-0 z-50 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-sm">
+            <div class="container mx-auto">
+                <div class="flex items-center p-4">
+                    <a href="/" class="flex items-center gap-2 hover:opacity-80 transition-opacity">
+                        <span class="material-symbols-outlined text-primary text-3xl">audiotrack</span>
+                        <h1 class="text-slate-900 dark:text-white text-xl font-bold leading-tight tracking-[-0.015em]">@siteName</h1>
+                    </a>
+                    <div class="hidden md:flex items-center gap-8 ml-10">
+                        <a class="text-slate-700 dark:text-slate-300 text-sm font-medium hover:text-primary dark:hover:text-white" asp-area="" asp-controller="Tts" asp-action="Index" data-i18n="nav.home">首页</a>
+                    </div>
+                    <div class="flex-1"></div>
+                    <div class="flex items-center gap-4">
+                        <!-- 语言切换 -->
+                        <div class="flex items-center gap-2 border border-slate-300 dark:border-slate-700 rounded-lg p-1">
+                            <button data-lang="zh-CN" onclick="switchLanguage('zh-CN')" 
+                                    class="lang-btn px-3 py-1 rounded text-sm font-medium transition-colors hover:bg-slate-200 dark:hover:bg-slate-700"
+                                    title="中文">
+                                中文
+                            </button>
+                            <button data-lang="en-US" onclick="switchLanguage('en-US')" 
+                                    class="lang-btn px-3 py-1 rounded text-sm font-medium transition-colors hover:bg-slate-200 dark:hover:bg-slate-700"
+                                    title="English">
+                                EN
+                            </button>
+                        </div>
+                        
+                        <!-- 主题切换 -->
+                        <button id="themeToggle" class="text-slate-800 dark:text-slate-200 hover:text-primary dark:hover:text-white" title="切换主题">
+                            <span class="material-symbols-outlined">dark_mode</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+        
+        <main>
+            @RenderBody()
+        </main>
+        
+        <!-- Footer -->
+        <footer class="bg-slate-100 dark:bg-slate-900/50 py-12 px-4 mt-16">
+            <div class="container mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 text-sm">
+                <div class="flex flex-col gap-4 items-start">
+                    <div class="flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary text-3xl">audiotrack</span>
+                        <h2 class="text-slate-900 dark:text-white text-xl font-bold">@siteName</h2>
+                    </div>
+                    <p class="text-slate-600 dark:text-slate-400">免费在线AI文字转语音工具<br/>支持多种语言和自然人声</p>
+                </div>
+                <div>
+                    <p class="font-bold text-slate-900 dark:text-white mb-3">产品服务</p>
+                    <ul class="space-y-2">
+                        <li><a class="text-slate-600 dark:text-slate-400 hover:text-primary" asp-area="" asp-controller="Tts" asp-action="Index">在线配音</a></li>
+                        <li><a class="text-slate-600 dark:text-slate-400 hover:text-primary" asp-area="" asp-controller="Home" asp-action="Features">功能特性</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <p class="font-bold text-slate-900 dark:text-white mb-3">关于</p>
+                    <ul class="space-y-2">
+                        <li><a class="text-slate-600 dark:text-slate-400 hover:text-primary" asp-area="" asp-controller="Home" asp-action="About">关于我们</a></li>
+                        <li><a class="text-slate-600 dark:text-slate-400 hover:text-primary" asp-area="" asp-controller="Home" asp-action="Contact">联系我们</a></li>
+                        <li><a class="text-slate-600 dark:text-slate-400 hover:text-primary" asp-area="" asp-controller="Home" asp-action="Privacy">隐私政策</a></li>
+                        <li><a class="text-slate-600 dark:text-slate-400 hover:text-primary" asp-area="" asp-controller="Home" asp-action="Terms">服务条款</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <p class="font-bold text-slate-900 dark:text-white mb-3">联系方式</p>
+                    <ul class="space-y-2">
+                        <li class="text-slate-600 dark:text-slate-400">邮箱: @contactEmail</li>
+                        <li><a class="text-slate-600 dark:text-slate-400 hover:text-primary" asp-area="" asp-controller="Home" asp-action="Contact">在线留言</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="container mx-auto mt-10 border-t border-slate-200 dark:border-slate-800 pt-6 text-center text-xs text-slate-500 dark:text-slate-400">
+                <p>&copy; 2025 @siteName. 保留所有权利.</p>
+                <p class="mt-2">
+                    <a class="hover:text-primary" asp-area="" asp-controller="Home" asp-action="Privacy">隐私政策</a> | 
+                    <a class="hover:text-primary" asp-area="" asp-controller="Home" asp-action="Terms">服务条款</a> | 
+                    <a class="hover:text-primary" asp-area="" asp-controller="Home" asp-action="Disclaimer">免责声明</a>
+                </p>
+            </div>
+        </footer>
+    </div>
+    
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/i18n.js" asp-append-version="true"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    
+    <style>
+        .lang-btn.active {
+            background-color: var(--color-primary, #5b13ec);
+            color: white;
+        }
+        .lang-btn {
+            color: var(--tw-prose-body);
+        }
+        .dark .lang-btn:not(.active) {
+            color: #cbd5e1;
+        }
+    </style>
+    
+    <script>
+        // 主题切换功能
+        document.addEventListener('DOMContentLoaded', function() {
+            const themeToggle = document.getElementById('themeToggle');
+            const html = document.documentElement;
+            
+            // 从 localStorage 读取主题设置
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'light') {
+                html.classList.remove('dark');
+            }
+            
+            themeToggle?.addEventListener('click', function() {
+                html.classList.toggle('dark');
+                const isDark = html.classList.contains('dark');
+                localStorage.setItem('theme', isDark ? 'dark' : 'light');
+                
+                // 更新图标
+                const icon = this.querySelector('.material-symbols-outlined');
+                icon.textContent = isDark ? 'dark_mode' : 'light_mode';
+            });
+            
+            // 初始化图标
+            const icon = themeToggle?.querySelector('.material-symbols-outlined');
+            if (icon) {
+                icon.textContent = html.classList.contains('dark') ? 'dark_mode' : 'light_mode';
+            }
+        });
+    </script>
+    
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

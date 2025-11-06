@@ -1,0 +1,129 @@
+@model TtsWebApp.Models.AppSettings
+@{
+    ViewData["Title"] = "设置";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h4>应用设置</h4>
+                </div>
+                <div class="card-body">
+                    <form id="settingsForm">
+                        <div class="mb-3">
+                            <label for="savePath" class="form-label">保存位置</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="savePath" value="@Model.SavePath" readonly>
+                                <button class="btn btn-outline-secondary" type="button" id="selectFolderBtn">选择文件夹</button>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="saveTTSOptions" @(Model.SaveTTSOptions ? "checked" : "")>
+                                <label class="form-check-label" for="saveTTSOptions">
+                                    保存TTS设置
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="openFolders" @(Model.OpenFolders ? "checked" : "")>
+                                <label class="form-check-label" for="openFolders">
+                                    自动打开文件夹
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">检查更新</label>
+                            <div class="d-flex gap-2">
+                                <a href="https://github.com/zs1083339604/tts-tauri.git" target="_blank" class="btn btn-outline-primary">
+                                    <i class="bi bi-github"></i> GitHub
+                                </a>
+                                <a href="https://gitee.com/lieranhuasha/tts-tauri.git" target="_blank" class="btn btn-outline-danger">
+                                    <i class="bi bi-git"></i> Gitee
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">当前版本</label>
+                            <div>
+                                <span class="badge bg-primary">0.2.0</span>
+                                <span class="text-muted">2025-05-09 更新</span>
+                            </div>
+                        </div>
+                        
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <button type="button" class="btn btn-primary" id="saveBtn">保存</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h4>关于</h4>
+                </div>
+                <div class="card-body">
+                    <h5>文字转语音应用</h5>
+                    <p>这是一个基于.NET MVC 9.0的文字转语音应用，提供高质量的语音合成功能。</p>
+                    <h6>主要功能</h6>
+                    <ul>
+                        <li>多语言支持</li>
+                        <li>多种语音选择</li>
+                        <li>音调、语速、音量调节</li>
+                        <li>字幕生成</li>
+                        <li>音频播放与下载</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // 选择文件夹按钮点击事件
+            $('#selectFolderBtn').on('click', function() {
+                // 在实际应用中，这里应该调用文件夹选择对话框
+                // 这里只是模拟选择操作
+                $('#savePath').val('C:\\Users\\Public\\Documents\\TTS');
+            });
+            
+            // 保存按钮点击事件
+            $('#saveBtn').on('click', function() {
+                saveSettings();
+            });
+        });
+        
+        function saveSettings() {
+            const settings = {
+                SavePath: $('#savePath').val(),
+                SaveTTSOptions: $('#saveTTSOptions').is(':checked'),
+                OpenFolders: $('#openFolders').is(':checked')
+            };
+            
+            $('#saveBtn').prop('disabled', true).text('保存中...');
+            
+            $.post('/Settings/SaveSettings', settings, function(response) {
+                if (response.success) {
+                    alert(response.message);
+                } else {
+                    alert('保存失败: ' + response.message);
+                }
+            }).fail(function() {
+                alert('保存请求失败');
+            }).always(function() {
+                $('#saveBtn').prop('disabled', false).text('保存');
+            });
+        }
+    </script>
+}

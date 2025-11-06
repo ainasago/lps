@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TTS WebAPI 测试</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .audio-container {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            background-color: #f8f9fa;
+        }
+        .subtitle-container {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            background-color: #f8f9fa;
+            max-height: 300px;
+            overflow-y: auto;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+        .loading {
+            display: none;
+        }
+        .voice-option {
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="mb-4">TTS WebAPI 测试</h1>
+        
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <h3>获取语音列表</h3>
+                <button id="getVoicesBtn" class="btn btn-primary">获取语音列表</button>
+                <div id="voicesLoading" class="loading spinner-border text-primary mt-2" role="status">
+                    <span class="visually-hidden">加载中...</span>
+                </div>
+                <div id="voicesResult" class="mt-3"></div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-12">
+                <h3>文字转语音</h3>
+                <div class="mb-3">
+                    <label for="textInput" class="form-label">输入要转换的文本</label>
+                    <textarea id="textInput" class="form-control" rows="3" placeholder="请输入要转换的文本...">Hello, this is a test of the TTS WebAPI. 你好，这是对TTS WebAPI的测试。</textarea>
+                </div>
+                
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="voiceSelect" class="form-label">选择语音</label>
+                        <select id="voiceSelect" class="form-select">
+                            <option value="">加载语音列表...</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="rateSelect" class="form-label">语速</label>
+                        <select id="rateSelect" class="form-select">
+                            <option value="0.8">较慢</option>
+                            <option value="1.0" selected>正常</option>
+                            <option value="1.2">较快</option>
+                            <option value="1.5">很快</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="pitchSelect" class="form-label">音调</label>
+                        <select id="pitchSelect" class="form-select">
+                            <option value="0.8">较低</option>
+                            <option value="1.0" selected>正常</option>
+                            <option value="1.2">较高</option>
+                            <option value="1.5">很高</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="mb-3 form-check">
+                    <input type="checkbox" class="form-check-input" id="generateSubtitle" checked>
+                    <label class="form-check-label" for="generateSubtitle">生成字幕</label>
+                </div>
+                
+                <button id="synthesizeBtn" class="btn btn-success">生成语音</button>
+                <div id="synthesizeLoading" class="loading spinner-border text-success mt-2" role="status">
+                    <span class="visually-hidden">生成中...</span>
+                </div>
+                
+                <div id="audioContainer" class="audio-container" style="display: none;">
+                    <h4>生成的音频</h4>
+                    <audio id="audioPlayer" controls class="w-100"></audio>
+                    <div class="mt-2">
+                        <a id="downloadLink" class="btn btn-outline-primary" download>下载音频</a>
+                    </div>
+                </div>
+                
+                <div id="subtitleContainer" class="subtitle-container" style="display: none;">
+                    <h4>生成的字幕 (SRT格式)</h4>
+                    <pre id="subtitleContent"></pre>
+                    <div class="mt-2">
+                        <button id="downloadSubtitleBtn" class="btn btn-outline-secondary">下载字幕文件</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const getVoicesBtn = document.getElementById('getVoicesBtn');
+            const voicesLoading = document.getElementById('voicesLoading');
+            const voicesResult = document.getElementById('voicesResult');
+            const voiceSelect = document.getElementById('voiceSelect');
+            const textInput = document.getElementById('textInput');
+            const rateSelect = document.getElementById('rateSelect');
+            const pitchSelect = document.getElementById('pitchSelect');
+            const generateSubtitle = document.getElementById('generateSubtitle');
+            const synthesizeBtn = document.getElementById('synthesizeBtn');
+            const synthesizeLoading = document.getElementById('synthesizeLoading');
+            const audioContainer = document.getElementById('audioContainer');
+            const audioPlayer = document.getElementById('audioPlayer');
+            const downloadLink = document.getElementById('downloadLink');
+            const subtitleContainer = document.getElementById('subtitleContainer');
+            const subtitleContent = document.getElementById('subtitleContent');
+            const downloadSubtitleBtn = document.getElementById('downloadSubtitleBtn');
+            
+            // API基础URL
+            const apiBaseUrl = window.location.origin;
+            
+            // 获取语音列表
+            getVoicesBtn.addEventListener('click', async function() {
+                voicesLoading.style.display = 'inline-block';
+                voicesResult.innerHTML = '';
+                
+                try {
+                    const response = await fetch(`${apiBaseUrl}/api/tts/voices`);
+                    const data = await response.json();
+                    
+                    if (response.ok) {
+                        // 清空现有选项
+                        voiceSelect.innerHTML = '';
+                        
+                        // 添加语音选项
+                        data.voices.forEach(voice => {
+                            const option = document.createElement('option');
+                            option.value = voice.name;
+                            option.textContent = `${voice.name} (${voice.locale}) - ${voice.gender}`;
+                            voiceSelect.appendChild(option);
+                        });
+                        
+                        // 显示语音列表
+                        voicesResult.innerHTML = `<div class="alert alert-success">成功获取 ${data.voices.length} 个语音</div>`;
+                    } else {
+                        voicesResult.innerHTML = `<div class="alert alert-danger">获取语音列表失败: ${data.message || '未知错误'}</div>`;
+                    }
+                } catch (error) {
+                    voicesResult.innerHTML = `<div class="alert alert-danger">请求错误: ${error.message}</div>`;
+                } finally {
+                    voicesLoading.style.display = 'none';
+                }
+            });
+            
+            // 文字转语音
+            synthesizeBtn.addEventListener('click', async function() {
+                const text = textInput.value.trim();
+                if (!text) {
+                    alert('请输入要转换的文本');
+                    return;
+                }
+                
+                const voice = voiceSelect.value;
+                if (!voice) {
+                    alert('请选择一个语音');
+                    return;
+                }
+                
+                synthesizeLoading.style.display = 'inline-block';
+                audioContainer.style.display = 'none';
+                subtitleContainer.style.display = 'none';
+                
+                try {
+                    const requestData = {
+                        text: text,
+                        voice: voice,
+                        rate: parseFloat(rateSelect.value),
+                        pitch: parseFloat(pitchSelect.value),
+                        generateSubtitle: generateSubtitle.checked
+                    };
+                    
+                    const response = await fetch(`${apiBaseUrl}/api/tts/synthesize`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(requestData)
+                    });
+                    
+                    if (response.ok) {
+                        const data = await response.json();
+                        
+                        // 设置音频
+                        audioPlayer.src = `data:audio/wav;base64,${data.audioData}`;
+                        downloadLink.href = `data:audio/wav;base64,${data.audioData}`;
+                        downloadLink.download = `tts_${Date.now()}.wav`;
+                        audioContainer.style.display = 'block';
+                        
+                        // 设置字幕
+                        if (generateSubtitle.checked && data.subtitleData) {
+                            subtitleContent.textContent = data.subtitleData;
+                            subtitleContainer.style.display = 'block';
+                        }
+                    } else {
+                        const errorData = await response.json();
+                        alert(`语音合成失败: ${errorData.message || '未知错误'}`);
+                    }
+                } catch (error) {
+                    alert(`请求错误: ${error.message}`);
+                } finally {
+                    synthesizeLoading.style.display = 'none';
+                }
+            });
+            
+            // 下载字幕文件
+            downloadSubtitleBtn.addEventListener('click', function() {
+                const subtitleText = subtitleContent.textContent;
+                const blob = new Blob([subtitleText], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `subtitle_${Date.now()}.srt`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            });
+            
+            // 页面加载时自动获取语音列表
+            getVoicesBtn.click();
+        });
+    </script>
+</body>
+</html>

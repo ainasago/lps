@@ -1,0 +1,556 @@
+@{
+    ViewData["Title"] = "免费在线AI文字转语音";
+}
+
+<!-- Hero Section / Core Tool -->
+<section class="py-16 px-4">
+<div class="container mx-auto flex flex-col items-center text-center gap-4">
+<h1 class="text-slate-900 dark:text-white text-4xl md:text-5xl font-bold leading-tight tracking-[-0.033em] max-w-3xl" data-i18n="home.title">
+安妮语音转换 - 免费AI文字转语音工具
+</h1>
+<h2 class="text-slate-600 dark:text-slate-400 text-base md:text-lg font-normal leading-normal max-w-2xl" data-i18n="home.subtitle">
+支持多种语言和自然人声，为您的视频、播客和演示文稿创建高质量音频
+</h2>
+</div>
+
+<div class="container mx-auto mt-12 p-4 sm:p-6 md:p-8 bg-white/50 dark:bg-white/5 border border-slate-200 dark:border-slate-800 rounded-xl max-w-5xl">
+<form id="ttsForm">
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+<div class="lg:col-span-2">
+<label class="flex flex-col w-full">
+<div class="flex justify-between items-center pb-2">
+<p class="text-slate-800 dark:text-slate-200 text-base font-medium leading-normal" data-i18n="home.inputLabel">在此输入您的文本</p>
+<p class="text-slate-500 dark:text-slate-400 text-xs" id="charCount">0 / 5000</p>
+</div>
+<textarea 
+                            class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-slate-900 dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary border-slate-300 dark:border-slate-700 bg-background-light dark:bg-background-dark min-h-64 placeholder:text-slate-400 dark:placeholder:text-slate-500 p-4 text-base font-normal leading-normal" 
+                            id="textInput" 
+                            placeholder="粘贴或输入您的文本..."
+                            data-i18n="home.placeholder"
+                            maxlength="5000"></textarea>
+</label>
+</div>
+<div class="flex flex-col gap-6">
+<div>
+<label class="block text-slate-800 dark:text-slate-200 text-base font-medium leading-normal pb-2" for="languageSelect" data-i18n="home.language">语言</label>
+<select class="form-select w-full rounded-lg text-slate-900 dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary border-slate-300 dark:border-slate-700 bg-background-light dark:bg-background-dark placeholder:text-slate-400 dark:placeholder:text-slate-500" id="languageSelect">
+<option value="">选择语言...</option>
+</select>
+</div>
+<div>
+<p class="text-slate-800 dark:text-slate-200 text-base font-medium leading-normal pb-2" data-i18n="home.voice">配音员</p>
+<select class="form-select w-full rounded-lg text-slate-900 dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary border-slate-300 dark:border-slate-700 bg-background-light dark:bg-background-dark" id="voiceSelect">
+<option value="">选择配音员...</option>
+</select>
+</div>
+<div>
+<label class="block text-slate-800 dark:text-slate-200 text-base font-medium leading-normal pb-2" for="pitchRange"><span data-i18n="home.pitch">音调</span>: <span id="pitchValue">0</span></label>
+<input class="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-primary" id="pitchRange" max="50" min="-50" step="1" type="range" value="0"/>
+</div>
+<div>
+<label class="block text-slate-800 dark:text-slate-200 text-base font-medium leading-normal pb-2" for="rateRange"><span data-i18n="home.rate">语速</span>: <span id="rateValue">0</span></label>
+<input class="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-primary" id="rateRange" max="200" min="-100" step="1" type="range" value="0"/>
+</div>
+<div>
+<label class="block text-slate-800 dark:text-slate-200 text-base font-medium leading-normal pb-2" for="volumeRange"><span data-i18n="home.volume">音量</span>: <span id="volumeValue">80</span></label>
+<input class="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-primary" id="volumeRange" max="100" min="0" step="1" type="range" value="80"/>
+</div>
+<div class="flex items-center gap-2">
+<input type="checkbox" id="generateSubtitles" class="w-4 h-4 text-primary bg-slate-100 border-slate-300 rounded focus:ring-primary">
+<label for="generateSubtitles" class="text-slate-800 dark:text-slate-200 text-sm font-medium" data-i18n="home.generateSubtitles">生成字幕</label>
+</div>
+
+<!-- 高级功能 -->
+<div class="mt-4 p-4 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-200 dark:border-slate-700">
+<h3 class="text-slate-900 dark:text-white text-sm font-bold mb-3">
+<span class="material-symbols-outlined text-base align-middle mr-1">tune</span>
+高级功能
+</h3>
+<div class="space-y-3">
+<!-- 试听模式 -->
+<div class="flex items-center gap-2">
+<input type="checkbox" id="previewMode" class="w-4 h-4 text-primary bg-slate-100 border-slate-300 rounded focus:ring-primary">
+<label for="previewMode" class="text-slate-800 dark:text-slate-200 text-sm font-medium">试听模式（只合成前</label>
+<input type="number" id="previewSentences" class="w-16 px-2 py-1 text-sm border border-slate-300 dark:border-slate-600 rounded bg-white dark:bg-slate-700 text-slate-900 dark:text-white" value="3" min="1" max="10">
+<label class="text-slate-800 dark:text-slate-200 text-sm font-medium">句）</label>
+</div>
+
+<!-- 停顿间隔 -->
+<div class="flex items-center gap-2">
+<label class="text-slate-800 dark:text-slate-200 text-sm font-medium">句间停顿：</label>
+<input type="number" id="breakTime" class="w-20 px-2 py-1 text-sm border border-slate-300 dark:border-slate-600 rounded bg-white dark:bg-slate-700 text-slate-900 dark:text-white" value="0" min="0" max="2000" step="100">
+<label class="text-slate-800 dark:text-slate-200 text-sm">毫秒</label>
+<span class="text-slate-500 dark:text-slate-400 text-xs">(0=无停顿)</span>
+</div>
+
+<!-- 长文本切片 -->
+<div class="flex items-center gap-2">
+<input type="checkbox" id="enableLongTextSplit" class="w-4 h-4 text-primary bg-slate-100 border-slate-300 rounded focus:ring-primary">
+<label for="enableLongTextSplit" class="text-slate-800 dark:text-slate-200 text-sm font-medium">长文本切片（每片</label>
+<input type="number" id="maxCharsPerChunk" class="w-20 px-2 py-1 text-sm border border-slate-300 dark:border-slate-600 rounded bg-white dark:bg-slate-700 text-slate-900 dark:text-white" value="500" min="100" max="2000" step="100">
+<label class="text-slate-800 dark:text-slate-200 text-sm font-medium">字）</label>
+</div>
+</div>
+</div>
+
+</div>
+</div>
+<div class="mt-8 flex flex-col md:flex-row gap-4 items-center">
+<button type="button" id="convertBtn" class="flex w-full md:w-auto min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-5 bg-primary text-white text-base font-bold leading-normal tracking-[0.015em] hover:opacity-90">
+<span class="material-symbols-outlined mr-2">graphic_eq</span>
+<span class="truncate" data-i18n="home.generateSpeech">生成语音</span>
+</button>
+<div id="inlinePlayer" class="flex items-center w-full grow bg-slate-200 dark:bg-slate-800 rounded-lg p-2" style="display: none;">
+<button type="button" id="playBtn" class="flex items-center justify-center size-8 rounded-full bg-slate-400 dark:bg-slate-600 text-white hover:bg-primary">
+<span class="material-symbols-outlined text-xl">play_arrow</span>
+</button>
+<div class="flex-grow h-1 bg-slate-300 dark:bg-slate-600 mx-3 rounded-full"></div>
+<p class="text-sm text-slate-600 dark:text-slate-400" id="timeDisplay">0:00 / 0:00</p>
+<button type="button" id="downloadAudioBtn" class="flex items-center justify-center size-8 ml-3 text-slate-600 dark:text-slate-400 hover:text-primary">
+<span class="material-symbols-outlined text-xl">download</span>
+</button>
+</div>
+</div>
+<audio id="audioPlayer" style="display: none;"></audio>
+<div id="subtitlesContainer" class="mt-6 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-4" style="display: none;">
+<div class="flex justify-between items-center mb-3">
+<h4 class="text-slate-900 dark:text-white text-lg font-bold">字幕内容</h4>
+<button type="button" id="downloadSubtitlesBtn" class="flex items-center gap-2 px-3 py-1 bg-amber-600 text-white text-sm rounded-lg hover:opacity-90">
+<span class="material-symbols-outlined text-sm">download</span>
+<span>下载字幕</span>
+</button>
+</div>
+<div id="subtitlesContent" class="text-slate-700 dark:text-slate-300 text-sm whitespace-pre-wrap max-h-64 overflow-y-auto"></div>
+</div>
+</form>
+</div>
+</section>
+
+<!-- Features Section -->
+<section class="py-16 px-4 bg-white/50 dark:bg-white/5">
+<div class="container mx-auto">
+<div class="text-center mb-12">
+<h2 class="text-3xl font-bold text-slate-900 dark:text-white">为什么选择我们</h2>
+<p class="text-slate-600 dark:text-slate-400 mt-2">探索让我们的 TTS 服务脱颖而出的功能特性</p>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+<div class="flex flex-col items-center text-center p-6">
+<div class="flex items-center justify-center size-14 rounded-xl bg-primary/20 mb-4">
+<span class="material-symbols-outlined text-primary text-3xl">language</span>
+</div>
+<p class="text-slate-900 dark:text-white text-lg font-bold leading-tight">全球语言覆盖</p>
+<p class="text-slate-600 dark:text-slate-400 mt-1 text-sm">支持全球数十种语言和方言</p>
+</div>
+<div class="flex flex-col items-center text-center p-6">
+<div class="flex items-center justify-center size-14 rounded-xl bg-primary/20 mb-4">
+<span class="material-symbols-outlined text-primary text-3xl">psychology</span>
+</div>
+<p class="text-slate-900 dark:text-white text-lg font-bold leading-tight">AI 驱动的自然语音</p>
+<p class="text-slate-600 dark:text-slate-400 mt-1 text-sm">利用尖端 AI 技术实现极其逼真的人声</p>
+</div>
+<div class="flex flex-col items-center text-center p-6">
+<div class="flex items-center justify-center size-14 rounded-xl bg-primary/20 mb-4">
+<span class="material-symbols-outlined text-primary text-3xl">folder_zip</span>
+</div>
+<p class="text-slate-900 dark:text-white text-lg font-bold leading-tight">多种音频格式</p>
+<p class="text-slate-600 dark:text-slate-400 mt-1 text-sm">导出 MP3、WAV 等流行格式的音频</p>
+</div>
+<div class="flex flex-col items-center text-center p-6">
+<div class="flex items-center justify-center size-14 rounded-xl bg-primary/20 mb-4">
+<span class="material-symbols-outlined text-primary text-3xl">api</span>
+</div>
+<p class="text-slate-900 dark:text-white text-lg font-bold leading-tight">开发者 API</p>
+<p class="text-slate-600 dark:text-slate-400 mt-1 text-sm">轻松将我们强大的 TTS 引擎集成到您的应用中</p>
+</div>
+</div>
+</div>
+</section>
+
+<!-- Use Cases Section -->
+<section class="py-16 px-4">
+<div class="container mx-auto">
+<div class="text-center mb-12">
+<h2 class="text-3xl font-bold text-slate-900 dark:text-white">适用于任何场景</h2>
+<p class="text-slate-600 dark:text-slate-400 mt-2">从创意项目到商业应用，我们都能满足您的需求</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+<div class="flex flex-col items-stretch justify-start rounded-xl bg-white/50 dark:bg-white/5 border border-slate-200 dark:border-slate-800 overflow-hidden">
+<div class="w-full bg-center bg-no-repeat aspect-video bg-cover" style="background-image: url('https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f3a4.svg'); background-size: 100px; background-color: #5b13ec20;"></div>
+<div class="p-6">
+<p class="text-slate-900 dark:text-white text-lg font-bold leading-tight tracking-[-0.015em]">视频和播客旁白</p>
+<p class="text-slate-600 dark:text-slate-400 mt-1 text-sm">无需麦克风即可为您的内容创建专业配音</p>
+</div>
+</div>
+<div class="flex flex-col items-stretch justify-start rounded-xl bg-white/50 dark:bg-white/5 border border-slate-200 dark:border-slate-800 overflow-hidden">
+<div class="w-full bg-center bg-no-repeat aspect-video bg-cover" style="background-image: url('https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f4da.svg'); background-size: 100px; background-color: #5b13ec20;"></div>
+<div class="p-6">
+<p class="text-slate-900 dark:text-white text-lg font-bold leading-tight tracking-[-0.015em]">在线学习与教育</p>
+<p class="text-slate-600 dark:text-slate-400 mt-1 text-sm">为课程和教育内容制作引人入胜的音频材料</p>
+</div>
+</div>
+<div class="flex flex-col items-stretch justify-start rounded-xl bg-white/50 dark:bg-white/5 border border-slate-200 dark:border-slate-800 overflow-hidden">
+<div class="w-full bg-center bg-no-repeat aspect-video bg-cover" style="background-image: url('https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f4e2.svg'); background-size: 100px; background-color: #5b13ec20;"></div>
+<div class="p-6">
+<p class="text-slate-900 dark:text-white text-lg font-bold leading-tight tracking-[-0.015em]">营销与广告</p>
+<p class="text-slate-600 dark:text-slate-400 mt-1 text-sm">在几分钟内制作引人注目的音频广告和宣传内容</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+@section Scripts {
+<script>
+let voices = [];
+let currentAudioData = null;
+let currentSubtitles = null;
+
+$(document).ready(function() {
+    loadVoices();
+    
+    $('#textInput').on('input', function() {
+        $('#charCount').text($(this).val().length + ' / 5000');
+    });
+    
+    $('#pitchRange').on('input', function() {
+        $('#pitchValue').text($(this).val());
+    });
+    
+    $('#rateRange').on('input', function() {
+        $('#rateValue').text($(this).val());
+    });
+    
+    $('#volumeRange').on('input', function() {
+        $('#volumeValue').text($(this).val());
+    });
+    
+    $('#languageSelect').on('change', function() {
+        updateVoiceList($(this).val());
+    });
+    
+    $('#convertBtn').on('click', function() {
+        convertText();
+    });
+    
+    $('#playBtn').on('click', function() {
+        playAudio();
+    });
+    
+    $('#downloadAudioBtn').on('click', function() {
+        downloadAudio();
+    });
+    
+    $('#downloadSubtitlesBtn').on('click', function() {
+        downloadSubtitles();
+    });
+    
+    const audioPlayer = document.getElementById('audioPlayer');
+    audioPlayer.addEventListener('timeupdate', updateProgress);
+    audioPlayer.addEventListener('ended', function() {
+        $('#playBtn .material-symbols-outlined').text('play_arrow');
+    });
+});
+
+function loadVoices() {
+    $.get('/Tts/GetVoices', function(data) {
+        voices = data;
+        populateLanguageSelect();
+    }).fail(function() {
+        alert('加载语音列表失败');
+    });
+}
+
+function populateLanguageSelect() {
+    const languages = [...new Set(voices.map(v => v.locale))];
+    const languageSelect = $('#languageSelect');
+    languageSelect.empty().append('<option value="">选择语言...</option>');
+    languages.sort();
+    const localeNameMap = {};
+    voices.forEach(voice => {
+        if (!localeNameMap[voice.locale] && voice.localeName) {
+            localeNameMap[voice.locale] = voice.localeName;
+        }
+    });
+    languages.forEach(lang => {
+        const displayName = localeNameMap[lang] || lang;
+        languageSelect.append(`<option value="${lang}">${displayName}</option>`);
+    });
+    
+    // 自动检测浏览器语言并选择默认语言
+    autoSelectLanguage();
+}
+
+function autoSelectLanguage() {
+    // 获取浏览器语言
+    const browserLang = navigator.language || navigator.userLanguage;
+    console.log('浏览器语言:', browserLang);
+    
+    // 语言映射表
+    const langMap = {
+        'zh': 'zh-CN',
+        'zh-CN': 'zh-CN',
+        'zh-TW': 'zh-TW',
+        'zh-HK': 'zh-HK',
+        'en': 'en-US',
+        'en-US': 'en-US',
+        'en-GB': 'en-GB',
+        'ja': 'ja-JP',
+        'ko': 'ko-KR',
+        'fr': 'fr-FR',
+        'de': 'de-DE',
+        'es': 'es-ES'
+    };
+    
+    // 尝试精确匹配
+    let matchedLocale = null;
+    const browserLangLower = browserLang.toLowerCase();
+    
+    // 首先尝试完全匹配
+    for (const [key, value] of Object.entries(langMap)) {
+        if (browserLangLower === key.toLowerCase()) {
+            matchedLocale = value;
+            break;
+        }
+    }
+    
+    // 如果没有完全匹配，尝试匹配语言代码（如 zh-CN 匹配 zh）
+    if (!matchedLocale) {
+        const langCode = browserLangLower.split('-')[0];
+        matchedLocale = langMap[langCode];
+    }
+    
+    // 获取可用语言列表
+    const availableLocales = voices.map(v => v.locale);
+    let selectedLocale = null;
+    
+    // 检查匹配的语言是否在可用语言列表中
+    if (matchedLocale) {
+        const exactMatch = availableLocales.find(l => l === matchedLocale);
+        
+        if (exactMatch) {
+            selectedLocale = exactMatch;
+            console.log('精确匹配语言:', selectedLocale);
+        } else {
+            // 尝试模糊匹配（如 zh-CN 匹配 zh-*）
+            const langPrefix = matchedLocale.split('-')[0];
+            const fuzzyMatch = availableLocales.find(l => l.startsWith(langPrefix));
+            if (fuzzyMatch) {
+                selectedLocale = fuzzyMatch;
+                console.log('模糊匹配语言:', selectedLocale);
+            }
+        }
+    }
+    
+    // 如果没有匹配到任何语言，默认选择英文
+    if (!selectedLocale) {
+        // 尝试找 en-US
+        selectedLocale = availableLocales.find(l => l === 'en-US');
+        
+        // 如果没有 en-US，找任何 en- 开头的
+        if (!selectedLocale) {
+            selectedLocale = availableLocales.find(l => l.startsWith('en-'));
+        }
+        
+        // 如果还是没有，选择第一个可用语言
+        if (!selectedLocale && availableLocales.length > 0) {
+            selectedLocale = availableLocales[0];
+        }
+        
+        console.log('使用默认语言:', selectedLocale);
+    }
+    
+    // 设置选中的语言
+    if (selectedLocale) {
+        $('#languageSelect').val(selectedLocale);
+        updateVoiceList(selectedLocale);
+        console.log('最终选择语言:', selectedLocale);
+        
+        // 自动选择第一个配音员
+        setTimeout(() => {
+            const firstVoice = $('#voiceSelect option:eq(1)').val();
+            if (firstVoice) {
+                $('#voiceSelect').val(firstVoice);
+                console.log('自动选择配音员:', firstVoice);
+            }
+        }, 100);
+    }
+}
+
+function updateVoiceList(selectedLanguage) {
+    const voiceSelect = $('#voiceSelect');
+    voiceSelect.empty().append('<option value="">选择配音员...</option>');
+    if (selectedLanguage) {
+        const filteredVoices = voices.filter(v => v.locale === selectedLanguage);
+        filteredVoices.forEach(voice => {
+            const displayName = voice.shortName || voice.name;
+            voiceSelect.append(`<option value="${voice.shortName}">${displayName} (${voice.gender})</option>`);
+        });
+    }
+}
+
+function convertText() {
+    const text = $('#textInput').val().trim();
+    const voiceId = $('#voiceSelect').val();
+    const language = $('#languageSelect').val();
+    const pitch = parseInt($('#pitchRange').val());
+    const rate = parseInt($('#rateRange').val());
+    const volume = parseInt($('#volumeRange').val());
+    const generateSubtitles = $('#generateSubtitles').is(':checked');
+    
+    // 高级功能参数
+    const previewMode = $('#previewMode').is(':checked');
+    const previewSentences = parseInt($('#previewSentences').val()) || 3;
+    const breakTime = parseInt($('#breakTime').val()) || 0;
+    const enableLongTextSplit = $('#enableLongTextSplit').is(':checked');
+    const maxCharsPerChunk = parseInt($('#maxCharsPerChunk').val()) || 500;
+    
+    if (!text) {
+        alert('请输入要转换的文本');
+        return;
+    }
+    if (!voiceId) {
+        alert('请选择配音员');
+        return;
+    }
+    
+    const request = {
+        Text: text,
+        Voice: voiceId,
+        Language: language,
+        Pitch: pitch,
+        Rate: rate,
+        Volume: volume,
+        GenerateSubtitles: generateSubtitles,
+        // 高级功能
+        PreviewMode: previewMode,
+        PreviewSentences: previewSentences,
+        BreakTime: breakTime,
+        EnableLongTextSplit: enableLongTextSplit,
+        MaxCharsPerChunk: maxCharsPerChunk
+    };
+    
+    console.log('发送请求:', request);
+    
+    const $convertBtn = $('#convertBtn');
+    $convertBtn.prop('disabled', true).find('span.truncate').text('转换中...');
+    
+    $.ajax({
+        url: '/Tts/ConvertText',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(request),
+        success: function(response) {
+            console.log('收到响应:', response);
+            if (response.success) {
+                currentAudioData = response.audioData;
+                currentSubtitles = response.subtitles;
+                console.log('音频数据长度:', currentAudioData ? currentAudioData.length : 0);
+                console.log('字幕数据长度:', currentSubtitles ? currentSubtitles.length : 0);
+                console.log('字幕数据:', currentSubtitles);
+                
+                // 显示元数据信息
+                if (response.chunkCount || response.processingTimeMs || response.isPreview) {
+                    let metaInfo = [];
+                    if (response.isPreview) metaInfo.push('🎧 试听模式');
+                    if (response.chunkCount > 1) metaInfo.push(`📄 ${response.chunkCount} 个片段`);
+                    if (response.totalCharacters) metaInfo.push(`📝 ${response.totalCharacters} 字符`);
+                    if (response.processingTimeMs) metaInfo.push(`⏱️ ${(response.processingTimeMs / 1000).toFixed(1)}秒`);
+                    
+                    if (metaInfo.length > 0) {
+                        console.log('处理信息:', metaInfo.join(' | '));
+                        // 可以在页面上显示这些信息
+                    }
+                }
+                
+                $('#inlinePlayer').show();
+                
+                const audioPlayer = document.getElementById('audioPlayer');
+                audioPlayer.src = 'data:audio/mpeg;base64,' + currentAudioData;
+                audioPlayer.onerror = function(e) {
+                    console.error('音频加载错误:', e);
+                    alert('音频加载失败，请检查控制台日志');
+                };
+                audioPlayer.onloadedmetadata = function() {
+                    console.log('音频元数据加载完成，时长:', audioPlayer.duration);
+                    updateTimeDisplay();
+                };
+                audioPlayer.load();
+                
+                if (currentSubtitles) {
+                    $('#subtitlesContainer').show();
+                    $('#subtitlesContent').text(currentSubtitles);
+                } else {
+                    $('#subtitlesContainer').hide();
+                }
+            } else {
+                alert('转换失败: ' + response.errorMessage);
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('转换请求失败:', error);
+            alert('转换请求失败');
+        },
+        complete: function() {
+            $convertBtn.prop('disabled', false).find('span.truncate').text('生成语音');
+        }
+    });
+}
+
+function playAudio() {
+    const audioPlayer = document.getElementById('audioPlayer');
+    const $playBtn = $('#playBtn .material-symbols-outlined');
+    if (audioPlayer.paused) {
+        audioPlayer.play();
+        $playBtn.text('pause');
+    } else {
+        audioPlayer.pause();
+        $playBtn.text('play_arrow');
+    }
+}
+
+function updateProgress() {
+    const audioPlayer = document.getElementById('audioPlayer');
+    if (audioPlayer.duration) {
+        const progress = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+        $('#progressBar').css('width', progress + '%');
+        updateTimeDisplay();
+    }
+}
+
+function updateTimeDisplay() {
+    const audioPlayer = document.getElementById('audioPlayer');
+    const current = formatTime(audioPlayer.currentTime);
+    const duration = formatTime(audioPlayer.duration);
+    $('#timeDisplay').text(current + ' / ' + duration);
+}
+
+function formatTime(seconds) {
+    if (isNaN(seconds)) return '0:00';
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return mins + ':' + (secs < 10 ? '0' : '') + secs;
+}
+
+function downloadAudio() {
+    if (currentAudioData) {
+        const a = document.createElement('a');
+        a.href = 'data:audio/mpeg;base64,' + currentAudioData;
+        a.download = 'tts_audio_' + new Date().getTime() + '.mp3';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    }
+}
+
+function downloadSubtitles() {
+    if (currentSubtitles) {
+        const a = document.createElement('a');
+        a.href = 'data:text/plain;charset=utf-8,' + encodeURIComponent(currentSubtitles);
+        a.download = 'tts_subtitles_' + new Date().getTime() + '.srt';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    }
+}
+</script>
+}
