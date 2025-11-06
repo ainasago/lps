@@ -116,6 +116,14 @@ app.UseAuthorization();
 
 app.MapStaticAssets();
 
+// 动态后台路由
+var adminPath = app.Configuration["AppSettings:AdminPath"] ?? "Admin";
+app.Logger.LogInformation("后台管理路径: /{AdminPath}", adminPath);
+app.MapControllerRoute(
+    name: "admin",
+    pattern: $"{adminPath}/{{action=Index}}/{{id?}}",
+    defaults: new { controller = "Admin" });
+
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Tts}/{action=Index}/{id?}")

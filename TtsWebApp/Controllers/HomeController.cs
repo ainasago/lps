@@ -71,9 +71,17 @@ public class HomeController : Controller
     }
     
     // 通用页面路由处理（通过 slug 访问）
-    [Route("/{slug}")]
+    // Order = 999 确保这个路由最后匹配，不会干扰其他控制器路由
+    [Route("/{slug}", Order = 999)]
     public async Task<IActionResult> Page(string slug)
     {
+        // 检查是否是后台路径
+        var adminPath = HttpContext.RequestServices.GetRequiredService<IConfiguration>()["AppSettings:AdminPath"] ?? "Admin";
+        if (slug.Equals(adminPath, StringComparison.OrdinalIgnoreCase))
+        {
+            return NotFound();
+        }
+        
         _logger.LogInformation("访问页面 slug: {Slug}", slug);
         
         var page = await _context.Articles
