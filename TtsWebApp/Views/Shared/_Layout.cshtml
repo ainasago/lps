@@ -1,12 +1,12 @@
-@using Microsoft.Extensions.Configuration
-@inject IConfiguration Configuration
+@using TtsWebApp.Services
+@inject IConfigService ConfigService
 @{
     ViewData["Title"] = ViewData["Title"] ?? "Home";
-    var siteName = Configuration["AppSettings:SiteName"] ?? "安妮语音转换";
-    var siteNameEn = Configuration["AppSettings:SiteNameEn"] ?? "Annie TTS";
-    var contactEmail = Configuration["AppSettings:ContactEmail"] ?? "contact@annietts.com";
-    var siteDescription = Configuration["AppSettings:SiteDescription"] ?? "免费在线AI文字转语音工具，支持多种语言和自然人声";
-    var siteUrl = Configuration["AppSettings:SiteUrl"] ?? "https://www.annietts.com";
+    var siteName = await ConfigService.GetConfigAsync("SiteName", "安妮语音转换");
+    var siteNameEn = await ConfigService.GetConfigAsync("SiteNameEn", "Annie TTS");
+    var contactEmail = await ConfigService.GetConfigAsync("ContactEmail", "contact@annietts.com");
+    var siteDescription = await ConfigService.GetConfigAsync("SiteDescription", "免费在线AI文字转语音工具，支持多种语言和自然人声");
+    var siteUrl = await ConfigService.GetConfigAsync("SiteUrl", "https://www.annietts.com");
 }
 <!DOCTYPE html>
 <html class="dark" lang="zh-CN">
@@ -92,6 +92,7 @@
                     </a>
                     <div class="hidden md:flex items-center gap-8 ml-10">
                         <a class="text-slate-700 dark:text-slate-300 text-sm font-medium hover:text-primary dark:hover:text-white" asp-area="" asp-controller="Tts" asp-action="Index" data-i18n="nav.home">首页</a>
+                        <a class="text-slate-700 dark:text-slate-300 text-sm font-medium hover:text-primary dark:hover:text-white" asp-area="" asp-controller="Article" asp-action="Index">文章</a>
                     </div>
                     <div class="flex-1"></div>
                     <div class="flex items-center gap-4">
@@ -136,6 +137,7 @@
                     <p class="font-bold text-slate-900 dark:text-white mb-3">产品服务</p>
                     <ul class="space-y-2">
                         <li><a class="text-slate-600 dark:text-slate-400 hover:text-primary" asp-area="" asp-controller="Tts" asp-action="Index">在线配音</a></li>
+                        <li><a class="text-slate-600 dark:text-slate-400 hover:text-primary" asp-area="" asp-controller="Article" asp-action="Index">文章列表</a></li>
                         <li><a class="text-slate-600 dark:text-slate-400 hover:text-primary" asp-area="" asp-controller="Home" asp-action="Features">功能特性</a></li>
                     </ul>
                 </div>

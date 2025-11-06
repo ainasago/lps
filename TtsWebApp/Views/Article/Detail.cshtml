@@ -1,0 +1,125 @@
+@model TtsWebApp.Models.Article
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<section class="py-16 px-4">
+    <div class="container mx-auto max-w-4xl">
+        <!-- 返回按钮 -->
+        <div class="mb-6">
+            <a asp-action="Index" class="text-primary hover:text-primary/80 flex items-center">
+                <span class="material-symbols-outlined mr-1">arrow_back</span>
+                返回文章列表
+            </a>
+        </div>
+        
+        <!-- 文章头部 -->
+        <article>
+            <h1 class="text-4xl font-bold text-slate-900 dark:text-white mb-4">
+                @Model.Title
+            </h1>
+            
+            <!-- 文章元信息 -->
+            <div class="flex flex-wrap items-center gap-4 text-sm text-slate-600 dark:text-slate-400 mb-6 pb-6 border-b border-slate-200 dark:border-slate-800">
+                @if (!string.IsNullOrEmpty(Model.Author))
+                {
+                    <span class="flex items-center">
+                        <span class="material-symbols-outlined text-sm mr-1">person</span>
+                        @Model.Author
+                    </span>
+                }
+                
+                <span class="flex items-center">
+                    <span class="material-symbols-outlined text-sm mr-1">schedule</span>
+                    @((Model.PublishedAt ?? Model.CreatedAt).ToString("yyyy年MM月dd日"))
+                </span>
+                
+                <span class="flex items-center">
+                    <span class="material-symbols-outlined text-sm mr-1">visibility</span>
+                    @Model.ViewCount 次浏览
+                </span>
+            </div>
+            
+            <!-- 标签 -->
+            @if (!string.IsNullOrEmpty(Model.Tags))
+            {
+                <div class="flex flex-wrap gap-2 mb-6">
+                    @foreach (var tag in Model.Tags.Split(',', StringSplitOptions.RemoveEmptyEntries))
+                    {
+                        <span class="px-3 py-1 bg-primary/10 text-primary text-sm rounded-full">
+                            #@tag.Trim()
+                        </span>
+                    }
+                </div>
+            }
+            
+            <!-- 文章内容 -->
+            <div class="prose prose-slate dark:prose-invert max-w-none">
+                @Html.Raw(Model.Content.Replace("\n", "<br/>"))
+            </div>
+        </article>
+        
+        <!-- 相关文章推荐（可选） -->
+        <div class="mt-12">
+            <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-6">相关文章</h2>
+            <div class="text-slate-600 dark:text-slate-400">
+                <p>暂无相关文章</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .prose {
+        font-size: 1.125rem;
+        line-height: 1.75;
+    }
+    .prose p {
+        margin-bottom: 1.25rem;
+    }
+    .prose h2 {
+        font-size: 1.875rem;
+        font-weight: 700;
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+    }
+    .prose h3 {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-top: 1.5rem;
+        margin-bottom: 0.75rem;
+    }
+    .prose ul, .prose ol {
+        margin-left: 1.5rem;
+        margin-bottom: 1.25rem;
+    }
+    .prose li {
+        margin-bottom: 0.5rem;
+    }
+    .prose code {
+        background-color: rgba(0, 0, 0, 0.05);
+        padding: 0.2rem 0.4rem;
+        border-radius: 0.25rem;
+        font-size: 0.875em;
+    }
+    .prose pre {
+        background-color: rgba(0, 0, 0, 0.05);
+        padding: 1rem;
+        border-radius: 0.5rem;
+        overflow-x: auto;
+        margin-bottom: 1.25rem;
+    }
+    .prose blockquote {
+        border-left: 4px solid var(--primary-color, #5b13ec);
+        padding-left: 1rem;
+        font-style: italic;
+        color: rgba(0, 0, 0, 0.7);
+    }
+    .dark .prose code,
+    .dark .prose pre {
+        background-color: rgba(255, 255, 255, 0.05);
+    }
+    .dark .prose blockquote {
+        color: rgba(255, 255, 255, 0.7);
+    }
+</style>

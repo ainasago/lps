@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - 管理后台</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+</head>
+<body class="bg-gray-100">
+    <div class="flex h-screen">
+        <!-- 侧边栏 -->
+        <aside class="w-64 bg-gray-900 text-white flex flex-col">
+            <div class="p-6 border-b border-gray-800">
+                <h1 class="text-2xl font-bold flex items-center">
+                    <span class="material-symbols-outlined mr-2">admin_panel_settings</span>
+                    管理后台
+                </h1>
+            </div>
+            
+            <nav class="flex-1 p-4">
+                <a asp-action="Index" asp-controller="Admin" 
+                   class="flex items-center px-4 py-3 mb-2 rounded-lg hover:bg-gray-800 transition @(ViewContext.RouteData.Values["Action"]?.ToString() == "Index" ? "bg-gray-800" : "")">
+                    <span class="material-symbols-outlined mr-3">dashboard</span>
+                    仪表板
+                </a>
+                
+                <a asp-action="SiteConfig" asp-controller="Admin"
+                   class="flex items-center px-4 py-3 mb-2 rounded-lg hover:bg-gray-800 transition @(ViewContext.RouteData.Values["Action"]?.ToString() == "SiteConfig" ? "bg-gray-800" : "")">
+                    <span class="material-symbols-outlined mr-3">settings</span>
+                    网站配置
+                </a>
+                
+                <a asp-action="Articles" asp-controller="Admin"
+                   class="flex items-center px-4 py-3 mb-2 rounded-lg hover:bg-gray-800 transition @(ViewContext.RouteData.Values["Action"]?.ToString()?.Contains("Article") == true ? "bg-gray-800" : "")">
+                    <span class="material-symbols-outlined mr-3">article</span>
+                    文章管理
+                </a>
+                
+                <a asp-action="Pages" asp-controller="Admin"
+                   class="flex items-center px-4 py-3 mb-2 rounded-lg hover:bg-gray-800 transition @(ViewContext.RouteData.Values["Action"]?.ToString()?.Contains("Page") == true ? "bg-gray-800" : "")">
+                    <span class="material-symbols-outlined mr-3">description</span>
+                    页面管理
+                </a>
+            </nav>
+            
+            <div class="p-4 border-t border-gray-800">
+                <div class="flex items-center mb-4">
+                    <span class="material-symbols-outlined mr-2">account_circle</span>
+                    <span>@User.Identity?.Name</span>
+                </div>
+                <form method="post" asp-action="Logout" asp-controller="Admin">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="w-full flex items-center justify-center px-4 py-2 bg-red-600 hover:bg-red-700 rounded-lg transition">
+                        <span class="material-symbols-outlined mr-2">logout</span>
+                        退出登录
+                    </button>
+                </form>
+            </div>
+        </aside>
+        
+        <!-- 主内容区 -->
+        <main class="flex-1 overflow-y-auto">
+            <div class="p-8">
+                @if (TempData["Success"] != null)
+                {
+                    <div class="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg mb-4 flex items-center">
+                        <span class="material-symbols-outlined mr-2">check_circle</span>
+                        @TempData["Success"]
+                    </div>
+                }
+                
+                @if (TempData["Error"] != null)
+                {
+                    <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4 flex items-center">
+                        <span class="material-symbols-outlined mr-2">error</span>
+                        @TempData["Error"]
+                    </div>
+                }
+                
+                @RenderBody()
+            </div>
+        </main>
+    </div>
+    
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

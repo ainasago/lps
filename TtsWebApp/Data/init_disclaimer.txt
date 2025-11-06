@@ -1,0 +1,49 @@
+<section class="py-16 px-4">
+    <div class="container mx-auto max-w-4xl">
+        <h1 class="text-4xl font-bold text-slate-900 dark:text-white mb-8 text-center">免责声明</h1>
+        
+        <div class="space-y-6 text-slate-700 dark:text-slate-300">
+            <p class="text-sm text-slate-600 dark:text-slate-400">最后更新日期：2025年1月1日</p>
+            
+            <div>
+                <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-3">1. 服务性质</h2>
+                <p class="leading-relaxed">
+                    本网站提供的文字转语音服务基于人工智能技术，旨在为用户提供便利的语音合成工具。本服务按"现状"和"可用"基础提供。
+                </p>
+            </div>
+            
+            <div>
+                <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-3">2. 内容准确性</h2>
+                <p class="leading-relaxed mb-3">虽然我们努力确保服务的质量和准确性，但我们不保证：</p>
+                <ul class="list-disc list-inside space-y-2 ml-4">
+                    <li>生成的语音完全准确无误</li>
+                    <li>语音的发音、语调、节奏完全符合您的预期</li>
+                    <li>服务在任何时候都可用且不会中断</li>
+                </ul>
+            </div>
+            
+            <div>
+                <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-3">3. 用户责任</h2>
+                <p class="leading-relaxed mb-3">用户对使用本服务的行为和结果承担全部责任，包括：</p>
+                <ul class="list-disc list-inside space-y-2 ml-4">
+                    <li>确保输入的文本内容合法、不侵权</li>
+                    <li>对生成的音频内容的使用方式负责</li>
+                    <li>遵守所有适用的法律法规</li>
+                </ul>
+            </div>
+            
+            <div>
+                <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-3">4. 责任限制</h2>
+                <p class="leading-relaxed">
+                    在法律允许的最大范围内，本网站及其运营者不对因使用或无法使用本服务而导致的任何直接、间接、偶然、特殊或后果性损害承担责任。
+                </p>
+            </div>
+            
+            <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 mt-6">
+                <p class="text-sm">
+                    <strong>特别提示：</strong>使用本网站服务即表示您已阅读、理解并同意本免责声明的所有内容。
+                </p>
+            </div>
+        </div>
+    </div>
+</section>

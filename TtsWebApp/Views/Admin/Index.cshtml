@@ -1,0 +1,68 @@
+@{
+    ViewData["Title"] = "仪表板";
+    Layout = "_AdminLayout";
+}
+
+<h1 class="text-3xl font-bold text-gray-800 mb-6">仪表板</h1>
+
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    <div class="bg-white rounded-lg shadow p-6">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-gray-600 text-sm">网站配置</p>
+                <p class="text-2xl font-bold text-gray-800 mt-2">5 项</p>
+            </div>
+            <span class="material-symbols-outlined text-blue-500 text-5xl">settings</span>
+        </div>
+        <a asp-action="SiteConfig" class="text-blue-600 hover:text-blue-700 text-sm mt-4 inline-block">
+            查看详情 →
+        </a>
+    </div>
+    
+    <div class="bg-white rounded-lg shadow p-6">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-gray-600 text-sm">文章总数</p>
+                <p class="text-2xl font-bold text-gray-800 mt-2">@ViewBag.ArticleCount 篇</p>
+            </div>
+            <span class="material-symbols-outlined text-green-500 text-5xl">article</span>
+        </div>
+        <a asp-action="Articles" class="text-green-600 hover:text-green-700 text-sm mt-4 inline-block">
+            查看详情 →
+        </a>
+    </div>
+    
+    <div class="bg-white rounded-lg shadow p-6">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-gray-600 text-sm">已发布文章</p>
+                <p class="text-2xl font-bold text-gray-800 mt-2">@ViewBag.PublishedCount 篇</p>
+            </div>
+            <span class="material-symbols-outlined text-purple-500 text-5xl">check_circle</span>
+        </div>
+        <a asp-action="Articles" class="text-purple-600 hover:text-purple-700 text-sm mt-4 inline-block">
+            查看详情 →
+        </a>
+    </div>
+</div>
+
+<div class="bg-white rounded-lg shadow p-6">
+    <h2 class="text-xl font-bold text-gray-800 mb-4">快速操作</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <a asp-action="CreateArticle" class="flex items-center p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition">
+            <span class="material-symbols-outlined text-blue-500 mr-3 text-3xl">add_circle</span>
+            <div>
+                <p class="font-bold text-gray-800">创建新文章</p>
+                <p class="text-sm text-gray-600">发布新的文章内容</p>
+            </div>
+        </a>
+        
+        <a asp-action="SiteConfig" class="flex items-center p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-green-500 hover:bg-green-50 transition">
+            <span class="material-symbols-outlined text-green-500 mr-3 text-3xl">tune</span>
+            <div>
+                <p class="font-bold text-gray-800">修改网站配置</p>
+                <p class="text-sm text-gray-600">更新网站基本信息</p>
+            </div>
+        </a>
+    </div>
+</div>

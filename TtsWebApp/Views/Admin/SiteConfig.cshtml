@@ -1,0 +1,53 @@
+@model List<TtsWebApp.Models.SiteConfig>
+@{
+    ViewData["Title"] = "网站配置";
+    Layout = "_AdminLayout";
+}
+
+<div class="flex justify-between items-center mb-6">
+    <h1 class="text-3xl font-bold text-gray-800">网站配置</h1>
+</div>
+
+<div class="bg-white rounded-lg shadow p-6">
+    <form method="post" asp-action="UpdateSiteConfig">
+        @Html.AntiForgeryToken()
+        
+        <div class="space-y-6">
+            @foreach (var config in Model)
+            {
+                <div>
+                    <label class="block text-gray-700 font-medium mb-2">
+                        @config.Key
+                        @if (!string.IsNullOrEmpty(config.Description))
+                        {
+                            <span class="text-sm text-gray-500 font-normal">(@config.Description)</span>
+                        }
+                    </label>
+                    <input type="text" name="configs[@config.Key]" value="@config.Value"
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                    <p class="text-xs text-gray-500 mt-1">最后更新: @config.UpdatedAt.ToString("yyyy-MM-dd HH:mm:ss")</p>
+                </div>
+            }
+        </div>
+        
+        <div class="mt-8 flex justify-end space-x-4">
+            <a asp-action="Index" class="px-6 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition">
+                取消
+            </a>
+            <button type="submit" class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition flex items-center">
+                <span class="material-symbols-outlined mr-2">save</span>
+                保存配置
+            </button>
+        </div>
+    </form>
+</div>
+
+<div class="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
+    <div class="flex items-start">
+        <span class="material-symbols-outlined text-blue-600 mr-2">info</span>
+        <div class="text-sm text-blue-800">
+            <p class="font-bold mb-1">提示</p>
+            <p>修改这些配置后，网站前台的相应内容会立即更新。请谨慎操作。</p>
+        </div>
+    </div>
+</div>

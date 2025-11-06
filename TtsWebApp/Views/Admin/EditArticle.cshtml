@@ -1,0 +1,88 @@
+@model TtsWebApp.Models.Article
+@{
+    ViewData["Title"] = "编辑文章";
+    Layout = "_AdminLayout";
+}
+
+<div class="flex justify-between items-center mb-6">
+    <h1 class="text-3xl font-bold text-gray-800">编辑文章</h1>
+</div>
+
+<div class="bg-white rounded-lg shadow p-6">
+    <form method="post" asp-action="EditArticle" asp-route-id="@Model.Id">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="Id" value="@Model.Id" />
+        
+        <div class="space-y-6">
+            <div>
+                <label for="Title" class="block text-gray-700 font-medium mb-2">
+                    标题 <span class="text-red-500">*</span>
+                </label>
+                <input type="text" id="Title" name="Title" value="@Model.Title" required
+                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            </div>
+            
+            <div>
+                <label for="Summary" class="block text-gray-700 font-medium mb-2">
+                    摘要
+                </label>
+                <input type="text" id="Summary" name="Summary" value="@Model.Summary"
+                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            </div>
+            
+            <div>
+                <label for="Content" class="block text-gray-700 font-medium mb-2">
+                    内容 <span class="text-red-500">*</span>
+                </label>
+                <textarea id="Content" name="Content" required rows="15"
+                          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">@Model.Content</textarea>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label for="Author" class="block text-gray-700 font-medium mb-2">
+                        作者
+                    </label>
+                    <input type="text" id="Author" name="Author" value="@Model.Author"
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                </div>
+                
+                <div>
+                    <label for="Tags" class="block text-gray-700 font-medium mb-2">
+                        标签
+                    </label>
+                    <input type="text" id="Tags" name="Tags" value="@Model.Tags"
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                </div>
+            </div>
+            
+            <div>
+                <label class="flex items-center">
+                    <input type="checkbox" id="IsPublished" name="IsPublished" value="true" @(Model.IsPublished ? "checked" : "")
+                           class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500" />
+                    <span class="ml-2 text-gray-700">已发布</span>
+                </label>
+            </div>
+            
+            <div class="bg-gray-50 p-4 rounded-lg text-sm text-gray-600">
+                <p><strong>创建时间:</strong> @Model.CreatedAt.ToString("yyyy-MM-dd HH:mm:ss")</p>
+                <p><strong>更新时间:</strong> @Model.UpdatedAt.ToString("yyyy-MM-dd HH:mm:ss")</p>
+                @if (Model.PublishedAt.HasValue)
+                {
+                    <p><strong>发布时间:</strong> @Model.PublishedAt.Value.ToString("yyyy-MM-dd HH:mm:ss")</p>
+                }
+                <p><strong>浏览量:</strong> @Model.ViewCount</p>
+            </div>
+        </div>
+        
+        <div class="mt-8 flex justify-end space-x-4">
+            <a asp-action="Articles" class="px-6 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition">
+                取消
+            </a>
+            <button type="submit" class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition flex items-center">
+                <span class="material-symbols-outlined mr-2">save</span>
+                保存更改
+            </button>
+        </div>
+    </form>
+</div>

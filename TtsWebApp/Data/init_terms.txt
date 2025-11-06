@@ -1,0 +1,41 @@
+<section class="py-16 px-4">
+    <div class="container mx-auto max-w-4xl">
+        <h1 class="text-4xl font-bold text-slate-900 dark:text-white mb-8 text-center">服务条款</h1>
+        
+        <div class="space-y-6 text-slate-700 dark:text-slate-300">
+            <p class="text-sm text-slate-600 dark:text-slate-400">最后更新日期：2025年1月1日</p>
+            
+            <div>
+                <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-3">1. 服务说明</h2>
+                <p class="leading-relaxed">
+                    本网站提供基于人工智能的文字转语音服务。我们致力于为用户提供高质量的语音合成功能，但不保证服务的绝对准确性、完整性或可靠性。
+                </p>
+            </div>
+            
+            <div>
+                <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-3">2. 用户责任</h2>
+                <p class="leading-relaxed mb-3">使用本服务时，您同意：</p>
+                <ul class="list-disc list-inside space-y-2 ml-4">
+                    <li>不上传或转换任何违法、侵权、诽谤、淫秽或其他不当内容</li>
+                    <li>不使用本服务进行任何非法活动或侵犯他人权利的行为</li>
+                    <li>不滥用服务资源，包括但不限于恶意批量请求</li>
+                    <li>对您使用本服务生成的内容承担全部责任</li>
+                </ul>
+            </div>
+            
+            <div>
+                <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-3">3. 知识产权</h2>
+                <p class="leading-relaxed">
+                    本网站的所有内容均受版权法和其他知识产权法律保护。您使用本服务生成的音频文件归您所有，但您需确保输入的文本内容不侵犯任何第三方的权利。
+                </p>
+            </div>
+            
+            <div>
+                <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-3">4. 免责声明</h2>
+                <p class="leading-relaxed">
+                    本服务按"现状"提供，不提供任何明示或暗示的保证。我们不对因使用或无法使用本服务而导致的任何损害承担责任。
+                </p>
+            </div>
+        </div>
+    </div>
+</section>

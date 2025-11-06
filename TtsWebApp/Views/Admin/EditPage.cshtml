@@ -1,0 +1,72 @@
+@model TtsWebApp.Models.Article
+@{
+    ViewData["Title"] = "编辑页面";
+    Layout = "_AdminLayout";
+}
+
+<div class="flex justify-between items-center mb-6">
+    <h1 class="text-3xl font-bold text-gray-800">编辑页面: @Model.Title</h1>
+</div>
+
+<div class="bg-white rounded-lg shadow p-6">
+    <form method="post" asp-action="EditPage" asp-route-id="@Model.Id">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="Id" value="@Model.Id" />
+        
+        <div class="space-y-6">
+            <div>
+                <label for="Title" class="block text-gray-700 font-medium mb-2">
+                    页面标题 <span class="text-red-500">*</span>
+                </label>
+                <input type="text" id="Title" name="Title" value="@Model.Title" required
+                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            </div>
+            
+            <div>
+                <label class="block text-gray-700 font-medium mb-2">
+                    页面标识符
+                </label>
+                <div class="px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-600">
+                    <code>@Model.Slug</code>
+                    <span class="text-sm ml-2">(不可修改)</span>
+                </div>
+            </div>
+            
+            <div>
+                <label for="Content" class="block text-gray-700 font-medium mb-2">
+                    页面内容 <span class="text-red-500">*</span>
+                </label>
+                <textarea id="Content" name="Content" required rows="20"
+                          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono text-sm">@Model.Content</textarea>
+                <p class="text-sm text-gray-500 mt-2">
+                    支持 HTML 标签。换行会自动转换为 &lt;br/&gt;
+                </p>
+            </div>
+            
+            <div class="bg-gray-50 p-4 rounded-lg text-sm text-gray-600">
+                <p><strong>创建时间:</strong> @Model.CreatedAt.ToString("yyyy-MM-dd HH:mm:ss")</p>
+                <p><strong>更新时间:</strong> @Model.UpdatedAt.ToString("yyyy-MM-dd HH:mm:ss")</p>
+            </div>
+        </div>
+        
+        <div class="mt-8 flex justify-end space-x-4">
+            <a asp-action="Pages" class="px-6 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition">
+                取消
+            </a>
+            <button type="submit" class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition flex items-center">
+                <span class="material-symbols-outlined mr-2">save</span>
+                保存页面
+            </button>
+        </div>
+    </form>
+</div>
+
+<div class="mt-6 bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+    <div class="flex items-start">
+        <span class="material-symbols-outlined text-yellow-600 mr-2">warning</span>
+        <div class="text-sm text-yellow-800">
+            <p class="font-bold mb-1">注意</p>
+            <p>修改页面内容后，前台对应页面会立即更新。请谨慎操作。</p>
+        </div>
+    </div>
+</div>
