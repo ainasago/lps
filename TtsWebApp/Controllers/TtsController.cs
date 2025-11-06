@@ -9,12 +9,17 @@ namespace TtsWebApp.Controllers
     {
         private readonly ILogger<TtsController> _logger;
         private readonly HttpClient _httpClient;
-        private readonly string _apiBaseUrl = "http://localhost:5275/api/tts";
+        private readonly IConfiguration _configuration;
+        private readonly string _apiBaseUrl;
+        private readonly string _apiReferer;
 
-        public TtsController(ILogger<TtsController> logger, HttpClient httpClient)
+        public TtsController(ILogger<TtsController> logger, HttpClient httpClient, IConfiguration configuration)
         {
             _logger = logger;
             _httpClient = httpClient;
+            _configuration = configuration;
+            _apiBaseUrl = _configuration["AppSettings:TtsApiUrl"] ?? "http://localhost:5275/api/tts";
+            _apiReferer = _configuration["AppSettings:TtsApiReferer"] ?? "http://localhost:5128/";
         }
 
         public IActionResult Index()
@@ -31,7 +36,7 @@ namespace TtsWebApp.Controllers
                 
                 // 创建请求并添加 Referer 头
                 var request = new HttpRequestMessage(HttpMethod.Get, $"{_apiBaseUrl}/voices");
-                request.Headers.Add("Referer", "http://localhost:5128/");
+                request.Headers.Add("Referer", _apiReferer);
                 
                 var response = await _httpClient.SendAsync(request);
                 _logger.LogInformation($"API响应状态码: {response.StatusCode}");
@@ -94,7 +99,7 @@ namespace TtsWebApp.Controllers
                 // 创建请求并添加 Referer 头
                 var httpRequest = new HttpRequestMessage(HttpMethod.Post, $"{_apiBaseUrl}/synthesize");
                 httpRequest.Content = content;
-                httpRequest.Headers.Add("Referer", "http://localhost:5128/");
+                httpRequest.Headers.Add("Referer", _apiReferer);
                 
                 var response = await _httpClient.SendAsync(httpRequest);
                 if (response.IsSuccessStatusCode)

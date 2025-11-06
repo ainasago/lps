@@ -3,12 +3,22 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using TtsWebApp.Data;
 using TtsWebApp.Services;
 using TtsWebApp.Models;
+using WebOptimizer;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddHttpClient();
+
+// 添加 WebOptimizer（JS/CSS 压缩和混淆）
+// WebOptimizer 会自动压缩和混淆 JS/CSS 文件
+builder.Services.AddWebOptimizer(pipeline =>
+{
+    // 压缩和混淆所有 JS 文件（包括 tts.js）
+    pipeline.MinifyJsFiles("js/**/*.js");
+    pipeline.MinifyCssFiles("css/**/*.css");
+});
 
 // 添加数据库
 builder.Services.AddDbContext<AppDbContext>(options =>
@@ -109,6 +119,10 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+// 使用 WebOptimizer（必须在 UseStaticFiles 之前）
+app.UseWebOptimizer();
+
 app.UseRouting();
 
 app.UseAuthentication();
