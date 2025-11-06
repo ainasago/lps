@@ -3,128 +3,303 @@
 }
 
 <!-- Hero Section / Core Tool -->
-<section class="py-16 px-4">
-<div class="container mx-auto flex flex-col items-center text-center gap-4">
-<h1 class="text-slate-900 dark:text-white text-4xl md:text-5xl font-bold leading-tight tracking-[-0.033em] max-w-3xl" data-i18n="home.title">
-安妮语音转换 - 免费AI文字转语音工具
+<section class="py-12 md:py-20 px-4 bg-gradient-to-br from-primary/5 via-transparent to-purple-500/5">
+<div class="container mx-auto flex flex-col items-center text-center gap-6 max-w-4xl">
+<div class="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 dark:bg-primary/20 rounded-full">
+<span class="material-symbols-outlined text-primary text-xl">auto_awesome</span>
+<span class="text-primary font-semibold text-sm">神经网络语音合成</span>
+</div>
+<h1 class="text-slate-900 dark:text-white text-4xl md:text-6xl font-extrabold leading-tight tracking-tight" data-i18n="home.title">
+让文字发声，<br/>让创意无限
 </h1>
-<h2 class="text-slate-600 dark:text-slate-400 text-base md:text-lg font-normal leading-normal max-w-2xl" data-i18n="home.subtitle">
-支持多种语言和自然人声，为您的视频、播客和演示文稿创建高质量音频
-</h2>
+<p class="text-slate-600 dark:text-slate-400 text-lg md:text-xl leading-relaxed max-w-2xl" data-i18n="home.subtitle">
+基于神经网络 TTS，支持多种语言和自然人声<br/>
+为您的内容创作提供完美配音解决方案
+</p>
 </div>
 
-<div class="container mx-auto mt-12 p-4 sm:p-6 md:p-8 bg-white/50 dark:bg-white/5 border border-slate-200 dark:border-slate-800 rounded-xl max-w-5xl">
-<form id="ttsForm">
-<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-<div class="lg:col-span-2">
-<label class="flex flex-col w-full">
-<div class="flex justify-between items-center pb-2">
-<p class="text-slate-800 dark:text-slate-200 text-base font-medium leading-normal" data-i18n="home.inputLabel">在此输入您的文本</p>
-<p class="text-slate-500 dark:text-slate-400 text-xs" id="charCount">0 / 5000</p>
+<div class="container mx-auto mt-12 max-w-6xl">
+<!-- 主转换卡片 -->
+<div class="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl shadow-primary/10 dark:shadow-primary/5 border border-slate-200 dark:border-slate-800 overflow-hidden">
+<form id="ttsForm" class="p-6 md:p-8">
+<!-- 文本输入区 -->
+<div class="mb-8">
+<div class="flex items-center justify-between mb-3">
+<label class="flex items-center gap-2 text-slate-900 dark:text-white font-semibold text-lg">
+<span class="material-symbols-outlined text-primary">edit_note</span>
+<span data-i18n="home.inputLabel">输入文本</span>
+</label>
+<span class="text-slate-500 dark:text-slate-400 text-sm font-medium" id="charCount">0 / 5000</span>
 </div>
 <textarea 
-                            class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-slate-900 dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary border-slate-300 dark:border-slate-700 bg-background-light dark:bg-background-dark min-h-64 placeholder:text-slate-400 dark:placeholder:text-slate-500 p-4 text-base font-normal leading-normal" 
-                            id="textInput" 
-                            placeholder="粘贴或输入您的文本..."
-                            data-i18n="home.placeholder"
-                            maxlength="5000"></textarea>
-</label>
+    class="form-input w-full resize-none rounded-xl text-slate-900 dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary/50 focus:border-primary border-2 border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 min-h-48 placeholder:text-slate-400 dark:placeholder:text-slate-500 p-5 text-base leading-relaxed transition-all" 
+    id="textInput" 
+    placeholder="在这里输入或粘贴您想要转换为语音的文本内容..."
+    data-i18n="home.placeholder"
+    maxlength="5000"></textarea>
 </div>
-<div class="flex flex-col gap-6">
-<div>
-<label class="block text-slate-800 dark:text-slate-200 text-base font-medium leading-normal pb-2" for="languageSelect" data-i18n="home.language">语言</label>
-<select class="form-select w-full rounded-lg text-slate-900 dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary border-slate-300 dark:border-slate-700 bg-background-light dark:bg-background-dark placeholder:text-slate-400 dark:placeholder:text-slate-500" id="languageSelect">
+
+<!-- 配置选项区 -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
+<!-- 语言选择 -->
+<div class="space-y-2">
+<label class="flex items-center gap-2 text-slate-700 dark:text-slate-300 font-medium text-sm" for="languageSelect">
+<span class="material-symbols-outlined text-lg text-primary">language</span>
+<span data-i18n="home.language">语言</span>
+</label>
+<select class="form-select w-full rounded-lg text-slate-900 dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary/50 border-2 border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 py-2.5 px-4 transition-all" id="languageSelect">
 <option value="">选择语言...</option>
 </select>
 </div>
-<div>
-<p class="text-slate-800 dark:text-slate-200 text-base font-medium leading-normal pb-2" data-i18n="home.voice">配音员</p>
-<select class="form-select w-full rounded-lg text-slate-900 dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary border-slate-300 dark:border-slate-700 bg-background-light dark:bg-background-dark" id="voiceSelect">
+
+<!-- 配音员选择 -->
+<div class="space-y-2">
+<label class="flex items-center gap-2 text-slate-700 dark:text-slate-300 font-medium text-sm">
+<span class="material-symbols-outlined text-lg text-primary">record_voice_over</span>
+<span data-i18n="home.voice">配音员</span>
+</label>
+<select class="form-select w-full rounded-lg text-slate-900 dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary/50 border-2 border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 py-2.5 px-4 transition-all" id="voiceSelect">
 <option value="">选择配音员...</option>
 </select>
 </div>
-<div>
-<label class="block text-slate-800 dark:text-slate-200 text-base font-medium leading-normal pb-2" for="pitchRange"><span data-i18n="home.pitch">音调</span>: <span id="pitchValue">0</span></label>
-<input class="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-primary" id="pitchRange" max="50" min="-50" step="1" type="range" value="0"/>
-</div>
-<div>
-<label class="block text-slate-800 dark:text-slate-200 text-base font-medium leading-normal pb-2" for="rateRange"><span data-i18n="home.rate">语速</span>: <span id="rateValue">0</span></label>
-<input class="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-primary" id="rateRange" max="200" min="-100" step="1" type="range" value="0"/>
-</div>
-<div>
-<label class="block text-slate-800 dark:text-slate-200 text-base font-medium leading-normal pb-2" for="volumeRange"><span data-i18n="home.volume">音量</span>: <span id="volumeValue">80</span></label>
-<input class="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-primary" id="volumeRange" max="100" min="0" step="1" type="range" value="80"/>
-</div>
-<div class="flex items-center gap-2">
-<input type="checkbox" id="generateSubtitles" class="w-4 h-4 text-primary bg-slate-100 border-slate-300 rounded focus:ring-primary">
-<label for="generateSubtitles" class="text-slate-800 dark:text-slate-200 text-sm font-medium" data-i18n="home.generateSubtitles">生成字幕</label>
 </div>
 
-<!-- 高级功能 -->
-<div class="mt-4 p-4 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-200 dark:border-slate-700">
-<h3 class="text-slate-900 dark:text-white text-sm font-bold mb-3">
-<span class="material-symbols-outlined text-base align-middle mr-1">tune</span>
-高级功能
-</h3>
+<!-- 参数调节区 -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+<!-- 音调 -->
 <div class="space-y-3">
+<div class="flex items-center justify-between">
+<label class="flex items-center gap-2 text-slate-700 dark:text-slate-300 font-medium text-sm">
+<span class="material-symbols-outlined text-lg text-amber-500">tune</span>
+<span data-i18n="home.pitch">音调</span>
+</label>
+<span class="text-primary font-bold text-sm" id="pitchValue">0</span>
+</div>
+<input class="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-full appearance-none cursor-pointer accent-primary slider-thumb" id="pitchRange" max="50" min="-50" step="1" type="range" value="0"/>
+</div>
+
+<!-- 语速 -->
+<div class="space-y-3">
+<div class="flex items-center justify-between">
+<label class="flex items-center gap-2 text-slate-700 dark:text-slate-300 font-medium text-sm">
+<span class="material-symbols-outlined text-lg text-blue-500">speed</span>
+<span data-i18n="home.rate">语速</span>
+</label>
+<span class="text-primary font-bold text-sm" id="rateValue">0</span>
+</div>
+<input class="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-full appearance-none cursor-pointer accent-primary slider-thumb" id="rateRange" max="200" min="-100" step="1" type="range" value="0"/>
+</div>
+
+<!-- 音量 -->
+<div class="space-y-3">
+<div class="flex items-center justify-between">
+<label class="flex items-center gap-2 text-slate-700 dark:text-slate-300 font-medium text-sm">
+<span class="material-symbols-outlined text-lg text-green-500">volume_up</span>
+<span data-i18n="home.volume">音量</span>
+</label>
+<span class="text-primary font-bold text-sm" id="volumeValue">80</span>
+</div>
+<input class="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-full appearance-none cursor-pointer accent-primary slider-thumb" id="volumeRange" max="100" min="0" step="1" type="range" value="80"/>
+</div>
+</div>
+
+<!-- 选项 -->
+<div class="flex items-center gap-4 mb-6">
+<label class="flex items-center gap-2 cursor-pointer group">
+<input type="checkbox" id="generateSubtitles" class="w-5 h-5 text-primary bg-slate-100 dark:bg-slate-800 border-2 border-slate-300 dark:border-slate-600 rounded focus:ring-2 focus:ring-primary/50 transition-all">
+<span class="text-slate-700 dark:text-slate-300 font-medium text-sm group-hover:text-primary transition-colors" data-i18n="home.generateSubtitles">生成字幕文件</span>
+</label>
+</div>
+
+<!-- 高级功能（可折叠） -->
+<details class="group">
+<summary class="flex items-center gap-2 cursor-pointer text-slate-700 dark:text-slate-300 font-semibold text-sm mb-4 hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-lg group-open:rotate-90 transition-transform">chevron_right</span>
+<span class="material-symbols-outlined text-lg text-purple-500">settings_suggest</span>
+<span>高级选项</span>
+</summary>
+<div class="pl-8 space-y-4 pb-4">
 <!-- 试听模式 -->
-<div class="flex items-center gap-2">
-<input type="checkbox" id="previewMode" class="w-4 h-4 text-primary bg-slate-100 border-slate-300 rounded focus:ring-primary">
-<label for="previewMode" class="text-slate-800 dark:text-slate-200 text-sm font-medium">试听模式（只合成前</label>
-<input type="number" id="previewSentences" class="w-16 px-2 py-1 text-sm border border-slate-300 dark:border-slate-600 rounded bg-white dark:bg-slate-700 text-slate-900 dark:text-white" value="3" min="1" max="10">
-<label class="text-slate-800 dark:text-slate-200 text-sm font-medium">句）</label>
+<div class="flex items-center gap-3 flex-wrap">
+<label class="flex items-center gap-2 cursor-pointer">
+<input type="checkbox" id="previewMode" class="w-4 h-4 text-primary bg-slate-100 dark:bg-slate-800 border-2 border-slate-300 dark:border-slate-600 rounded focus:ring-2 focus:ring-primary/50">
+<span class="text-slate-700 dark:text-slate-300 text-sm font-medium">试听模式（前</span>
+</label>
+<input type="number" id="previewSentences" class="w-16 px-3 py-1.5 text-sm border-2 border-slate-200 dark:border-slate-600 rounded-lg bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary/50 focus:border-primary" value="3" min="1" max="10">
+<span class="text-slate-700 dark:text-slate-300 text-sm font-medium">句）</span>
 </div>
 
 <!-- 停顿间隔 -->
-<div class="flex items-center gap-2">
-<label class="text-slate-800 dark:text-slate-200 text-sm font-medium">句间停顿：</label>
-<input type="number" id="breakTime" class="w-20 px-2 py-1 text-sm border border-slate-300 dark:border-slate-600 rounded bg-white dark:bg-slate-700 text-slate-900 dark:text-white" value="0" min="0" max="2000" step="100">
-<label class="text-slate-800 dark:text-slate-200 text-sm">毫秒</label>
+<div class="flex items-center gap-3 flex-wrap">
+<label class="text-slate-700 dark:text-slate-300 text-sm font-medium">句间停顿：</label>
+<input type="number" id="breakTime" class="w-24 px-3 py-1.5 text-sm border-2 border-slate-200 dark:border-slate-600 rounded-lg bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary/50 focus:border-primary" value="0" min="0" max="2000" step="100">
+<span class="text-slate-700 dark:text-slate-300 text-sm font-medium">毫秒</span>
 <span class="text-slate-500 dark:text-slate-400 text-xs">(0=无停顿)</span>
 </div>
 
 <!-- 长文本切片 -->
-<div class="flex items-center gap-2">
-<input type="checkbox" id="enableLongTextSplit" class="w-4 h-4 text-primary bg-slate-100 border-slate-300 rounded focus:ring-primary">
-<label for="enableLongTextSplit" class="text-slate-800 dark:text-slate-200 text-sm font-medium">长文本切片（每片</label>
-<input type="number" id="maxCharsPerChunk" class="w-20 px-2 py-1 text-sm border border-slate-300 dark:border-slate-600 rounded bg-white dark:bg-slate-700 text-slate-900 dark:text-white" value="500" min="100" max="2000" step="100">
-<label class="text-slate-800 dark:text-slate-200 text-sm font-medium">字）</label>
+<div class="flex items-center gap-3 flex-wrap">
+<label class="flex items-center gap-2 cursor-pointer">
+<input type="checkbox" id="enableLongTextSplit" class="w-4 h-4 text-primary bg-slate-100 dark:bg-slate-800 border-2 border-slate-300 dark:border-slate-600 rounded focus:ring-2 focus:ring-primary/50">
+<span class="text-slate-700 dark:text-slate-300 text-sm font-medium">长文本切片（每片</span>
+</label>
+<input type="number" id="maxCharsPerChunk" class="w-20 px-3 py-1.5 text-sm border-2 border-slate-200 dark:border-slate-600 rounded-lg bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary/50 focus:border-primary" value="500" min="100" max="2000" step="100">
+<span class="text-slate-700 dark:text-slate-300 text-sm font-medium">字）</span>
 </div>
 </div>
-</div>
+</details>
 
-</div>
-</div>
-<div class="mt-8 flex flex-col md:flex-row gap-4 items-center">
-<button type="button" id="convertBtn" class="flex w-full md:w-auto min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-5 bg-primary text-white text-base font-bold leading-normal tracking-[0.015em] hover:opacity-90">
-<span class="material-symbols-outlined mr-2">graphic_eq</span>
+<!-- 生成按钮 -->
+<div class="pt-6 border-t border-slate-200 dark:border-slate-700">
+<button type="button" id="convertBtn" class="w-full flex items-center justify-center gap-3 px-8 py-4 bg-gradient-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-600/90 text-white text-lg font-bold rounded-xl shadow-lg shadow-primary/30 hover:shadow-xl hover:shadow-primary/40 transition-all transform hover:scale-[1.02] active:scale-[0.98]">
+<span class="material-symbols-outlined text-2xl">graphic_eq</span>
 <span class="truncate" data-i18n="home.generateSpeech">生成语音</span>
+<span class="material-symbols-outlined text-2xl">arrow_forward</span>
 </button>
-<div id="inlinePlayer" class="flex items-center w-full grow bg-slate-200 dark:bg-slate-800 rounded-lg p-2" style="display: none;">
-<button type="button" id="playBtn" class="flex items-center justify-center size-8 rounded-full bg-slate-400 dark:bg-slate-600 text-white hover:bg-primary">
-<span class="material-symbols-outlined text-xl">play_arrow</span>
+</div>
+<!-- 音频播放器 -->
+<div id="inlinePlayer" class="mt-6 p-6 bg-gradient-to-br from-primary/5 to-purple-500/5 dark:from-primary/10 dark:to-purple-500/10 rounded-xl border-2 border-primary/20 dark:border-primary/30" style="display: none;">
+<div class="flex items-center gap-4">
+<button type="button" id="playBtn" class="flex items-center justify-center size-14 rounded-full bg-gradient-to-br from-primary to-purple-600 text-white hover:shadow-lg hover:shadow-primary/50 transition-all transform hover:scale-110 active:scale-95">
+<span class="material-symbols-outlined text-3xl">play_arrow</span>
 </button>
-<div class="flex-grow h-1 bg-slate-300 dark:bg-slate-600 mx-3 rounded-full"></div>
-<p class="text-sm text-slate-600 dark:text-slate-400" id="timeDisplay">0:00 / 0:00</p>
-<button type="button" id="downloadAudioBtn" class="flex items-center justify-center size-8 ml-3 text-slate-600 dark:text-slate-400 hover:text-primary">
-<span class="material-symbols-outlined text-xl">download</span>
+<div class="flex-grow">
+<div class="h-2 bg-slate-300 dark:bg-slate-700 rounded-full overflow-hidden">
+<div id="progressBar" class="h-full bg-gradient-to-r from-primary to-purple-600 rounded-full transition-all" style="width: 0%"></div>
+</div>
+<div class="flex justify-between items-center mt-2">
+<p class="text-sm font-medium text-slate-700 dark:text-slate-300" id="timeDisplay">0:00 / 0:00</p>
+<button type="button" id="downloadAudioBtn" class="flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-800 text-primary hover:bg-primary hover:text-white border-2 border-primary rounded-lg font-semibold text-sm transition-all transform hover:scale-105">
+<span class="material-symbols-outlined text-lg">download</span>
+<span>下载音频</span>
 </button>
+</div>
+</div>
 </div>
 </div>
 <audio id="audioPlayer" style="display: none;"></audio>
-<div id="subtitlesContainer" class="mt-6 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-4" style="display: none;">
-<div class="flex justify-between items-center mb-3">
-<h4 class="text-slate-900 dark:text-white text-lg font-bold">字幕内容</h4>
-<button type="button" id="downloadSubtitlesBtn" class="flex items-center gap-2 px-3 py-1 bg-amber-600 text-white text-sm rounded-lg hover:opacity-90">
-<span class="material-symbols-outlined text-sm">download</span>
+
+<!-- 字幕显示区 -->
+<div id="subtitlesContainer" class="mt-6 bg-amber-50 dark:bg-amber-900/10 border-2 border-amber-200 dark:border-amber-800 rounded-xl p-6" style="display: none;">
+<div class="flex justify-between items-center mb-4">
+<h4 class="flex items-center gap-2 text-slate-900 dark:text-white text-lg font-bold">
+<span class="material-symbols-outlined text-amber-600">subtitles</span>
+<span>字幕内容</span>
+</h4>
+<button type="button" id="downloadSubtitlesBtn" class="flex items-center gap-2 px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white text-sm font-semibold rounded-lg transition-all transform hover:scale-105">
+<span class="material-symbols-outlined text-lg">download</span>
 <span>下载字幕</span>
 </button>
 </div>
-<div id="subtitlesContent" class="text-slate-700 dark:text-slate-300 text-sm whitespace-pre-wrap max-h-64 overflow-y-auto"></div>
+<div id="subtitlesContent" class="text-slate-700 dark:text-slate-300 text-sm leading-relaxed whitespace-pre-wrap max-h-64 overflow-y-auto p-4 bg-white dark:bg-slate-800/50 rounded-lg border border-amber-200 dark:border-amber-800"></div>
 </div>
 </form>
 </div>
+</div>
 </section>
+
+<style>
+/* 自定义滑块样式 - 亮色主题 */
+input[type="range"].slider-thumb::-webkit-slider-thumb {
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--color-primary, #5b13ec), #9333ea);
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(91, 19, 236, 0.4);
+    transition: all 0.2s;
+}
+
+input[type="range"].slider-thumb::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
+    box-shadow: 0 4px 12px rgba(91, 19, 236, 0.6);
+}
+
+input[type="range"].slider-thumb::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--color-primary, #5b13ec), #9333ea);
+    cursor: pointer;
+    border: none;
+    box-shadow: 0 2px 8px rgba(91, 19, 236, 0.4);
+    transition: all 0.2s;
+}
+
+input[type="range"].slider-thumb::-moz-range-thumb:hover {
+    transform: scale(1.2);
+    box-shadow: 0 4px 12px rgba(91, 19, 236, 0.6);
+}
+
+/* 暗色主题滑块样式 */
+@@media (prefers-color-scheme: dark) {
+    input[type="range"].slider-thumb::-webkit-slider-thumb {
+        box-shadow: 0 2px 12px rgba(147, 51, 234, 0.5);
+    }
+    
+    input[type="range"].slider-thumb::-webkit-slider-thumb:hover {
+        box-shadow: 0 4px 16px rgba(147, 51, 234, 0.7);
+    }
+    
+    input[type="range"].slider-thumb::-moz-range-thumb {
+        box-shadow: 0 2px 12px rgba(147, 51, 234, 0.5);
+    }
+    
+    input[type="range"].slider-thumb::-moz-range-thumb:hover {
+        box-shadow: 0 4px 16px rgba(147, 51, 234, 0.7);
+    }
+}
+
+/* 暗色主题类选择器 */
+.dark input[type="range"].slider-thumb::-webkit-slider-thumb {
+    box-shadow: 0 2px 12px rgba(147, 51, 234, 0.5);
+}
+
+.dark input[type="range"].slider-thumb::-webkit-slider-thumb:hover {
+    box-shadow: 0 4px 16px rgba(147, 51, 234, 0.7);
+}
+
+.dark input[type="range"].slider-thumb::-moz-range-thumb {
+    box-shadow: 0 2px 12px rgba(147, 51, 234, 0.5);
+}
+
+.dark input[type="range"].slider-thumb::-moz-range-thumb:hover {
+    box-shadow: 0 4px 16px rgba(147, 51, 234, 0.7);
+}
+
+/* 进度条动画 */
+#progressBar {
+    transition: width 0.1s linear;
+}
+
+/* 折叠动画 */
+details[open] summary ~ * {
+    animation: slideDown 0.3s ease-out;
+}
+
+@@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 暗色主题下的卡片优化 */
+@@media (prefers-color-scheme: dark) {
+    .bg-white {
+        background-color: rgb(15 23 42) !important;
+    }
+}
+
+.dark .bg-white {
+    background-color: rgb(15 23 42) !important;
+}
+</style>
 
 <!-- Features Section -->
 <section class="py-16 px-4 bg-white/50 dark:bg-white/5">
@@ -145,8 +320,8 @@
 <div class="flex items-center justify-center size-14 rounded-xl bg-primary/20 mb-4">
 <span class="material-symbols-outlined text-primary text-3xl">psychology</span>
 </div>
-<p class="text-slate-900 dark:text-white text-lg font-bold leading-tight">AI 驱动的自然语音</p>
-<p class="text-slate-600 dark:text-slate-400 mt-1 text-sm">利用尖端 AI 技术实现极其逼真的人声</p>
+<p class="text-slate-900 dark:text-white text-lg font-bold leading-tight">神经网络自然语音</p>
+<p class="text-slate-600 dark:text-slate-400 mt-1 text-sm">基于微软神经网络技术，生成极其逼真的人声</p>
 </div>
 <div class="flex flex-col items-center text-center p-6">
 <div class="flex items-center justify-center size-14 rounded-xl bg-primary/20 mb-4">
@@ -283,7 +458,6 @@ function populateLanguageSelect() {
 function autoSelectLanguage() {
     // 获取浏览器语言
     const browserLang = navigator.language || navigator.userLanguage;
-    console.log('浏览器语言:', browserLang);
     
     // 语言映射表
     const langMap = {
@@ -329,14 +503,12 @@ function autoSelectLanguage() {
         
         if (exactMatch) {
             selectedLocale = exactMatch;
-            console.log('精确匹配语言:', selectedLocale);
         } else {
             // 尝试模糊匹配（如 zh-CN 匹配 zh-*）
             const langPrefix = matchedLocale.split('-')[0];
             const fuzzyMatch = availableLocales.find(l => l.startsWith(langPrefix));
             if (fuzzyMatch) {
                 selectedLocale = fuzzyMatch;
-                console.log('模糊匹配语言:', selectedLocale);
             }
         }
     }
@@ -355,22 +527,18 @@ function autoSelectLanguage() {
         if (!selectedLocale && availableLocales.length > 0) {
             selectedLocale = availableLocales[0];
         }
-        
-        console.log('使用默认语言:', selectedLocale);
     }
     
     // 设置选中的语言
     if (selectedLocale) {
         $('#languageSelect').val(selectedLocale);
         updateVoiceList(selectedLocale);
-        console.log('最终选择语言:', selectedLocale);
         
         // 自动选择第一个配音员
         setTimeout(() => {
             const firstVoice = $('#voiceSelect option:eq(1)').val();
             if (firstVoice) {
                 $('#voiceSelect').val(firstVoice);
-                console.log('自动选择配音员:', firstVoice);
             }
         }, 100);
     }
@@ -429,8 +597,6 @@ function convertText() {
         MaxCharsPerChunk: maxCharsPerChunk
     };
     
-    console.log('发送请求:', request);
-    
     const $convertBtn = $('#convertBtn');
     $convertBtn.prop('disabled', true).find('span.truncate').text('转换中...');
     
@@ -440,13 +606,9 @@ function convertText() {
         contentType: 'application/json',
         data: JSON.stringify(request),
         success: function(response) {
-            console.log('收到响应:', response);
             if (response.success) {
                 currentAudioData = response.audioData;
                 currentSubtitles = response.subtitles;
-                console.log('音频数据长度:', currentAudioData ? currentAudioData.length : 0);
-                console.log('字幕数据长度:', currentSubtitles ? currentSubtitles.length : 0);
-                console.log('字幕数据:', currentSubtitles);
                 
                 // 显示元数据信息
                 if (response.chunkCount || response.processingTimeMs || response.isPreview) {
@@ -456,10 +618,7 @@ function convertText() {
                     if (response.totalCharacters) metaInfo.push(`📝 ${response.totalCharacters} 字符`);
                     if (response.processingTimeMs) metaInfo.push(`⏱️ ${(response.processingTimeMs / 1000).toFixed(1)}秒`);
                     
-                    if (metaInfo.length > 0) {
-                        console.log('处理信息:', metaInfo.join(' | '));
-                        // 可以在页面上显示这些信息
-                    }
+                    // 可以在页面上显示这些信息
                 }
                 
                 $('#inlinePlayer').show();
@@ -467,11 +626,9 @@ function convertText() {
                 const audioPlayer = document.getElementById('audioPlayer');
                 audioPlayer.src = 'data:audio/mpeg;base64,' + currentAudioData;
                 audioPlayer.onerror = function(e) {
-                    console.error('音频加载错误:', e);
-                    alert('音频加载失败，请检查控制台日志');
+                    alert('音频加载失败');
                 };
                 audioPlayer.onloadedmetadata = function() {
-                    console.log('音频元数据加载完成，时长:', audioPlayer.duration);
                     updateTimeDisplay();
                 };
                 audioPlayer.load();
@@ -487,7 +644,6 @@ function convertText() {
             }
         },
         error: function(xhr, status, error) {
-            console.error('转换请求失败:', error);
             alert('转换请求失败');
         },
         complete: function() {
