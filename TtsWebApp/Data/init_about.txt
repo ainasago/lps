@@ -1,20 +1,16 @@
-
-
 <section class="py-16 px-4">
     <div class="container mx-auto max-w-4xl">
-        <h1 class="text-4xl font-bold text-slate-900 dark:text-white mb-8 text-center">关于@siteName</h1>
+        <h1 class="text-4xl font-bold text-slate-900 dark:text-white mb-8 text-center">关于@(siteName)</h1>
         
-        <div class="bg-white/50 dark:bg-white/5 border border-slate-200 dark:border-slate-800 rounded-xl p-8 mb-8">
-            <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-4">我们的使命</h2>
-            <p class="text-slate-700 dark:text-slate-300 leading-relaxed mb-4">
-                @(siteName)致力于为全球用户提供高质量、易用的AI文字转语音服务。我们相信，每个人都应该能够轻松地将文字内容转换为自然流畅的语音，无论是用于视频制作、播客录制、在线教育还是其他创意项目。
-            </p>
-            <p class="text-slate-700 dark:text-slate-300 leading-relaxed">
-                通过先进的人工智能技术，我们让语音合成变得简单、快速且高效，帮助创作者、教育工作者和企业节省时间和成本，同时提升内容的专业性和吸引力。
-            </p>
-        </div>
-        
-        <div class="bg-white/50 dark:bg-white/5 border border-slate-200 dark:border-slate-800 rounded-xl p-8 mb-8">
+        <div class="space-y-8">
+            <div>
+                <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-4">我们的使命</h2>
+                <p class="text-slate-700 dark:text-slate-300 leading-relaxed mb-4">
+                    @(siteName) 致力于为全球用户提供高质量、易用的AI文字转语音服务。我们相信，每个人都应该能够轻松地将文字内容转换为自然流畅的语音，无论是用于视频制作、播客录制、在线教育还是其他创意项目。
+                </p>
+                <p class="text-slate-700 dark:text-slate-300 leading-relaxed">
+                    通过先进的人工智能技术，我们让语音合成变得简单、快速且高效，帮助创作者、教育工作者和企业节省时间和成本，同时提升内容的专业性和吸引力。
+                </p>
             <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-4">我们的优势</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div class="flex gap-4">
@@ -104,7 +100,7 @@
             </p>
             <div class="space-y-2 text-slate-700 dark:text-slate-300">
                 <p><strong>邮箱：</strong> @contactEmail</p>
-                <p><strong>在线留言：</strong> <a href="/Home/Contact" class="text-primary hover:underline">点击这里</a></p>
+                <p><strong>在线留言：</strong> <a href="/contact" class="text-primary hover:underline">点击这里</a></p>
             </div>
         </div>
     </div>

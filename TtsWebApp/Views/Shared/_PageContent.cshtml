@@ -1,4 +1,22 @@
 @model TtsWebApp.Models.Article?
+@using TtsWebApp.Services
+@inject IConfigService ConfigService
+
+@{
+    var siteName = await ConfigService.GetConfigAsync("SiteName", "安妮语音转换");
+    var contactEmail = await ConfigService.GetConfigAsync("ContactEmail", "contact@annietts.com");
+    
+    // 替换内容中的变量
+    string ProcessContent(string content)
+    {
+        if (string.IsNullOrEmpty(content)) return content;
+        
+        return content
+            .Replace("@siteName", siteName)
+            .Replace("@(siteName)", siteName)
+            .Replace("@contactEmail", contactEmail);
+    }
+}
 
 @if (Model == null)
 {
@@ -14,7 +32,7 @@
 else
 {
     <div class="prose prose-slate dark:prose-invert max-w-none">
-        @Html.Raw(Model.Content.Replace("\n", "<br/>"))
+        @Html.Raw(ProcessContent(Model.Content))
     </div>
     
     <div class="mt-6 text-center text-sm text-slate-500 dark:text-slate-400">

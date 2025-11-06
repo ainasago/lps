@@ -69,6 +69,27 @@ public class HomeController : Controller
             .FirstOrDefaultAsync(a => a.Slug == "disclaimer" && a.Type == ArticleType.Page);
         return View(page);
     }
+    
+    // 通用页面路由处理（通过 slug 访问）
+    [Route("/{slug}")]
+    public async Task<IActionResult> Page(string slug)
+    {
+        _logger.LogInformation("访问页面 slug: {Slug}", slug);
+        
+        var page = await _context.Articles
+            .FirstOrDefaultAsync(a => a.Slug == slug && a.Type == ArticleType.Page && a.IsPublished);
+        
+        if (page == null)
+        {
+            _logger.LogWarning("未找到页面: {Slug}", slug);
+            return NotFound();
+        }
+        
+        _logger.LogInformation("找到页面: {Title}", page.Title);
+        
+        // 使用通用的页面视图
+        return View("PageView", page);
+    }
 
     public IActionResult Features()
     {

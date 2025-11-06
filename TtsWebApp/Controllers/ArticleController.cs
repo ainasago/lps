@@ -20,7 +20,7 @@ public class ArticleController : Controller
     public async Task<IActionResult> Index(int page = 1, int pageSize = 10)
     {
         var query = _context.Articles
-            .Where(a => a.IsPublished)
+            .Where(a => a.IsPublished && a.Type == ArticleType.Article)
             .OrderByDescending(a => a.PublishedAt ?? a.CreatedAt);
         
         var total = await query.CountAsync();
@@ -41,7 +41,7 @@ public class ArticleController : Controller
     public async Task<IActionResult> Detail(int id)
     {
         var article = await _context.Articles
-            .FirstOrDefaultAsync(a => a.Id == id && a.IsPublished);
+            .FirstOrDefaultAsync(a => a.Id == id && a.IsPublished && a.Type == ArticleType.Article);
         
         if (article == null)
         {
@@ -59,7 +59,7 @@ public class ArticleController : Controller
     public async Task<IActionResult> Latest(int count = 5)
     {
         var articles = await _context.Articles
-            .Where(a => a.IsPublished)
+            .Where(a => a.IsPublished && a.Type == ArticleType.Article)
             .OrderByDescending(a => a.PublishedAt ?? a.CreatedAt)
             .Take(count)
             .ToListAsync();
