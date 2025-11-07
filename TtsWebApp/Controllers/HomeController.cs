@@ -75,9 +75,22 @@ public class HomeController : Controller
     [Route("/{slug}", Order = 999)]
     public async Task<IActionResult> Page(string slug)
     {
-        // 检查是否是后台路径
+        // 排除空 slug（根路径）
+        if (string.IsNullOrWhiteSpace(slug))
+        {
+            return NotFound();
+        }
+        
+        // 排除包含文件扩展名的请求（让静态文件正常访问）
+        if (slug.Contains('.'))
+        {
+            return NotFound();
+        }
+        
+        // 检查是否是后台路径（包括子路径）
         var adminPath = HttpContext.RequestServices.GetRequiredService<IConfiguration>()["AppSettings:AdminPath"] ?? "Admin";
-        if (slug.Equals(adminPath, StringComparison.OrdinalIgnoreCase))
+        if (slug.Equals(adminPath, StringComparison.OrdinalIgnoreCase) || 
+            Request.Path.StartsWithSegments($"/{adminPath}", StringComparison.OrdinalIgnoreCase))
         {
             return NotFound();
         }

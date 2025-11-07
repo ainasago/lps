@@ -1,0 +1,463 @@
+@model List<TtsWebApp.Models.FileItem>
+@{
+    ViewData["Title"] = "文件管理";
+    var currentPath = ViewBag.CurrentPath as string ?? "";
+    var breadcrumbs = ViewBag.Breadcrumbs as List<TtsWebApp.Models.BreadcrumbItem> ?? new List<TtsWebApp.Models.BreadcrumbItem>();
+    var rootPath = ViewBag.RootPath as string ?? "";
+}
+
+@Html.AntiForgeryToken()
+
+<div class="mb-6">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-2 gap-3">
+        <h1 class="text-2xl md:text-3xl font-bold text-gray-800">文件管理</h1>
+        <div class="flex gap-2 flex-wrap w-full md:w-auto">
+            <button onclick="showCreateFileModal()" class="flex-1 md:flex-none px-3 md:px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition flex items-center justify-center text-sm md:text-base" title="新建文件">
+                <span class="material-symbols-outlined md:mr-2 text-lg md:text-xl">note_add</span>
+                <span class="hidden md:inline">新建文件</span>
+            </button>
+            <button onclick="showCreateFolderModal()" class="flex-1 md:flex-none px-3 md:px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition flex items-center justify-center text-sm md:text-base" title="新建文件夹">
+                <span class="material-symbols-outlined md:mr-2 text-lg md:text-xl">create_new_folder</span>
+                <span class="hidden md:inline">新建文件夹</span>
+            </button>
+            <button onclick="showUploadModal()" class="flex-1 md:flex-none px-3 md:px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition flex items-center justify-center text-sm md:text-base" title="上传文件">
+                <span class="material-symbols-outlined md:mr-2 text-lg md:text-xl">upload</span>
+                <span class="hidden md:inline">上传文件</span>
+            </button>
+        </div>
+    </div>
+    
+    <!-- 根目录路径显示 -->
+    <div class="mb-4 px-3 py-2 bg-gray-100 rounded-lg border border-gray-200">
+        <div class="flex items-center text-sm text-gray-600">
+            <span class="material-symbols-outlined text-base mr-2">folder</span>
+            <span class="font-medium mr-2">根目录:</span>
+            <code class="text-gray-800 bg-white px-2 py-1 rounded border border-gray-300">@rootPath</code>
+        </div>
+    </div>
+
+    <!-- 面包屑导航 -->
+    <nav class="flex items-center text-sm text-gray-600 mb-4">
+        <span class="material-symbols-outlined mr-2">folder_open</span>
+        @foreach (var item in breadcrumbs)
+        {
+            if (item.IsCurrent)
+            {
+                <span class="font-semibold text-gray-800">@item.Name</span>
+            }
+            else
+            {
+                <a href="@Url.Action("Index", new { path = item.Path })" class="hover:text-blue-600 transition">
+                    @item.Name
+                </a>
+                <span class="mx-2">/</span>
+            }
+        }
+    </nav>
+</div>
+
+<!-- 文件列表 -->
+<div class="bg-white rounded-lg shadow overflow-hidden">
+    @if (Model.Count == 0)
+    {
+        <div class="p-12 text-center text-gray-500">
+            <span class="material-symbols-outlined text-6xl text-gray-300 block mb-4">folder_open</span>
+            <p class="text-lg">此文件夹为空</p>
+        </div>
+    }
+    else
+    {
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-3 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-12">类型</th>
+                        <th class="px-3 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">名称</th>
+                        <th class="px-3 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-24 md:w-32 hidden sm:table-cell">大小</th>
+                        <th class="px-3 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-32 md:w-48 hidden lg:table-cell">修改时间</th>
+                        <th class="px-3 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-32 md:w-48">操作</th>
+                    </tr>
+                </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+                @foreach (var item in Model)
+                {
+                    <tr class="hover:bg-gray-50 transition">
+                        <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap">
+                            <span class="material-symbols-outlined text-gray-600 text-base md:text-xl">@item.IconClass</span>
+                        </td>
+                        <td class="px-3 md:px-6 py-3 md:py-4">
+                            @if (item.IsDirectory)
+                            {
+                                <a href="@Url.Action("Index", new { path = item.RelativePath })" class="text-blue-600 hover:text-blue-800 font-medium flex items-center text-sm md:text-base">
+                                    @item.Name
+                                </a>
+                            }
+                            else
+                            {
+                                <span class="text-gray-800 text-sm md:text-base break-all">@item.Name</span>
+                            }
+                        </td>
+                        <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-xs md:text-sm text-gray-600 hidden sm:table-cell">
+                            @(item.IsDirectory ? "-" : item.FormattedSize)
+                        </td>
+                        <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-xs md:text-sm text-gray-600 hidden lg:table-cell">
+                            @item.LastModified.ToString("yyyy-MM-dd HH:mm:ss")
+                        </td>
+                        <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-sm">
+                            <div class="flex gap-1 md:gap-2 flex-wrap">
+                                @if (!item.IsDirectory)
+                                {
+                                    @if (item.IsImage)
+                                    {
+                                        <a href="@Url.Action("Preview", new { path = item.RelativePath })" 
+                                           class="inline-flex items-center justify-center w-7 h-7 md:w-8 md:h-8 border border-purple-400 hover:border-purple-600 text-purple-600 hover:text-purple-700 rounded transition" 
+                                           title="预览">
+                                            <span class="material-symbols-outlined text-base md:text-lg">visibility</span>
+                                        </a>
+                                    }
+                                    <button onclick="editFile('@item.RelativePath')" 
+                                            class="inline-flex items-center justify-center w-7 h-7 md:w-8 md:h-8 border border-blue-400 hover:border-blue-600 text-blue-600 hover:text-blue-700 rounded transition" 
+                                            title="编辑">
+                                        <span class="material-symbols-outlined text-base md:text-lg">edit</span>
+                                    </button>
+                                    <a href="@Url.Action("Download", new { path = item.RelativePath })" 
+                                       class="inline-flex items-center justify-center w-7 h-7 md:w-8 md:h-8 border border-green-400 hover:border-green-600 text-green-600 hover:text-green-700 rounded transition" 
+                                       title="下载">
+                                        <span class="material-symbols-outlined text-base md:text-lg">download</span>
+                                    </a>
+                                }
+                                <button onclick="renameItem('@item.RelativePath', '@item.Name', @(item.IsDirectory ? "true" : "false"))" 
+                                        class="inline-flex items-center justify-center w-7 h-7 md:w-8 md:h-8 border border-yellow-400 hover:border-yellow-600 text-yellow-600 hover:text-yellow-700 rounded transition" 
+                                        title="重命名">
+                                    <span class="material-symbols-outlined text-base md:text-lg">drive_file_rename_outline</span>
+                                </button>
+                                <button onclick="deleteItem('@item.RelativePath', '@item.Name', @(item.IsDirectory ? "true" : "false"))" 
+                                        class="inline-flex items-center justify-center w-7 h-7 md:w-8 md:h-8 border border-red-400 hover:border-red-600 text-red-600 hover:text-red-700 rounded transition" 
+                                        title="删除">
+                                    <span class="material-symbols-outlined text-base md:text-lg">delete</span>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+            </table>
+        </div>
+    }
+</div>
+
+<!-- 新建文件模态框 -->
+<div id="createFileModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+    <div class="bg-white rounded-lg p-6 w-full max-w-md">
+        <h3 class="text-xl font-bold mb-4">新建文件</h3>
+        <form id="createFileForm" onsubmit="createFile(event)">
+            <div class="mb-4">
+                <label class="block text-gray-700 font-medium mb-2">文件名</label>
+                <input type="text" id="newFileName" name="FileName" required 
+                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                       placeholder="例如: index.html, script.js, style.css" />
+                <p class="text-sm text-gray-500 mt-1">请包含文件扩展名</p>
+            </div>
+            <div class="flex justify-end gap-2">
+                <button type="button" onclick="hideCreateFileModal()" 
+                        class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
+                    取消
+                </button>
+                <button type="submit" 
+                        class="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg">
+                    创建
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- 创建文件夹模态框 -->
+<div id="createFolderModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+    <div class="bg-white rounded-lg p-6 w-full max-w-md">
+        <h3 class="text-xl font-bold mb-4">创建文件夹</h3>
+        <form id="createFolderForm" onsubmit="createFolder(event)">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="ParentPath" value="@currentPath" />
+            <div class="mb-4">
+                <label class="block text-gray-700 font-medium mb-2">文件夹名称</label>
+                <input type="text" name="FolderName" required 
+                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                       placeholder="请输入文件夹名称" />
+            </div>
+            <div class="flex justify-end gap-2">
+                <button type="button" onclick="hideCreateFolderModal()" 
+                        class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
+                    取消
+                </button>
+                <button type="submit" 
+                        class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg">
+                    创建
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- 上传文件模态框 -->
+<div id="uploadModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+    <div class="bg-white rounded-lg p-6 w-full max-w-md">
+        <h3 class="text-xl font-bold mb-4">上传文件</h3>
+        <form id="uploadForm" onsubmit="uploadFile(event)">
+            @Html.AntiForgeryToken()
+            <div class="mb-4">
+                <label class="block text-gray-700 font-medium mb-2">选择文件</label>
+                <input type="file" name="file" required 
+                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                <p class="text-sm text-gray-500 mt-1">最大文件大小: 20MB</p>
+            </div>
+            <div id="uploadProgress" class="hidden mb-4">
+                <div class="w-full bg-gray-200 rounded-full h-2">
+                    <div id="uploadProgressBar" class="bg-blue-600 h-2 rounded-full" style="width: 0%"></div>
+                </div>
+            </div>
+            <div class="flex justify-end gap-2">
+                <button type="button" onclick="hideUploadModal()" 
+                        class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
+                    取消
+                </button>
+                <button type="submit" 
+                        class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg">
+                    上传
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- 重命名模态框 -->
+<div id="renameModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+    <div class="bg-white rounded-lg p-6 w-full max-w-md">
+        <h3 class="text-xl font-bold mb-4">重命名</h3>
+        <form id="renameForm" onsubmit="submitRename(event)">
+            @Html.AntiForgeryToken()
+            <input type="hidden" id="renamePath" name="Path" />
+            <div class="mb-4">
+                <label class="block text-gray-700 font-medium mb-2">新名称</label>
+                <input type="text" id="renameNewName" name="NewName" required 
+                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            </div>
+            <div class="flex justify-end gap-2">
+                <button type="button" onclick="hideRenameModal()" 
+                        class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
+                    取消
+                </button>
+                <button type="submit" 
+                        class="px-4 py-2 bg-yellow-600 hover:bg-yellow-700 text-white rounded-lg">
+                    重命名
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+    const currentPath = '@currentPath';
+    const adminPath = '@ViewBag.AdminPath';
+    
+    // 获取防伪令牌
+    function getAntiForgeryToken() {
+        return document.querySelector('input[name="__RequestVerificationToken"]').value;
+    }
+
+    // 显示/隐藏模态框
+    function showCreateFileModal() {
+        document.getElementById('createFileModal').classList.remove('hidden');
+    }
+
+    function hideCreateFileModal() {
+        document.getElementById('createFileModal').classList.add('hidden');
+        document.getElementById('createFileForm').reset();
+    }
+
+    function showCreateFolderModal() {
+        document.getElementById('createFolderModal').classList.remove('hidden');
+    }
+
+    function hideCreateFolderModal() {
+        document.getElementById('createFolderModal').classList.add('hidden');
+        document.getElementById('createFolderForm').reset();
+    }
+
+    function showUploadModal() {
+        document.getElementById('uploadModal').classList.remove('hidden');
+    }
+
+    function hideUploadModal() {
+        document.getElementById('uploadModal').classList.add('hidden');
+        document.getElementById('uploadForm').reset();
+        document.getElementById('uploadProgress').classList.add('hidden');
+    }
+
+    function showRenameModal() {
+        document.getElementById('renameModal').classList.remove('hidden');
+    }
+
+    function hideRenameModal() {
+        document.getElementById('renameModal').classList.add('hidden');
+        document.getElementById('renameForm').reset();
+    }
+
+    // 新建文件
+    async function createFile(event) {
+        event.preventDefault();
+        const fileName = document.getElementById('newFileName').value;
+        
+        if (!fileName) {
+            alert('请输入文件名');
+            return;
+        }
+
+        // 创建文件后直接跳转到编辑页面
+        const filePath = currentPath ? `${currentPath}/${fileName}` : fileName;
+        window.location.href = `/${adminPath}/FileManager/Edit?path=${encodeURIComponent(filePath)}&create=true`;
+    }
+
+    // 创建文件夹
+    async function createFolder(event) {
+        event.preventDefault();
+        const form = event.target;
+        const formData = new FormData(form);
+
+        try {
+            const response = await fetch(`/${adminPath}/FileManager/CreateFolder`, {
+                method: 'POST',
+                body: formData
+            });
+
+            const result = await response.json();
+            
+            if (result.success) {
+                alert(result.message);
+                location.reload();
+            } else {
+                alert(result.message);
+            }
+        } catch (error) {
+            alert('创建文件夹失败: ' + error.message);
+        }
+    }
+
+    // 上传文件
+    async function uploadFile(event) {
+        event.preventDefault();
+        const form = event.target;
+        const formData = new FormData(form);
+        formData.append('path', currentPath);
+
+        const progressDiv = document.getElementById('uploadProgress');
+        const progressBar = document.getElementById('uploadProgressBar');
+        
+        progressDiv.classList.remove('hidden');
+
+        try {
+            const response = await fetch(`/${adminPath}/FileManager/Upload`, {
+                method: 'POST',
+                body: formData
+            });
+
+            const result = await response.json();
+            
+            if (result.success) {
+                alert(result.message);
+                location.reload();
+            } else {
+                alert(result.message);
+            }
+        } catch (error) {
+            alert('上传失败: ' + error.message);
+        } finally {
+            progressDiv.classList.add('hidden');
+        }
+    }
+
+    // 编辑文件
+    function editFile(path) {
+        window.location.href = `/${adminPath}/FileManager/Edit?path=${encodeURIComponent(path)}`;
+    }
+
+    // 重命名
+    function renameItem(path, currentName, isDirectory) {
+        document.getElementById('renamePath').value = path;
+        document.getElementById('renameNewName').value = currentName;
+        showRenameModal();
+    }
+
+    async function submitRename(event) {
+        event.preventDefault();
+        const form = event.target;
+        const formData = new FormData(form);
+
+        try {
+            const response = await fetch(`/${adminPath}/FileManager/Rename`, {
+                method: 'POST',
+                body: formData
+            });
+
+            const result = await response.json();
+            
+            if (result.success) {
+                alert(result.message);
+                location.reload();
+            } else {
+                alert(result.message);
+            }
+        } catch (error) {
+            alert('重命名失败: ' + error.message);
+        }
+    }
+
+    // 删除
+    async function deleteItem(path, name, isDirectory) {
+        const type = isDirectory ? '文件夹' : '文件';
+        if (!confirm(`确定要删除${type} "${name}" 吗？${isDirectory ? '此操作将删除文件夹及其所有内容。' : ''}`)) {
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('Path', path);
+        formData.append('__RequestVerificationToken', getAntiForgeryToken());
+
+        try {
+            const response = await fetch(`/${adminPath}/FileManager/Delete`, {
+                method: 'POST',
+                body: formData
+            });
+
+            const result = await response.json();
+            
+            if (result.success) {
+                alert(result.message);
+                location.reload();
+            } else {
+                alert(result.message);
+            }
+        } catch (error) {
+            alert('删除失败: ' + error.message);
+        }
+    }
+
+    // 点击模态框外部关闭
+    document.getElementById('createFileModal').addEventListener('click', function(e) {
+        if (e.target === this) hideCreateFileModal();
+    });
+
+    document.getElementById('createFolderModal').addEventListener('click', function(e) {
+        if (e.target === this) hideCreateFolderModal();
+    });
+
+    document.getElementById('uploadModal').addEventListener('click', function(e) {
+        if (e.target === this) hideUploadModal();
+    });
+
+    document.getElementById('renameModal').addEventListener('click', function(e) {
+        if (e.target === this) hideRenameModal();
+    });
+</script>
+}

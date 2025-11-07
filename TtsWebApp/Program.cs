@@ -4,11 +4,38 @@ using TtsWebApp.Data;
 using TtsWebApp.Services;
 using TtsWebApp.Models;
 using WebOptimizer;
+using Serilog;
+using Serilog.Events;
+
+// 配置 Serilog
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Information()
+    .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+    .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
+    .MinimumLevel.Override("Microsoft.EntityFrameworkCore", LogEventLevel.Warning)
+    .MinimumLevel.Override("Microsoft.Hosting.Lifetime", LogEventLevel.Information)
+    .Enrich.FromLogContext()
+    .WriteTo.Console()
+    .WriteTo.File(
+        path: "logs/app-.log",
+        rollingInterval: RollingInterval.Day,
+        retainedFileCountLimit: 30,
+        outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception}")
+    .CreateLogger();
+
+try
+{
+    Log.Information("应用程序启动中...");
 
 var builder = WebApplication.CreateBuilder(args);
 
+// 使用 Serilog
+builder.Host.UseSerilog();
+
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+// 启用 Razor 运行时编译，允许在发布后修改视图文件
+builder.Services.AddControllersWithViews()
+    .AddRazorRuntimeCompilation();
 builder.Services.AddHttpClient();
 
 // 添加 WebOptimizer（JS/CSS 压缩和混淆）
@@ -37,6 +64,10 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 
 // 添加配置服务
 builder.Services.AddScoped<IConfigService, ConfigService>();
+
+// 添加文件管理服务
+builder.Services.Configure<FileManagerConfig>(builder.Configuration.GetSection("FileManager"));
+builder.Services.AddScoped<IFileManagerService, FileManagerService>();
 
 var app = builder.Build();
 
@@ -123,25 +154,46 @@ app.UseHttpsRedirection();
 // 使用 WebOptimizer（必须在 UseStaticFiles 之前）
 app.UseWebOptimizer();
 
+// 启用静态文件访问
+app.UseStaticFiles();
+
 app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapStaticAssets();
-
 // 动态后台路由
 var adminPath = app.Configuration["AppSettings:AdminPath"] ?? "Admin";
 app.Logger.LogInformation("后台管理路径: /{AdminPath}", adminPath);
+
+// FileManager 专用路由
+app.MapControllerRoute(
+    name: "filemanager",
+    pattern: $"{adminPath}/FileManager/{{action=Index}}",
+    defaults: new { controller = "FileManager", action = "Index" });
+
+// Admin 专用路由
 app.MapControllerRoute(
     name: "admin",
     pattern: $"{adminPath}/{{action=Index}}/{{id?}}",
     defaults: new { controller = "Admin" });
 
+// 默认路由
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Tts}/{action=Index}/{id?}")
-    .WithStaticAssets();
+    pattern: "{controller=Tts}/{action=Index}/{id?}");
 
+app.MapStaticAssets();
 
-app.Run();
+    Log.Information("应用程序启动完成");
+    app.Run();
+}
+catch (Exception ex)
+{
+    Log.Fatal(ex, "应用程序启动失败");
+    throw;
+}
+finally
+{
+    Log.CloseAndFlush();
+}

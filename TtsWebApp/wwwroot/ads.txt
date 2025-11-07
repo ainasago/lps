@@ -1,0 +1,13 @@
+# ads.txt file for annietts.com
+# This file was last updated on: 2025-11-06
+
+# Authorized Digital Sellers for annietts.com
+# Format: domain.com, publisher_id, DIRECT|RESELLER, TAG_ID
+
+# Google AdSense (Direct)
+google.com, pub-0000000000000000, DIRECT, f08c47fec0942fa0
+
+# Facebook Audience Network (Reseller)
+facebook.com, 0000000000000000, RESELLER, c3e20eee3f780d68
+
+# Contact: admin@annietts.com for advertising partnerships

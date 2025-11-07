@@ -18,20 +18,47 @@ public class RefererValidationMiddleware
         _logger = logger;
         
         // 从配置读取允许的主机
-        var allowedOrigins = configuration.GetSection("AllowedOrigins").Get<string[]>() ?? new[]
+        var allowedOrigins = configuration.GetSection("AllowedOrigins").Get<string[]>();
+        
+        if (allowedOrigins == null || allowedOrigins.Length == 0)
         {
-            "localhost:5000",
-            "localhost:5001",
-            "localhost:7000",
-            "localhost:7001",
-            "www.annietts.com",
-            "annietts.com"
-        };
-        
-        _allowedHosts = new HashSet<string>(allowedOrigins, StringComparer.OrdinalIgnoreCase);
-        
-        // 记录允许的主机列表
-        _logger.LogInformation("Referer 验证允许的主机: {Hosts}", string.Join(", ", _allowedHosts));
+            _logger.LogWarning("警告：未配置 AllowedOrigins，Referer 验证将拒绝所有请求！请在 appsettings.json 中配置 AllowedOrigins");
+            _allowedHosts = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        }
+        else
+        {
+            _allowedHosts = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            
+            // 处理配置中的每个来源，提取 host:port 格式
+            foreach (var origin in allowedOrigins)
+            {
+                try
+                {
+                    // 如果包含协议，解析 URL
+                    if (origin.StartsWith("http://") || origin.StartsWith("https://"))
+                    {
+                        var uri = new Uri(origin);
+                        var host = uri.Host;
+                        if (uri.Port != 80 && uri.Port != 443)
+                        {
+                            host = $"{uri.Host}:{uri.Port}";
+                        }
+                        _allowedHosts.Add(host);
+                    }
+                    else
+                    {
+                        // 直接使用 host:port 格式
+                        _allowedHosts.Add(origin);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogWarning(ex, "解析允许的来源失败: {Origin}", origin);
+                }
+            }
+            
+            _logger.LogInformation("Referer 验证已启用，允许的主机: {Hosts}", string.Join(", ", _allowedHosts));
+        }
     }
 
     public async Task InvokeAsync(HttpContext context)

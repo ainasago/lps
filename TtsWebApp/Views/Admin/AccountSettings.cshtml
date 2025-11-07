@@ -1,0 +1,139 @@
+@model TtsWebApp.Models.AdminUser
+@{
+    ViewData["Title"] = "账户设置"; 
+}
+
+<div class="mb-6">
+    <h1 class="text-3xl font-bold text-gray-800 flex items-center">
+        <span class="material-symbols-outlined mr-3 text-4xl">manage_accounts</span>
+        账户设置
+    </h1>
+    <p class="text-gray-600 mt-2">管理您的账户信息和安全设置</p>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <!-- 修改用户名 -->
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+        <div class="px-6 py-4 border-b border-gray-200">
+            <h2 class="text-lg font-semibold text-gray-800 flex items-center">
+                <span class="material-symbols-outlined mr-2">person</span>
+                修改用户名
+            </h2>
+        </div>
+        <div class="p-6">
+            <form method="post" asp-action="ChangeUsername">
+                @Html.AntiForgeryToken()
+                
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">当前用户名</label>
+                    <input type="text" value="@Model.Username" disabled
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-500 cursor-not-allowed">
+                </div>
+                
+                <div class="mb-6">
+                    <label for="newUsername" class="block text-sm font-medium text-gray-700 mb-2">
+                        新用户名 <span class="text-red-500">*</span>
+                    </label>
+                    <input type="text" id="newUsername" name="newUsername" required minlength="3" maxlength="50"
+                           placeholder="请输入新用户名（3-50个字符）"
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    <p class="mt-1 text-sm text-gray-500">用户名长度必须在 3-50 个字符之间</p>
+                </div>
+                
+                <button type="submit" onclick="return confirm('确定要修改用户名吗？')"
+                        class="w-full flex items-center justify-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+                    <span class="material-symbols-outlined mr-2">save</span>
+                    保存修改
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 修改密码 -->
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+        <div class="px-6 py-4 border-b border-gray-200">
+            <h2 class="text-lg font-semibold text-gray-800 flex items-center">
+                <span class="material-symbols-outlined mr-2">key</span>
+                修改密码
+            </h2>
+        </div>
+        <div class="p-6">
+            <form method="post" asp-action="ChangePassword" id="changePasswordForm">
+                @Html.AntiForgeryToken()
+                
+                <div class="mb-4">
+                    <label for="currentPassword" class="block text-sm font-medium text-gray-700 mb-2">
+                        当前密码 <span class="text-red-500">*</span>
+                    </label>
+                    <input type="password" id="currentPassword" name="currentPassword" required
+                           placeholder="请输入当前密码"
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                </div>
+                
+                <div class="mb-4">
+                    <label for="newPassword" class="block text-sm font-medium text-gray-700 mb-2">
+                        新密码 <span class="text-red-500">*</span>
+                    </label>
+                    <input type="password" id="newPassword" name="newPassword" required minlength="6"
+                           placeholder="请输入新密码（至少6个字符）"
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    <p class="mt-1 text-sm text-gray-500">密码长度至少为 6 个字符</p>
+                </div>
+                
+                <div class="mb-6">
+                    <label for="confirmPassword" class="block text-sm font-medium text-gray-700 mb-2">
+                        确认新密码 <span class="text-red-500">*</span>
+                    </label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" required minlength="6"
+                           placeholder="请再次输入新密码"
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                </div>
+                
+                <button type="submit"
+                        class="w-full flex items-center justify-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+                    <span class="material-symbols-outlined mr-2">save</span>
+                    修改密码
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- 账户信息 -->
+<div class="mt-6 bg-white rounded-lg shadow-sm border border-gray-200">
+    <div class="px-6 py-4 border-b border-gray-200">
+        <h2 class="text-lg font-semibold text-gray-800 flex items-center">
+            <span class="material-symbols-outlined mr-2">info</span>
+            账户信息
+        </h2>
+    </div>
+    <div class="p-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+                <p class="text-gray-600 mb-2"><span class="font-medium text-gray-800">用户 ID：</span>@Model.Id</p>
+                <p class="text-gray-600"><span class="font-medium text-gray-800">创建时间：</span>@Model.CreatedAt.ToString("yyyy-MM-dd HH:mm:ss")</p>
+            </div>
+            <div>
+                <p class="text-gray-600"><span class="font-medium text-gray-800">最后登录：</span>@(Model.LastLoginAt?.ToString("yyyy-MM-dd HH:mm:ss") ?? "从未登录")</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+    // 验证密码一致性
+    document.getElementById('changePasswordForm').addEventListener('submit', function(e) {
+        const newPassword = document.getElementById('newPassword').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+        
+        if (newPassword !== confirmPassword) {
+            e.preventDefault();
+            alert('两次输入的新密码不一致，请重新输入！');
+            return false;
+        }
+        
+        return confirm('确定要修改密码吗？');
+    });
+</script>
+}

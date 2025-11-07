@@ -1,0 +1,231 @@
+@model TtsWebApp.Models.FileContentResponse
+@{
+    ViewData["Title"] = "编辑文件";
+    var filePath = ViewBag.FilePath as string ?? "";
+    var fileName = ViewBag.FileName as string ?? "";
+    var fileExtension = ViewBag.FileExtension as string ?? "txt";
+}
+
+<div class="mb-6">
+    <div class="flex justify-between items-center mb-4">
+        <div>
+            <h1 class="text-3xl font-bold text-gray-800 mb-2">编辑文件</h1>
+            <p class="text-gray-600 flex items-center">
+                <span class="material-symbols-outlined mr-2 text-sm">description</span>
+                @fileName
+            </p>
+        </div>
+        <div class="flex gap-2">
+            <button onclick="history.back()" class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition flex items-center">
+                <span class="material-symbols-outlined mr-2">arrow_back</span>
+                返回
+            </button>
+            <button onclick="saveFile()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition flex items-center">
+                <span class="material-symbols-outlined mr-2">save</span>
+                保存
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Monaco Editor 容器 -->
+<div class="bg-white rounded-lg shadow overflow-hidden">
+    <div id="editor-container" style="height: calc(100vh - 250px); min-height: 500px;"></div>
+</div>
+
+<!-- 保存状态提示 -->
+<div id="saveStatus" class="hidden fixed bottom-4 right-4 px-6 py-3 rounded-lg shadow-lg text-white">
+    <span id="saveStatusText"></span>
+</div>
+
+@section Scripts {
+<!-- Monaco Editor CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs/loader.min.js"></script>
+
+<script>
+    const filePath = '@Html.Raw(filePath)';
+    const fileExtension = '@fileExtension';
+    const adminPath = '@ViewBag.AdminPath';
+    let editor;
+
+    // 根据文件扩展名确定语言
+    function getLanguageFromExtension(ext) {
+        const languageMap = {
+            'cs': 'csharp',
+            'cshtml': 'razor',
+            'js': 'javascript',
+            'ts': 'typescript',
+            'json': 'json',
+            'xml': 'xml',
+            'html': 'html',
+            'css': 'css',
+            'scss': 'scss',
+            'less': 'less',
+            'md': 'markdown',
+            'sql': 'sql',
+            'py': 'python',
+            'java': 'java',
+            'cpp': 'cpp',
+            'c': 'c',
+            'php': 'php',
+            'rb': 'ruby',
+            'go': 'go',
+            'rs': 'rust',
+            'sh': 'shell',
+            'yaml': 'yaml',
+            'yml': 'yaml',
+            'txt': 'plaintext',
+            'log': 'plaintext',
+            'config': 'xml'
+        };
+        
+        return languageMap[ext.toLowerCase()] || 'plaintext';
+    }
+
+    // 初始化 Monaco Editor
+    require.config({ 
+        paths: { 
+            'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs' 
+        } 
+    });
+
+    require(['vs/editor/editor.main'], function() {
+        const language = getLanguageFromExtension(fileExtension);
+        
+        editor = monaco.editor.create(document.getElementById('editor-container'), {
+            value: @Html.Raw(Json.Serialize(Model?.Content ?? "")),
+            language: language,
+            theme: 'vs-dark',
+            automaticLayout: true,
+            fontSize: 14,
+            minimap: {
+                enabled: true
+            },
+            scrollBeyondLastLine: false,
+            wordWrap: 'on',
+            formatOnPaste: true,
+            formatOnType: true,
+            tabSize: 4,
+            insertSpaces: true,
+            renderWhitespace: 'selection',
+            lineNumbers: 'on',
+            glyphMargin: true,
+            folding: true,
+            lineDecorationsWidth: 10,
+            lineNumbersMinChars: 3,
+            scrollbar: {
+                vertical: 'visible',
+                horizontal: 'visible',
+                useShadows: false,
+                verticalScrollbarSize: 10,
+                horizontalScrollbarSize: 10
+            }
+        });
+
+        // Ctrl+S 保存快捷键
+        editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS, function() {
+            saveFile();
+        });
+
+        // 监听内容变化
+        let changeTimeout;
+        editor.onDidChangeModelContent(function() {
+            clearTimeout(changeTimeout);
+            changeTimeout = setTimeout(function() {
+                // 可以在这里添加自动保存功能
+            }, 1000);
+        });
+    });
+
+    // 保存文件
+    async function saveFile() {
+        if (!editor) {
+            showStatus('编辑器未初始化', 'error');
+            return;
+        }
+
+        const content = editor.getValue();
+        const formData = new FormData();
+        formData.append('Path', filePath);
+        formData.append('Content', content);
+
+        // 添加 CSRF token
+        const token = document.querySelector('input[name="__RequestVerificationToken"]');
+        if (token) {
+            formData.append('__RequestVerificationToken', token.value);
+        }
+
+        showStatus('保存中...', 'info');
+
+        try {
+            const response = await fetch(`/${adminPath}/FileManager/Save`, {
+                method: 'POST',
+                body: formData
+            });
+
+            const result = await response.json();
+            
+            if (result.success) {
+                showStatus('保存成功', 'success');
+            } else {
+                showStatus('保存失败: ' + result.message, 'error');
+            }
+        } catch (error) {
+            showStatus('保存失败: ' + error.message, 'error');
+        }
+    }
+
+    // 显示状态提示
+    function showStatus(message, type) {
+        const statusDiv = document.getElementById('saveStatus');
+        const statusText = document.getElementById('saveStatusText');
+        
+        statusText.textContent = message;
+        
+        // 设置颜色
+        statusDiv.classList.remove('bg-blue-500', 'bg-green-500', 'bg-red-500');
+        if (type === 'success') {
+            statusDiv.classList.add('bg-green-500');
+        } else if (type === 'error') {
+            statusDiv.classList.add('bg-red-500');
+        } else {
+            statusDiv.classList.add('bg-blue-500');
+        }
+        
+        // 显示
+        statusDiv.classList.remove('hidden');
+        
+        // 3秒后自动隐藏（除非是错误）
+        if (type !== 'error') {
+            setTimeout(() => {
+                statusDiv.classList.add('hidden');
+            }, 3000);
+        } else {
+            setTimeout(() => {
+                statusDiv.classList.add('hidden');
+            }, 5000);
+        }
+    }
+
+    // 页面离开前提示
+    window.addEventListener('beforeunload', function(e) {
+        if (editor && editor.getValue() !== @Html.Raw(Json.Serialize(Model?.Content ?? ""))) {
+            e.preventDefault();
+            e.returnValue = '您有未保存的更改，确定要离开吗？';
+            return e.returnValue;
+        }
+    });
+
+    // 窗口大小改变时调整编辑器
+    window.addEventListener('resize', function() {
+        if (editor) {
+            editor.layout();
+        }
+    });
+</script>
+
+<!-- CSRF Token (隐藏) -->
+<form style="display: none;">
+    @Html.AntiForgeryToken()
+</form>
+}

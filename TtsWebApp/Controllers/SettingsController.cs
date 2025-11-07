@@ -1,8 +1,10 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TtsWebApp.Models;
 
 namespace TtsWebApp.Controllers
 {
+    [Authorize]
     public class SettingsController : Controller
     {
         private readonly ILogger<SettingsController> _logger;

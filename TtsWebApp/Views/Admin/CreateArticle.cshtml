@@ -1,7 +1,6 @@
 @model TtsWebApp.Models.Article
 @{
-    ViewData["Title"] = "创建文章";
-    Layout = "_AdminLayout";
+    ViewData["Title"] = "创建文章"; 
 }
 
 <div class="flex justify-between items-center mb-6">
@@ -36,9 +35,11 @@
                 <label for="Content" class="block text-gray-700 font-medium mb-2">
                     内容 <span class="text-red-500">*</span>
                 </label>
-                <textarea id="Content" name="Content" required rows="15"
-                          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          placeholder="请输入文章内容（支持 Markdown）"></textarea>
+                <textarea id="Content" name="Content" required class="w-full"
+                          placeholder="请输入文章内容"></textarea>
+                <p class="text-sm text-gray-500 mt-2">
+                    支持富文本编辑，包括格式化、链接、图片、表格等。
+                </p>
                 <span asp-validation-for="Content" class="text-red-500 text-sm"></span>
             </div>
             
@@ -86,4 +87,50 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+
+    <!-- TinyMCE -->
+    <script src="~/lib/tinymce/js/tinymce/tinymce.min.js"></script>
+    <script>
+        tinymce.init({
+            selector: '#Content',
+            height: 600,
+            menubar: true,
+            plugins: [
+                'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
+                'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
+                'insertdatetime', 'media', 'table', 'help', 'wordcount', 'emoticons',
+                'template', 'paste', 'directionality', 'textcolor', 'colorpicker'
+            ],
+            toolbar1: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | tinycomments | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
+            toolbar2: 'forecolor backcolor | code fullscreen preview | help',
+            image_advtab: true,
+            image_title: true,
+            automatic_uploads: true,
+            file_picker_types: 'image',
+            paste_data_images: true,
+            content_style: 'body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; font-size: 14px; }',
+            setup: function (editor) {
+                editor.on('change', function () {
+                    editor.save();
+                });
+            },
+            language: 'en_US',
+            directionality: 'ltr',
+            branding: false,
+            promotion: false,
+            contextmenu: 'link image table configurepermanentpen',
+            table_default_attributes: {
+                border: '0',
+                cellpadding: '0',
+                cellspacing: '0',
+                width: '100%',
+                style: 'border-collapse: collapse;'
+            },
+            table_default_styles: {
+                width: '100%',
+                'border-collapse': 'collapse'
+            }
+        });
+    </script>
 }
+

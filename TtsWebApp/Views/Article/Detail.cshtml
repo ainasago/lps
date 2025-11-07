@@ -115,6 +115,78 @@
         font-style: italic;
         color: rgba(0, 0, 0, 0.7);
     }
+
+    /* 主题适配样式 - 强制覆盖TinyMCE生成的颜色 */
+    .prose * {
+        color: inherit !important;
+    }
+
+    /* 白色主题 */
+    .prose {
+        color: #1f2937 !important; /* slate-800 */
+    }
+    .prose a {
+        color: #5b13ec !important; /* primary */
+    }
+    .prose a:hover {
+        color: #4c0fd1 !important; /* primary darker */
+    }
+    .prose strong, .prose b {
+        color: #111827 !important; /* slate-900 */
+    }
+    .prose em, .prose i {
+        color: #374151 !important; /* slate-700 */
+    }
+
+    /* 暗黑主题 */
+    .dark .prose {
+        color: #ffffff !important;
+    }
+    .dark .prose a {
+        color: #a855f7 !important; /* primary lighter for dark */
+    }
+    .dark .prose a:hover {
+        color: #c084fc !important; /* primary even lighter */
+    }
+    .dark .prose strong, .prose b {
+        color: #f9fafb !important; /* gray-50 */
+    }
+    .dark .prose em, .prose i {
+        color: #e5e7eb !important; /* gray-200 */
+    }
+
+    /* 覆盖TinyMCE可能生成的内联颜色样式 */
+    .prose [style*="color"] {
+        color: inherit !important;
+    }
+    .prose span[style*="color"],
+    .prose p[style*="color"],
+    .prose div[style*="color"] {
+        color: inherit !important;
+    }
+
+    /* 表格样式 */
+    .prose table {
+        border-collapse: collapse;
+        width: 100%;
+        margin-bottom: 1.25rem;
+    }
+    .prose th, .prose td {
+        border: 1px solid #e5e7eb;
+        padding: 0.5rem;
+        text-align: left;
+    }
+    .dark .prose th, .dark .prose td {
+        border-color: #374151;
+    }
+    .prose th {
+        background-color: #f9fafb;
+        font-weight: 600;
+    }
+    .dark .prose th {
+        background-color: #1f2937;
+    }
+
     .dark .prose code,
     .dark .prose pre {
         background-color: rgba(255, 255, 255, 0.05);

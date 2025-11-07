@@ -1,7 +1,6 @@
 @model TtsWebApp.Models.Article
 @{
-    ViewData["Title"] = "编辑页面";
-    Layout = "_AdminLayout";
+    ViewData["Title"] = "编辑页面"; 
 }
 
 <div class="flex justify-between items-center mb-6">
@@ -36,10 +35,9 @@
                 <label for="Content" class="block text-gray-700 font-medium mb-2">
                     页面内容 <span class="text-red-500">*</span>
                 </label>
-                <textarea id="Content" name="Content" required rows="20"
-                          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono text-sm">@Model.Content</textarea>
+                <textarea id="Content" name="Content" required class="w-full">@Model.Content</textarea>
                 <p class="text-sm text-gray-500 mt-2">
-                    支持 HTML 标签。换行会自动转换为 &lt;br/&gt;
+                    支持完整的HTML编辑，包括样式、脚本、媒体等。用于创建复杂的页面布局。
                 </p>
             </div>
             
@@ -70,3 +68,74 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+<!-- TinyMCE -->
+<script src="~/lib/tinymce/js/tinymce/tinymce.min.js"></script>
+<script>
+    tinymce.init({
+        selector: '#Content',
+        height: 700,
+        menubar: true,
+        plugins: [
+            'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
+            'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
+            'insertdatetime', 'media', 'table', 'help', 'wordcount', 'emoticons',
+            'template', 'paste', 'directionality', 'textcolor', 'colorpicker',
+            'codesample', 'hr', 'pagebreak', 'nonbreaking', 'toc', 'imagetools',
+            'textpattern', 'noneditable', 'charmap', 'quickbars', 'advcode'
+        ],
+        toolbar1: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media table | code codesample | hr pagebreak',
+        toolbar2: 'visualblocks preview fullscreen | help | toc insertdatetime charmap emoticons | template nonbreaking | searchreplace | visualchars visualaid | ltr rtl',
+        image_advtab: true,
+        image_title: true,
+        automatic_uploads: true,
+        file_picker_types: 'image',
+        paste_data_images: true,
+        content_style: 'body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; font-size: 14px; }',
+        setup: function (editor) {
+            editor.on('change', function () {
+                editor.save();
+            });
+        },
+        language: 'en_US',
+        directionality: 'ltr',
+        branding: false,
+        promotion: false,
+        contextmenu: 'link image table configurepermanentpen codesample',
+        codesample_languages: [
+            {text: 'HTML/XML', value: 'markup'},
+            {text: 'JavaScript', value: 'javascript'},
+            {text: 'CSS', value: 'css'},
+            {text: 'PHP', value: 'php'},
+            {text: 'Ruby', value: 'ruby'},
+            {text: 'Python', value: 'python'},
+            {text: 'Java', value: 'java'},
+            {text: 'C', value: 'c'},
+            {text: 'C#', value: 'csharp'},
+            {text: 'C++', value: 'cpp'}
+        ],
+        table_default_attributes: {
+            border: '0',
+            cellpadding: '0',
+            cellspacing: '0',
+            width: '100%',
+            style: 'border-collapse: collapse;'
+        },
+        table_default_styles: {
+            width: '100%',
+            'border-collapse': 'collapse'
+        },
+        quickbars_selection_toolbar: 'bold italic | quicklink h2 h3 blockquote',
+        quickbars_insert_toolbar: 'quickimage quicktable',
+        quickbars_image_toolbar: 'alignleft aligncenter alignright | rotateleft rotateright | imageoptions',
+        noneditable_noneditable_class: 'mceNonEditable',
+        toolbar_mode: 'sliding',
+        resize: true,
+        statusbar: true,
+        elementpath: true,
+        browser_spellcheck: true,
+        entity_encoding: 'raw'
+    });
+</script>
+}

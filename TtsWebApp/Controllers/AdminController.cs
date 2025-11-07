@@ -312,6 +312,134 @@ public class AdminController : Controller
         return RedirectToAction(nameof(Articles));
     }
     
+    // 账户设置页面
+    public async Task<IActionResult> AccountSettings()
+    {
+        var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
+        var user = await _context.AdminUsers.FindAsync(userId);
+        
+        if (user == null)
+        {
+            return NotFound();
+        }
+        
+        return View(user);
+    }
+    
+    // 修改用户名
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> ChangeUsername(string newUsername)
+    {
+        if (string.IsNullOrWhiteSpace(newUsername))
+        {
+            TempData["Error"] = "用户名不能为空";
+            return RedirectToAction(nameof(AccountSettings));
+        }
+        
+        if (newUsername.Length < 3 || newUsername.Length > 50)
+        {
+            TempData["Error"] = "用户名长度必须在 3-50 个字符之间";
+            return RedirectToAction(nameof(AccountSettings));
+        }
+        
+        var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
+        var user = await _context.AdminUsers.FindAsync(userId);
+        
+        if (user == null)
+        {
+            return NotFound();
+        }
+        
+        // 检查用户名是否已存在
+        var existingUser = await _context.AdminUsers
+            .FirstOrDefaultAsync(u => u.Username == newUsername && u.Id != userId);
+        
+        if (existingUser != null)
+        {
+            TempData["Error"] = "用户名已存在";
+            return RedirectToAction(nameof(AccountSettings));
+        }
+        
+        var oldUsername = user.Username;
+        user.Username = newUsername;
+        await _context.SaveChangesAsync();
+        
+        _logger.LogInformation("用户 {OldUsername} 修改用户名为 {NewUsername}", oldUsername, newUsername);
+        
+        // 更新登录状态
+        await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        
+        var claims = new List<Claim>
+        {
+            new Claim(ClaimTypes.Name, user.Username),
+            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
+        };
+        
+        var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+        var authProperties = new AuthenticationProperties
+        {
+            IsPersistent = true,
+            ExpiresUtc = DateTimeOffset.UtcNow.AddHours(24)
+        };
+        
+        await HttpContext.SignInAsync(
+            CookieAuthenticationDefaults.AuthenticationScheme,
+            new ClaimsPrincipal(claimsIdentity),
+            authProperties);
+        
+        TempData["Success"] = "用户名修改成功";
+        return RedirectToAction(nameof(AccountSettings));
+    }
+    
+    // 修改密码
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> ChangePassword(string currentPassword, string newPassword, string confirmPassword)
+    {
+        if (string.IsNullOrWhiteSpace(currentPassword) || string.IsNullOrWhiteSpace(newPassword))
+        {
+            TempData["Error"] = "密码不能为空";
+            return RedirectToAction(nameof(AccountSettings));
+        }
+        
+        if (newPassword != confirmPassword)
+        {
+            TempData["Error"] = "两次输入的新密码不一致";
+            return RedirectToAction(nameof(AccountSettings));
+        }
+        
+        if (newPassword.Length < 6)
+        {
+            TempData["Error"] = "密码长度至少为 6 个字符";
+            return RedirectToAction(nameof(AccountSettings));
+        }
+        
+        var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
+        var user = await _context.AdminUsers.FindAsync(userId);
+        
+        if (user == null)
+        {
+            return NotFound();
+        }
+        
+        // 验证当前密码
+        if (!VerifyPassword(currentPassword, user.PasswordHash))
+        {
+            TempData["Error"] = "当前密码错误";
+            return RedirectToAction(nameof(AccountSettings));
+        }
+        
+        // 更新密码
+        user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(newPassword);
+        await _context.SaveChangesAsync();
+        
+        _logger.LogInformation("用户 {Username} 修改了密码", user.Username);
+        
+        TempData["Success"] = "密码修改成功";
+        return RedirectToAction(nameof(AccountSettings));
+    }
+    
     // 简单的密码验证（实际应使用 BCrypt）
     private bool VerifyPassword(string password, string hash)
     {

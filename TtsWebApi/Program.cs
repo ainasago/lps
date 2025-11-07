@@ -2,8 +2,33 @@ using TtsWebApi.Services;
 using TtsWebApi.Controllers;
 using TtsWebApi.Middleware;
 using Microsoft.Extensions.Logging;
+using Serilog;
+using Serilog.Events;
+
+// 配置 Serilog
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Information()
+    .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+    .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
+    .Enrich.FromLogContext()
+    .WriteTo.Console(
+        outputTemplate: "[{Timestamp:yyyy-MM-dd HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception}")
+    .WriteTo.File(
+        path: "logs/tts-api-.log",
+        rollingInterval: RollingInterval.Day,
+        outputTemplate: "[{Timestamp:yyyy-MM-dd HH:mm:ss.fff} {Level:u3}] {Message:lj}{NewLine}{Exception}",
+        retainedFileCountLimit: 30,
+        fileSizeLimitBytes: 10485760) // 10MB
+    .CreateLogger();
+
+try
+{
+    Log.Information("=== TTS API 服务启动中 ===");
 
 var builder = WebApplication.CreateBuilder(args);
+
+// 使用 Serilog
+builder.Host.UseSerilog();
 
 // Add services to the container.
 builder.Services.AddControllers();
@@ -22,11 +47,13 @@ builder.Services.AddScoped<MultiRoleParser>();
 builder.Services.AddScoped<AudioMerger>();
 
 // 从配置文件读取允许的来源
-var allowedOrigins = builder.Configuration.GetSection("AllowedOrigins").Get<string[]>() ?? new[]
+var allowedOrigins = builder.Configuration.GetSection("AllowedOrigins").Get<string[]>();
+
+if (allowedOrigins == null || allowedOrigins.Length == 0)
 {
-    "localhost:5000",
-    "localhost:5001"
-};
+    Log.Warning("警告：未配置 AllowedOrigins，CORS 将不允许任何跨域请求！请在 appsettings.json 中配置 AllowedOrigins");
+    allowedOrigins = Array.Empty<string>();
+}
 
 // 构建完整的 URL（添加 http:// 和 https://）
 var allowedUrls = new List<string>();
@@ -45,7 +72,14 @@ foreach (var origin in allowedOrigins)
     }
 }
 
-Console.WriteLine($"CORS 允许的来源: {string.Join(", ", allowedUrls)}");
+if (allowedUrls.Count > 0)
+{
+    Log.Information("CORS 允许的来源: {Origins}", string.Join(", ", allowedUrls));
+}
+else
+{
+    Log.Warning("CORS 未配置任何允许的来源");
+}
 
 // Add CORS - 只允许配置的来源调用
 builder.Services.AddCors(options =>
@@ -86,4 +120,16 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+Log.Information("=== TTS API 服务已启动，正在监听请求 ===");
 app.Run();
+Log.Information("=== TTS API 服务已停止 ===");
+}
+catch (Exception ex)
+{
+    Log.Fatal(ex, "TTS API 服务启动失败");
+    throw;
+}
+finally
+{
+    Log.CloseAndFlush();
+}
