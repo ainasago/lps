@@ -476,3 +476,4 @@ jspm_packages/
 # Temporary folders
 tmp/
 temp/
+/TtsWebApp/output/TtsWebApp
