@@ -1,0 +1,111 @@
+<section class="py-16 px-4">
+    <div class="container mx-auto max-w-4xl">
+        <h1 class="text-4xl font-bold text-slate-900 dark:text-white mb-8 text-center">About @(siteNameEn)</h1>
+        
+        <div class="space-y-8">
+            <div>
+                <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-4">Our Mission</h2>
+                <p class="text-slate-700 dark:text-slate-300 leading-relaxed mb-4">
+                    @(siteNameEn) is dedicated to providing high-quality, easy-to-use AI text-to-speech services to users worldwide. We believe that everyone should be able to easily convert text content into natural and fluent speech, whether for video production, podcast recording, online education, or other creative projects.
+                </p>
+                <p class="text-slate-700 dark:text-slate-300 leading-relaxed">
+                    Through advanced artificial intelligence technology, we make speech synthesis simple, fast, and efficient, helping creators, educators, and businesses save time and costs while enhancing the professionalism and appeal of their content.
+                </p>
+            </div>
+            
+            <div>
+                <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-4">Our Advantages</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="flex gap-4">
+                        <div class="flex-shrink-0">
+                            <div class="flex items-center justify-center size-12 rounded-lg bg-primary/20">
+                                <span class="material-symbols-outlined text-primary text-2xl">psychology</span>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-2">AI-Powered Technology</h3>
+                            <p class="text-slate-600 dark:text-slate-400 text-sm">Using the latest deep learning algorithms to generate incredibly natural and realistic human voices</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex gap-4">
+                        <div class="flex-shrink-0">
+                            <div class="flex items-center justify-center size-12 rounded-lg bg-primary/20">
+                                <span class="material-symbols-outlined text-primary text-2xl">language</span>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-2">Multi-Language Support</h3>
+                            <p class="text-slate-600 dark:text-slate-400 text-sm">Support for speech synthesis in multiple languages and dialects including Chinese, English, and more</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex gap-4">
+                        <div class="flex-shrink-0">
+                            <div class="flex items-center justify-center size-12 rounded-lg bg-primary/20">
+                                <span class="material-symbols-outlined text-primary text-2xl">speed</span>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-2">Fast and Efficient</h3>
+                            <p class="text-slate-600 dark:text-slate-400 text-sm">Complete speech synthesis in seconds, significantly improving work efficiency</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex gap-4">
+                        <div class="flex-shrink-0">
+                            <div class="flex items-center justify-center size-12 rounded-lg bg-primary/20">
+                                <span class="material-symbols-outlined text-primary text-2xl">tune</span>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-2">Flexible Adjustment</h3>
+                            <p class="text-slate-600 dark:text-slate-400 text-sm">Support for fine-tuning parameters such as pitch, speed, and volume</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="bg-white/50 dark:bg-white/5 border border-slate-200 dark:border-slate-800 rounded-xl p-8 mb-8">
+            <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-4">Use Cases</h2>
+            <ul class="space-y-3 text-slate-700 dark:text-slate-300">
+                <li class="flex items-start gap-3">
+                    <span class="material-symbols-outlined text-primary mt-1">check_circle</span>
+                    <span><strong>Video Production:</strong> Add professional narration to short videos, vlogs, and tutorial videos</span>
+                </li>
+                <li class="flex items-start gap-3">
+                    <span class="material-symbols-outlined text-primary mt-1">check_circle</span>
+                    <span><strong>Podcast Recording:</strong> Quickly generate intros and segments for podcast episodes</span>
+                </li>
+                <li class="flex items-start gap-3">
+                    <span class="material-symbols-outlined text-primary mt-1">check_circle</span>
+                    <span><strong>Online Education:</strong> Create clear voice explanations for course content</span>
+                </li>
+                <li class="flex items-start gap-3">
+                    <span class="material-symbols-outlined text-primary mt-1">check_circle</span>
+                    <span><strong>Audiobooks:</strong> Convert text content into audiobooks</span>
+                </li>
+                <li class="flex items-start gap-3">
+                    <span class="material-symbols-outlined text-primary mt-1">check_circle</span>
+                    <span><strong>Advertising & Marketing:</strong> Create product introductions and advertising voiceovers</span>
+                </li>
+                <li class="flex items-start gap-3">
+                    <span class="material-symbols-outlined text-primary mt-1">check_circle</span>
+                    <span><strong>Accessibility:</strong> Help visually impaired people access information</span>
+                </li>
+            </ul>
+        </div>
+        
+        <div class="bg-white/50 dark:bg-white/5 border border-slate-200 dark:border-slate-800 rounded-xl p-8">
+            <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-4">Contact Us</h2>
+            <p class="text-slate-700 dark:text-slate-300 leading-relaxed mb-4">
+                If you have any questions, suggestions, or partnership inquiries, please feel free to contact us:
+            </p>
+            <div class="space-y-2 text-slate-700 dark:text-slate-300">
+                <p><strong>Email:</strong> @contactEmail</p>
+                <p><strong>Online Message:</strong> <a href="/contact" class="text-primary hover:underline">Click here</a></p>
+            </div>
+        </div>
+    </div>
+</section>

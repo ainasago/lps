@@ -280,6 +280,8 @@ public class AdminController : Controller
         existingArticle.Content = article.Content;
         existingArticle.Author = article.Author;
         existingArticle.Tags = article.Tags;
+        existingArticle.Language = article.Language;
+        existingArticle.RelatedArticleId = article.RelatedArticleId;
         existingArticle.UpdatedAt = DateTime.Now;
         
         if (article.IsPublished && !existingArticle.IsPublished)

@@ -17,10 +17,15 @@ public class ArticleController : Controller
     }
     
     // 文章列表页
-    public async Task<IActionResult> Index(int page = 1, int pageSize = 10)
+    public async Task<IActionResult> Index(string lang = "zh-CN", int page = 1, int pageSize = 10)
     {
+        // 从 localStorage 或 query 参数获取语言
+        var currentLang = lang ?? "zh-CN";
+        
         var query = _context.Articles
-            .Where(a => a.IsPublished && a.Type == ArticleType.Article)
+            .Where(a => a.IsPublished 
+                     && a.Type == ArticleType.Article 
+                     && a.Language == currentLang)
             .OrderByDescending(a => a.PublishedAt ?? a.CreatedAt);
         
         var total = await query.CountAsync();
@@ -33,6 +38,7 @@ public class ArticleController : Controller
         ViewBag.PageSize = pageSize;
         ViewBag.Total = total;
         ViewBag.TotalPages = (int)Math.Ceiling(total / (double)pageSize);
+        ViewBag.CurrentLang = currentLang;
         
         return View(articles);
     }
@@ -48,9 +54,19 @@ public class ArticleController : Controller
             return NotFound();
         }
         
+        // 查找关联的其他语言版本
+        Article? relatedArticle = null;
+        if (article.RelatedArticleId.HasValue)
+        {
+            relatedArticle = await _context.Articles
+                .FirstOrDefaultAsync(a => a.Id == article.RelatedArticleId.Value && a.IsPublished);
+        }
+        
         // 增加浏览量
         article.ViewCount++;
         await _context.SaveChangesAsync();
+        
+        ViewBag.RelatedArticle = relatedArticle;
         
         return View(article);
     }

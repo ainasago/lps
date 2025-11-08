@@ -1,0 +1,125 @@
+<section class="py-16 px-4">
+    <div class="container mx-auto max-w-4xl">
+        <h1 class="text-4xl font-bold text-slate-900 dark:text-white mb-8 text-center">Disclaimer</h1>
+        
+        <div class="bg-white/50 dark:bg-white/5 border border-slate-200 dark:border-slate-800 rounded-xl p-8 space-y-6 text-slate-700 dark:text-slate-300">
+            <div>
+                <p class="text-sm text-slate-600 dark:text-slate-400 mb-4">Last Updated: January 1, 2025</p>
+                <p class="leading-relaxed">
+                    This disclaimer applies to all services and content provided by the @(siteNameEn) website (hereinafter referred to as "this website"). Please read the following carefully before using this website.
+                </p>
+            </div>
+            
+            <div>
+                <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-3">1. Nature of Service</h2>
+                <p class="leading-relaxed">
+                    The text-to-speech service provided by this website is based on artificial intelligence technology and is designed to provide users with a convenient speech synthesis tool. This service is provided on an "as is" and "as available" basis, without any express or implied warranties.
+                </p>
+            </div>
+            
+            <div>
+                <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-3">2. Content Accuracy</h2>
+                <p class="leading-relaxed mb-3">
+                    While we strive to ensure the quality and accuracy of our service, we do not guarantee:
+                </p>
+                <ul class="list-disc list-inside space-y-2 ml-4">
+                    <li>The generated speech is completely accurate and error-free</li>
+                    <li>The pronunciation, intonation, and rhythm of the speech fully meet your expectations</li>
+                    <li>The service is available at all times and will not be interrupted</li>
+                    <li>The completeness, timeliness, or reliability of website content</li>
+                </ul>
+            </div>
+            
+            <div>
+                <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-3">3. User Responsibilities</h2>
+                <p class="leading-relaxed mb-3">
+                    Users are fully responsible for their use of this service and its results, including but not limited to:
+                </p>
+                <ul class="list-disc list-inside space-y-2 ml-4">
+                    <li>Ensuring that the input text content is legal and non-infringing</li>
+                    <li>Being responsible for how the generated audio content is used</li>
+                    <li>Complying with all applicable laws and regulations</li>
+                    <li>Bearing any consequences arising from the use of this service</li>
+                </ul>
+            </div>
+            
+            <div>
+                <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-3">4. Limitation of Liability</h2>
+                <p class="leading-relaxed mb-3">
+                    To the maximum extent permitted by law, this website and its operators are not liable for:
+                </p>
+                <ul class="list-disc list-inside space-y-2 ml-4">
+                    <li>Any direct, indirect, incidental, special, or consequential damages resulting from the use or inability to use this service</li>
+                    <li>Losses caused by service interruptions, errors, delays, or data loss</li>
+                    <li>Damages caused by third-party actions (including hacker attacks, virus spread, etc.)</li>
+                    <li>Any consequences arising from users' violation of this disclaimer or terms of service</li>
+                    <li>Service interruptions caused by force majeure (such as natural disasters, war, government actions, etc.)</li>
+                </ul>
+            </div>
+            
+            <div>
+                <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-3">5. Third-Party Services</h2>
+                <p class="leading-relaxed">
+                    This website may use or link to third-party services (such as advertising services, analytics tools, etc.). We are not responsible for the content, privacy policies, or practices of these third-party services. Users use these third-party services at their own risk.
+                </p>
+            </div>
+            
+            <div>
+                <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-3">6. Intellectual Property</h2>
+                <p class="leading-relaxed">
+                    Users must ensure that their input text content does not infringe upon any third-party intellectual property rights. If intellectual property disputes arise from user-input content, users shall bear all legal responsibilities, and this website assumes no liability.
+                </p>
+            </div>
+            
+            <div>
+                <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-3">7. Commercial Use</h2>
+                <p class="leading-relaxed">
+                    When users use audio content generated by this service for commercial purposes, they should ensure compliance with relevant laws, regulations, and third-party rights requirements. This website assumes no responsibility for users' commercial use activities.
+                </p>
+            </div>
+            
+            <div>
+                <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-3">8. Medical and Legal Advice</h2>
+                <p class="leading-relaxed">
+                    The services provided by this website do not constitute any form of professional advice (including but not limited to medical, legal, or financial advice). If you need professional advice, please consult professionals in the relevant field.
+                </p>
+            </div>
+            
+            <div>
+                <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-3">9. Link Disclaimer</h2>
+                <p class="leading-relaxed">
+                    This website may contain links to other websites. These links are provided for user convenience only and do not represent our endorsement or recommendation of these websites. We are not responsible for the content, accuracy, or availability of linked websites.
+                </p>
+            </div>
+            
+            <div>
+                <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-3">10. Disclaimer Modifications</h2>
+                <p class="leading-relaxed">
+                    We reserve the right to modify this disclaimer at any time without prior notice. Modified disclaimers will be posted on this page. Continued use of this service indicates your acceptance of the modified disclaimer.
+                </p>
+            </div>
+            
+            <div>
+                <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-3">11. Governing Law</h2>
+                <p class="leading-relaxed">
+                    This disclaimer is governed by the laws of the People's Republic of China. Any disputes arising from this disclaimer shall be resolved through friendly negotiation; if negotiation fails, they shall be submitted to a court of competent jurisdiction for litigation.
+                </p>
+            </div>
+            
+            <div>
+                <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-3">12. Contact Us</h2>
+                <p class="leading-relaxed">
+                    If you have any questions about this disclaimer, please contact us:<br/>
+                    <strong>Email:</strong> @contactEmail<br/>
+                    <strong>Online Message:</strong> <a href="/contact-en" class="text-primary hover:underline">Click here</a>
+                </p>
+            </div>
+            
+            <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 mt-6">
+                <p class="text-sm text-slate-700 dark:text-slate-300">
+                    <strong>Special Notice:</strong> By using this website's services, you acknowledge that you have read, understood, and agree to all contents of this disclaimer. If you do not agree to any part of this disclaimer, please stop using this service immediately.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>

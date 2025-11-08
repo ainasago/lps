@@ -81,4 +81,11 @@ public class Article
     // 页面标识符（用于页面类型，如 "about", "privacy" 等）
     [StringLength(50)]
     public string? Slug { get; set; }
+    
+    // 语言标识：zh-CN=中文, en-US=英文
+    [StringLength(10)]
+    public string Language { get; set; } = "zh-CN";
+    
+    // 关联文章ID（用于关联中英文版本，指向另一个语言的文章）
+    public int? RelatedArticleId { get; set; }
 }

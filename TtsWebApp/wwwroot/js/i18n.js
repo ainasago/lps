@@ -72,7 +72,12 @@ const translations = {
         'msg.convertFailed': '转换失败',
         'msg.audioLoadFailed': '音频加载失败，请检查控制台日志',
         'msg.audioLoaded': '音频元数据加载完成，时长',
-        'msg.loadVoicesFailed': '加载语音列表失败'
+        'msg.loadVoicesFailed': '加载语音列表失败',
+        
+        // Article
+        'article.backToList': '返回文章列表',
+        'article.viewChinese': '查看中文版',
+        'article.viewEnglish': 'View English Version'
     },
     'en-US': {
         // Navigation
@@ -146,7 +151,12 @@ const translations = {
         'msg.convertFailed': 'Conversion failed',
         'msg.audioLoadFailed': 'Audio loading failed, please check console',
         'msg.audioLoaded': 'Audio metadata loaded, duration',
-        'msg.loadVoicesFailed': 'Failed to load voice list'
+        'msg.loadVoicesFailed': 'Failed to load voice list',
+        
+        // Article
+        'article.backToList': 'Back to Article List',
+        'article.viewChinese': '查看中文版',
+        'article.viewEnglish': 'View English Version'
     }
 };
 
@@ -169,6 +179,28 @@ function t(key, ...args) {
 function switchLanguage(lang) {
     currentLang = lang;
     localStorage.setItem('siteLang', lang);
+    
+    // 检查是否在静态页面上，如果是则跳转到对应语言的页面
+    const currentPath = window.location.pathname;
+    const staticPages = ['about', 'privacy', 'terms', 'disclaimer', 'contact'];
+    
+    // 检查当前路径是否是静态页面
+    for (const page of staticPages) {
+        // 匹配 /page 或 /page-en 格式
+        if (currentPath === `/${page}` || currentPath === `/${page}-en`) {
+            // 根据目标语言构建新路径
+            const newPath = lang === 'en-US' ? `/${page}-en` : `/${page}`;
+            
+            // 如果路径不同，则跳转
+            if (currentPath !== newPath) {
+                window.location.href = newPath;
+                return; // 跳转后不再执行后续代码
+            }
+            break;
+        }
+    }
+    
+    // 如果不需要跳转，则更新页面语言
     updatePageLanguage();
     
     // 更新 HTML lang 属性
@@ -193,17 +225,62 @@ function updatePageLanguage() {
         }
     });
     
+    // 更新网站标题（使用 data-zh 和 data-en 属性）
+    const siteNameEl = document.getElementById('siteName');
+    if (siteNameEl) {
+        const zhName = siteNameEl.getAttribute('data-zh');
+        const enName = siteNameEl.getAttribute('data-en');
+        siteNameEl.textContent = currentLang === 'zh-CN' ? zhName : enName;
+    }
+    
+    // 更新页面链接（中英文页面切换）
+    updatePageLinks();
+    
     // 更新页面标题
     const titleKey = document.querySelector('[data-i18n-title]')?.getAttribute('data-i18n-title');
     if (titleKey) {
-        document.title = t(titleKey) + ' - ' + (currentLang === 'zh-CN' ? '安妮语音转换' : 'Annie TTS');
+        const siteName = currentLang === 'zh-CN' ? 
+            (siteNameEl?.getAttribute('data-zh') || '安妮语音转换') : 
+            (siteNameEl?.getAttribute('data-en') || 'Annie TTS');
+        document.title = t(titleKey) + ' - ' + siteName;
     }
+}
+
+// 更新页面链接（根据语言切换中英文页面）
+function updatePageLinks() {
+    const pageLinks = ['about', 'privacy', 'terms', 'disclaimer', 'contact'];
+    
+    pageLinks.forEach(page => {
+        // 查找所有指向该页面的链接
+        const links = document.querySelectorAll(`a[href="/${page}"]`);
+        links.forEach(link => {
+            if (currentLang === 'en-US') {
+                link.href = `/${page}-en`;
+            } else {
+                link.href = `/${page}`;
+            }
+        });
+    });
 }
 
 // 初始化语言
 function initLanguage() {
-    // 如果没有保存的语言设置，使用浏览器语言
-    if (!localStorage.getItem('siteLang')) {
+    // 检查当前页面路径，判断是否是英文页面
+    const currentPath = window.location.pathname;
+    const isEnglishPage = currentPath.endsWith('-en');
+    
+    // 如果是英文页面，自动设置为英文
+    if (isEnglishPage) {
+        currentLang = 'en-US';
+        localStorage.setItem('siteLang', 'en-US');
+    } 
+    // 如果是中文页面（about, privacy, terms, disclaimer, contact），自动设置为中文
+    else if (/^\/(about|privacy|terms|disclaimer|contact)$/.test(currentPath)) {
+        currentLang = 'zh-CN';
+        localStorage.setItem('siteLang', 'zh-CN');
+    }
+    // 其他页面使用保存的语言设置或浏览器语言
+    else if (!localStorage.getItem('siteLang')) {
         const browserLang = navigator.language || navigator.userLanguage;
         currentLang = browserLang.startsWith('zh') ? 'zh-CN' : 'en-US';
         localStorage.setItem('siteLang', currentLang);

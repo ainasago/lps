@@ -4,6 +4,7 @@
 
 @{
     var siteName = await ConfigService.GetConfigAsync("SiteName", "安妮语音转换");
+    var siteNameEn = await ConfigService.GetConfigAsync("SiteNameEn", "Annie TTS");
     var contactEmail = await ConfigService.GetConfigAsync("ContactEmail", "contact@annietts.com");
     
     // 替换内容中的变量
@@ -14,6 +15,8 @@
         return content
             .Replace("@siteName", siteName)
             .Replace("@(siteName)", siteName)
+            .Replace("@siteNameEn", siteNameEn)
+            .Replace("@(siteNameEn)", siteNameEn)
             .Replace("@contactEmail", contactEmail);
     }
 }

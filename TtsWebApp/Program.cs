@@ -91,37 +91,78 @@ using (var scope = app.Services.CreateScope())
         var now = DateTime.Now;
         var pages = new List<Article>();
         
-        // 读取并添加页面
-        var pageFiles = new Dictionary<string, (string title, string slug)>
+        // 读取并添加页面（支持中英文）
+        var pageFiles = new Dictionary<string, (string titleZh, string titleEn, string slug)>
         {
-            ["init_about.txt"] = ("关于我们", "about"),
-            ["init_privacy.txt"] = ("隐私政策", "privacy"),
-            ["init_terms.txt"] = ("服务条款", "terms"),
-            ["init_disclaimer.txt"] = ("免责声明", "disclaimer"),
-            ["init_contact.txt"] = ("联系我们", "contact")
+            ["about"] = ("关于我们", "About Us", "about"),
+            ["privacy"] = ("隐私政策", "Privacy Policy", "privacy"),
+            ["terms"] = ("服务条款", "Terms of Service", "terms"),
+            ["disclaimer"] = ("免责声明", "Disclaimer", "disclaimer"),
+            ["contact"] = ("联系我们", "Contact Us", "contact")
         };
         
-        foreach (var (fileName, (title, slug)) in pageFiles)
+        foreach (var (key, (titleZh, titleEn, slug)) in pageFiles)
         {
-            var filePath = Path.Combine(dataPath, fileName);
-            string content;
+            // 读取中文版本
+            var filePathZh = Path.Combine(dataPath, $"init_{key}_zh.txt");
+            var filePathEn = Path.Combine(dataPath, $"init_{key}_en.txt");
             
-            if (File.Exists(filePath))
+            string contentZh = "";
+            string contentEn = "";
+            
+            // 尝试读取中文文件
+            if (File.Exists(filePathZh))
             {
-                content = File.ReadAllText(filePath);
-                logger.LogInformation("成功读取文件: {FileName}, 内容长度: {Length}", fileName, content.Length);
+                contentZh = File.ReadAllText(filePathZh);
+                logger.LogInformation("成功读取中文文件: {FileName}, 内容长度: {Length}", $"init_{key}_zh.txt", contentZh.Length);
             }
             else
             {
-                content = $"<p>{title}页面内容</p>";
-                logger.LogWarning("文件不存在: {FilePath}, 使用默认内容", filePath);
+                // 兼容旧文件名（无语言后缀）
+                var oldFilePath = Path.Combine(dataPath, $"init_{key}.txt");
+                if (File.Exists(oldFilePath))
+                {
+                    contentZh = File.ReadAllText(oldFilePath);
+                    logger.LogInformation("使用旧格式文件: {FileName}", $"init_{key}.txt");
+                }
+                else
+                {
+                    contentZh = $"<p>{titleZh}页面内容</p>";
+                    logger.LogWarning("中文文件不存在: {FilePath}, 使用默认内容", filePathZh);
+                }
             }
             
+            // 尝试读取英文文件
+            if (File.Exists(filePathEn))
+            {
+                contentEn = File.ReadAllText(filePathEn);
+                logger.LogInformation("成功读取英文文件: {FileName}, 内容长度: {Length}", $"init_{key}_en.txt", contentEn.Length);
+            }
+            else
+            {
+                contentEn = $"<p>{titleEn} page content</p>";
+                logger.LogWarning("英文文件不存在: {FilePath}, 使用默认内容", filePathEn);
+            }
+            
+            // 添加中文页面
             pages.Add(new Article
             {
-                Title = title,
+                Title = titleZh,
                 Slug = slug,
-                Content = content,
+                Content = contentZh,
+                Type = ArticleType.Page,
+                IsPublished = true,
+                CreatedAt = now,
+                UpdatedAt = now,
+                PublishedAt = now
+            });
+            
+            // 添加英文页面
+            pages.Add(new Article
+            {
+                Title = titleEn,
+                Slug = $"{slug}-en",
+                Content = contentEn,
                 Type = ArticleType.Page,
                 IsPublished = true,
                 CreatedAt = now,

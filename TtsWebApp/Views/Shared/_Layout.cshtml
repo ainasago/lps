@@ -81,12 +81,13 @@
                 <div class="flex items-center p-4">
                     <a href="/" class="flex items-center gap-2 hover:opacity-80 transition-opacity">
                         <span class="material-symbols-outlined text-primary text-3xl">audiotrack</span>
-                        <h1 class="text-slate-900 dark:text-white text-xl font-bold leading-tight tracking-[-0.015em]">@siteName</h1>
+                        <h1 id="siteName" class="text-slate-900 dark:text-white text-xl font-bold leading-tight tracking-[-0.015em]" data-zh="@siteName" data-en="@siteNameEn">@siteName</h1>
                     </a>
                     <div class="hidden md:flex items-center gap-8 ml-10">
                         <a class="text-slate-700 dark:text-slate-300 text-sm font-medium hover:text-primary dark:hover:text-white" asp-area="" asp-controller="Tts" asp-action="Index" data-i18n="nav.home">首页</a>
-                        <a class="text-slate-700 dark:text-slate-300 text-sm font-medium hover:text-primary dark:hover:text-white" asp-area="" asp-controller="Article" asp-action="Index">文章</a>
-                    </div>
+                       @*  <a class="text-slate-700 dark:text-slate-300 text-sm font-medium hover:text-primary dark:hover:text-white" asp-area="" asp-controller="Article" asp-action="Index">文章</a>
+                   *@  
+                   </div>
                     <div class="flex-1"></div>
                     <div class="flex items-center gap-4">
                         <!-- 语言切换 -->
@@ -122,41 +123,41 @@
                 <div class="flex flex-col gap-4 items-start">
                     <div class="flex items-center gap-2">
                         <span class="material-symbols-outlined text-primary text-3xl">audiotrack</span>
-                        <h2 class="text-slate-900 dark:text-white text-xl font-bold">@siteName</h2>
+                        <h2 class="text-slate-900 dark:text-white text-xl font-bold" data-i18n="footer.brand">@siteName</h2>
                     </div>
-                    <p class="text-slate-600 dark:text-slate-400">免费在线AI文字转语音工具<br/>支持多种语言和自然人声</p>
+                    <p class="text-slate-600 dark:text-slate-400" data-i18n="footer.brandDesc">免费在线AI文字转语音工具<br/>支持多种语言和自然人声</p>
                 </div>
                 <div>
-                    <p class="font-bold text-slate-900 dark:text-white mb-3">产品服务</p>
+                    <p class="font-bold text-slate-900 dark:text-white mb-3" data-i18n="footer.products">产品服务</p>
                     <ul class="space-y-2">
-                        <li><a class="text-slate-600 dark:text-slate-400 hover:text-primary" asp-area="" asp-controller="Tts" asp-action="Index">在线配音</a></li>
+                        <li><a class="text-slate-600 dark:text-slate-400 hover:text-primary" asp-area="" asp-controller="Tts" asp-action="Index" data-i18n="footer.onlineTts">在线配音</a></li>
                         <li><a class="text-slate-600 dark:text-slate-400 hover:text-primary" asp-area="" asp-controller="Article" asp-action="Index">文章列表</a></li>
-                        <li><a class="text-slate-600 dark:text-slate-400 hover:text-primary" href="/features">功能特性</a></li>
+                        <li><a class="text-slate-600 dark:text-slate-400 hover:text-primary" href="/features" data-i18n="nav.features">功能特性</a></li>
                     </ul>
                 </div>
                 <div>
-                    <p class="font-bold text-slate-900 dark:text-white mb-3">关于我们</p>
+                    <p class="font-bold text-slate-900 dark:text-white mb-3" data-i18n="footer.about">关于我们</p>
                     <ul class="space-y-2">
-                        <li><a class="text-slate-600 dark:text-slate-400 hover:text-primary" href="/about">公司介绍</a></li>
-                        <li><a class="text-slate-600 dark:text-slate-400 hover:text-primary" href="/privacy">隐私政策</a></li>
-                        <li><a class="text-slate-600 dark:text-slate-400 hover:text-primary" href="/disclaimer">免责声明</a></li>
-                        <li><a class="text-slate-600 dark:text-slate-400 hover:text-primary" href="/terms">服务条款</a></li>
+                        <li><a class="text-slate-600 dark:text-slate-400 hover:text-primary" href="/about" data-i18n="footer.aboutUs">公司介绍</a></li>
+                        <li><a class="text-slate-600 dark:text-slate-400 hover:text-primary" href="/privacy" data-i18n="footer.privacy">隐私政策</a></li>
+                        <li><a class="text-slate-600 dark:text-slate-400 hover:text-primary" href="/disclaimer" data-i18n="footer.disclaimer">免责声明</a></li>
+                        <li><a class="text-slate-600 dark:text-slate-400 hover:text-primary" href="/terms" data-i18n="footer.terms">服务条款</a></li>
                     </ul>
                 </div>
                 <div>
-                    <p class="font-bold text-slate-900 dark:text-white mb-3">联系方式</p>
+                    <p class="font-bold text-slate-900 dark:text-white mb-3" data-i18n="footer.contact">联系方式</p>
                     <ul class="space-y-2">
-                        <li class="text-slate-600 dark:text-slate-400">邮箱: @contactEmail</li>
-                        <li><a class="text-slate-600 dark:text-slate-400 hover:text-primary" href="/contact">在线留言</a></li>
+                        <li class="text-slate-600 dark:text-slate-400" data-i18n="footer.email">邮箱: @contactEmail</li>
+                        <li><a class="text-slate-600 dark:text-slate-400 hover:text-primary" href="/contact" data-i18n="footer.onlineMessage">在线留言</a></li>
                     </ul>
                 </div>
             </div>
             <div class="container mx-auto mt-10 border-t border-slate-200 dark:border-slate-800 pt-6 text-center text-xs text-slate-500 dark:text-slate-400">
-                <p>&copy; 2025 @siteName. 保留所有权利.</p>
+                <p data-i18n="footer.copyright">&copy; 2025 @siteName. 保留所有权利.</p>
                 <p class="mt-2">
-                    <a class="hover:text-primary" href="/privacy">隐私政策</a> | 
-                    <a class="hover:text-primary" href="/terms">服务条款</a> | 
-                    <a class="hover:text-primary" href="/disclaimer">免责声明</a>
+                    <a class="hover:text-primary" href="/privacy" data-i18n="footer.privacy">隐私政策</a> | 
+                    <a class="hover:text-primary" href="/terms" data-i18n="footer.terms">服务条款</a> | 
+                    <a class="hover:text-primary" href="/disclaimer" data-i18n="footer.disclaimer">免责声明</a>
                 </p>
             </div>
         </footer>

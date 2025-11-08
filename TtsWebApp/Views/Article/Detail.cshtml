@@ -5,12 +5,22 @@
 
 <section class="py-16 px-4">
     <div class="container mx-auto max-w-4xl">
-        <!-- 返回按钮 -->
-        <div class="mb-6">
+        <!-- 返回按钮和语言切换 -->
+        <div class="mb-6 flex justify-between items-center">
             <a asp-action="Index" class="text-primary hover:text-primary/80 flex items-center">
                 <span class="material-symbols-outlined mr-1">arrow_back</span>
-                返回文章列表
+                <span data-i18n="article.backToList">返回文章列表</span>
             </a>
+            
+            @if (ViewBag.RelatedArticle != null)
+            {
+                var related = ViewBag.RelatedArticle as TtsWebApp.Models.Article;
+                <a href="/Article/Detail/@related.Id" 
+                   class="px-4 py-2 bg-primary/10 text-primary rounded-lg hover:bg-primary/20 transition-colors flex items-center gap-2">
+                    <span class="material-symbols-outlined text-lg">translate</span>
+                    <span>@(related.Language == "zh-CN" ? "查看中文版" : "View English Version")</span>
+                </a>
+            }
         </div>
         
         <!-- 文章头部 -->

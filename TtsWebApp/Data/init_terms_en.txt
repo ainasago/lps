@@ -1,0 +1,129 @@
+<section class="py-16 px-4">
+    <div class="container mx-auto max-w-4xl">
+        <h1 class="text-4xl font-bold text-slate-900 dark:text-white mb-8 text-center">Terms of Service</h1>
+        
+        <div class="bg-white/50 dark:bg-white/5 border border-slate-200 dark:border-slate-800 rounded-xl p-8 space-y-6 text-slate-700 dark:text-slate-300">
+            <div>
+                <p class="text-sm text-slate-600 dark:text-slate-400 mb-4">Last Updated: January 1, 2025</p>
+                <p class="leading-relaxed">
+                    Welcome to @(siteNameEn). Before using our services, please carefully read the following Terms of Service. By using this website, you agree to abide by these terms.
+                </p>
+            </div>
+            
+            <div>
+                <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-3">1. Service Description</h2>
+                <p class="leading-relaxed mb-3">
+                    @(siteNameEn) provides artificial intelligence-based text-to-speech services. We are committed to providing users with high-quality speech synthesis functions, but do not guarantee the absolute accuracy, completeness, or reliability of the service.
+                </p>
+                <p class="leading-relaxed">
+                    We reserve the right to modify, suspend, or terminate the service at any time without prior notice.
+                </p>
+            </div>
+            
+            <div>
+                <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-3">2. User Responsibilities</h2>
+                <p class="leading-relaxed mb-3">When using this service, you agree to:</p>
+                <ul class="list-disc list-inside space-y-2 ml-4">
+                    <li>Not upload or convert any illegal, infringing, defamatory, obscene, or other inappropriate content</li>
+                    <li>Not use this service for any illegal activities or actions that infringe upon the rights of others</li>
+                    <li>Not attempt to damage, interfere with, or gain unauthorized access to the website's systems or networks</li>
+                    <li>Not abuse service resources, including but not limited to malicious batch requests</li>
+                    <li>Respect intellectual property rights and not infringe upon others' copyrights, trademarks, or other rights</li>
+                    <li>Take full responsibility for the content you generate using this service</li>
+                </ul>
+            </div>
+            
+            <div>
+                <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-3">3. Intellectual Property</h2>
+                <p class="leading-relaxed mb-3">
+                    All content on this website, including but not limited to text, images, icons, interface design, and code, is protected by copyright and other intellectual property laws. Without our express written permission, you may not copy, modify, distribute, or otherwise use this content.
+                </p>
+                <p class="leading-relaxed">
+                    Audio files generated using this service belong to you, but you must ensure that the input text content does not infringe upon any third-party rights.
+                </p>
+            </div>
+            
+            <div>
+                <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-3">4. Disclaimer</h2>
+                <p class="leading-relaxed mb-3">
+                    This service is provided "as is" without any express or implied warranties, including but not limited to:
+                </p>
+                <ul class="list-disc list-inside space-y-2 ml-4">
+                    <li>The suitability, accuracy, or reliability of the service</li>
+                    <li>The service will be uninterrupted or error-free</li>
+                    <li>The quality of generated speech meets your specific needs</li>
+                    <li>The security of servers or networks</li>
+                </ul>
+                <p class="leading-relaxed mt-3">
+                    We are not liable for any direct, indirect, incidental, special, or consequential damages resulting from the use or inability to use this service.
+                </p>
+            </div>
+            
+            <div>
+                <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-3">5. Usage Restrictions</h2>
+                <p class="leading-relaxed mb-3">
+                    To ensure service quality and fair use, we may impose the following restrictions on service usage:
+                </p>
+                <ul class="list-disc list-inside space-y-2 ml-4">
+                    <li>Text length limit per conversion</li>
+                    <li>Daily conversion limit</li>
+                    <li>Concurrent request limit</li>
+                    <li>Storage time limit for generated audio</li>
+                </ul>
+                <p class="leading-relaxed mt-3">
+                    We reserve the right to suspend or terminate your access to the service upon detecting abusive behavior.
+                </p>
+            </div>
+            
+            <div>
+                <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-3">6. Privacy Protection</h2>
+                <p class="leading-relaxed">
+                    We value your privacy. For information on how we collect, use, and protect your information, please refer to our <a href="/privacy-en" class="text-primary hover:underline">Privacy Policy</a>.
+                </p>
+            </div>
+            
+            <div>
+                <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-3">7. Third-Party Links</h2>
+                <p class="leading-relaxed">
+                    This website may contain links to third-party websites. These links are provided for user convenience only, and we are not responsible for the content, privacy policies, or practices of these third-party websites. You access these websites at your own risk.
+                </p>
+            </div>
+            
+            <div>
+                <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-3">8. Advertising Services</h2>
+                <p class="leading-relaxed">
+                    This website may display third-party advertisements (such as Google AdSense). The content and display of these advertisements are controlled by third-party advertising service providers, and we are not responsible for the accuracy or legality of the advertising content.
+                </p>
+            </div>
+            
+            <div>
+                <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-3">9. Terms Modification</h2>
+                <p class="leading-relaxed">
+                    We reserve the right to modify these Terms of Service at any time. Modified terms will be posted on this page with the "Last Updated" date noted. Continued use of this service indicates your acceptance of the modified terms.
+                </p>
+            </div>
+            
+            <div>
+                <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-3">10. Governing Law</h2>
+                <p class="leading-relaxed">
+                    These Terms of Service are governed by the laws of the People's Republic of China. Any disputes arising from these terms shall be resolved through friendly negotiation; if negotiation fails, they shall be submitted to a court of competent jurisdiction for litigation.
+                </p>
+            </div>
+            
+            <div>
+                <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-3">11. Contact Us</h2>
+                <p class="leading-relaxed">
+                    If you have any questions about these Terms of Service, please contact us:<br/>
+                    <strong>Email:</strong> @contactEmail<br/>
+                    <strong>Online Message:</strong> <a href="/contact-en" class="text-primary hover:underline">Click here</a>
+                </p>
+            </div>
+            
+            <div class="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4 mt-6">
+                <p class="text-sm text-slate-700 dark:text-slate-300">
+                    <strong>Important Notice:</strong> By using this service, you acknowledge that you have read, understood, and agree to abide by all the above terms. If you do not agree to these terms, please do not use this service.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>

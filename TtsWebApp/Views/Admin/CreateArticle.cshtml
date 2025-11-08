@@ -63,6 +63,30 @@
                 </div>
             </div>
             
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label for="Language" class="block text-gray-700 font-medium mb-2">
+                        语言 <span class="text-red-500">*</span>
+                    </label>
+                    <select id="Language" name="Language" required
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="zh-CN" selected>中文 (zh-CN)</option>
+                        <option value="en-US">英文 (en-US)</option>
+                    </select>
+                    <p class="text-sm text-gray-500 mt-1">选择文章的语言</p>
+                </div>
+                
+                <div>
+                    <label for="RelatedArticleId" class="block text-gray-700 font-medium mb-2">
+                        关联文章ID
+                    </label>
+                    <input type="number" id="RelatedArticleId" name="RelatedArticleId"
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                           placeholder="输入另一个语言版本的文章ID" />
+                    <p class="text-sm text-gray-500 mt-1">用于关联中英文版本（可选）</p>
+                </div>
+            </div>
+            
             <div>
                 <label class="flex items-center">
                     <input type="checkbox" id="IsPublished" name="IsPublished" value="true"

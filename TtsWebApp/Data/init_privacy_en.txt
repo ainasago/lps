@@ -1,0 +1,116 @@
+<section class="py-16 px-4">
+    <div class="container mx-auto max-w-4xl">
+        <h1 class="text-4xl font-bold text-slate-900 dark:text-white mb-8 text-center">Privacy Policy</h1>
+        
+        <div class="bg-white/50 dark:bg-white/5 border border-slate-200 dark:border-slate-800 rounded-xl p-8 space-y-6 text-slate-700 dark:text-slate-300">
+            <div>
+                <p class="text-sm text-slate-600 dark:text-slate-400 mb-4">Last Updated: January 1, 2025</p>
+                <p class="leading-relaxed">
+                    Welcome to @(siteNameEn) (hereinafter referred to as "we" or "this website"). We take your privacy very seriously and are committed to protecting your personal information. This Privacy Policy explains how we collect, use, store, and protect your information.
+                </p>
+            </div>
+            
+            <div>
+                <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-3">1. Information Collection</h2>
+                <p class="leading-relaxed mb-3">When you use our services, we may collect the following types of information:</p>
+                <ul class="list-disc list-inside space-y-2 ml-4">
+                    <li><strong>Usage Information:</strong> Text content you input, selected languages and voices, parameter settings, etc.</li>
+                    <li><strong>Technical Information:</strong> IP address, browser type, device information, operating system, etc.</li>
+                    <li><strong>Cookies and Similar Technologies:</strong> Used to improve user experience and website functionality</li>
+                    <li><strong>Analytics Data:</strong> Website traffic, page views, usage duration, and other statistical information</li>
+                </ul>
+            </div>
+            
+            <div>
+                <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-3">2. Information Use</h2>
+                <p class="leading-relaxed mb-3">The information we collect will be used to:</p>
+                <ul class="list-disc list-inside space-y-2 ml-4">
+                    <li>Provide and maintain text-to-speech services</li>
+                    <li>Improve and optimize user experience</li>
+                    <li>Analyze website usage and understand user needs</li>
+                    <li>Prevent abuse and protect website security</li>
+                    <li>Comply with legal and regulatory requirements</li>
+                    <li>Send service-related notifications (if applicable)</li>
+                </ul>
+            </div>
+            
+            <div>
+                <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-3">3. Information Storage and Security</h2>
+                <p class="leading-relaxed mb-3">
+                    We take reasonable technical and administrative measures to protect the security of your information and prevent unauthorized access, use, modification, or disclosure. However, please note that Internet transmission cannot be guaranteed to be 100% secure.
+                </p>
+                <p class="leading-relaxed">
+                    <strong>Important Note:</strong> The text content you input is only used to generate speech. We do not permanently store your text content. After processing is complete, the text data will be immediately deleted.
+                </p>
+            </div>
+            
+            <div>
+                <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-3">4. Cookie Usage</h2>
+                <p class="leading-relaxed mb-3">
+                    We use Cookies and similar technologies to:
+                </p>
+                <ul class="list-disc list-inside space-y-2 ml-4">
+                    <li>Remember your theme preferences (light/dark mode)</li>
+                    <li>Analyze website traffic and user behavior</li>
+                    <li>Personalize advertising content (if applicable)</li>
+                </ul>
+                <p class="leading-relaxed mt-3">
+                    You can manage or disable Cookies through your browser settings, but this may affect the normal use of certain features.
+                </p>
+            </div>
+            
+            <div>
+                <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-3">5. Third-Party Services</h2>
+                <p class="leading-relaxed mb-3">
+                    Our website may use third-party services, including but not limited to:
+                </p>
+                <ul class="list-disc list-inside space-y-2 ml-4">
+                    <li><strong>Google AdSense:</strong> Used to display personalized advertisements</li>
+                    <li><strong>Google Analytics:</strong> Used for website data analysis</li>
+                    <li><strong>CDN Services:</strong> Used to accelerate resource loading</li>
+                </ul>
+                <p class="leading-relaxed mt-3">
+                    These third-party services may collect and use your information. Please refer to their respective privacy policies for details.
+                </p>
+            </div>
+            
+            <div>
+                <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-3">6. Children's Privacy</h2>
+                <p class="leading-relaxed">
+                    Our services are intended for general users and we do not knowingly collect personal information from children under 13 years of age. If we discover that we have inadvertently collected information from children under 13, we will delete such information as soon as possible.
+                </p>
+            </div>
+            
+            <div>
+                <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-3">7. Your Rights</h2>
+                <p class="leading-relaxed mb-3">Under applicable laws and regulations, you may have the following rights:</p>
+                <ul class="list-disc list-inside space-y-2 ml-4">
+                    <li>Access the personal information we hold about you</li>
+                    <li>Request correction of inaccurate information</li>
+                    <li>Request deletion of your personal information</li>
+                    <li>Object to or restrict the processing of your information</li>
+                    <li>Withdraw consent you have previously given</li>
+                </ul>
+                <p class="leading-relaxed mt-3">
+                    To exercise these rights, please contact us at @contactEmail.
+                </p>
+            </div>
+            
+            <div>
+                <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-3">8. Privacy Policy Updates</h2>
+                <p class="leading-relaxed">
+                    We may update this Privacy Policy from time to time. The updated policy will be posted on this page with the "Last Updated" date noted. We recommend that you review this page regularly to stay informed about how we protect your information.
+                </p>
+            </div>
+            
+            <div>
+                <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-3">9. Contact Us</h2>
+                <p class="leading-relaxed">
+                    If you have any questions or suggestions about this Privacy Policy, please contact us:<br/>
+                    <strong>Email:</strong> @contactEmail<br/>
+                    <strong>Online Message:</strong> <a href="/contact" class="text-primary hover:underline">Click here</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
