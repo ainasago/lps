@@ -1,0 +1,266 @@
+@{
+    ViewData["Title"] = "TTS 数据统计";
+    var dailyStats = ViewBag.DailyStats as List<dynamic>;
+    var languageStats = ViewBag.LanguageStats as List<dynamic>;
+    var voiceStats = ViewBag.VoiceStats as List<dynamic>;
+    var ipStats = ViewBag.IpStats as List<dynamic>;
+    var totalRecords = ViewBag.TotalRecords;
+    var todayRecords = ViewBag.TodayRecords;
+    var successRate = ViewBag.SuccessRate;
+}
+
+<div class="container mx-auto px-4 py-8">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-3xl font-bold text-slate-900 dark:text-white">TTS 数据统计</h1>
+        <a href="@Url.Action("TtsRecords")" class="px-4 py-2 bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-lg hover:bg-slate-300 dark:hover:bg-slate-600">
+            <span class="material-symbols-outlined text-sm align-middle">list</span>
+            查看记录
+        </a>
+    </div>
+
+    <!-- 总体统计卡片 -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div class="bg-white dark:bg-slate-800 rounded-lg shadow-sm p-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-slate-600 dark:text-slate-400">总转换次数</p>
+                    <p class="text-3xl font-bold text-slate-900 dark:text-white mt-2">@totalRecords</p>
+                </div>
+                <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center">
+                    <span class="material-symbols-outlined text-blue-600 dark:text-blue-400 text-3xl">analytics</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white dark:bg-slate-800 rounded-lg shadow-sm p-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-slate-600 dark:text-slate-400">今日转换</p>
+                    <p class="text-3xl font-bold text-slate-900 dark:text-white mt-2">@todayRecords</p>
+                </div>
+                <div class="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center">
+                    <span class="material-symbols-outlined text-green-600 dark:text-green-400 text-3xl">today</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white dark:bg-slate-800 rounded-lg shadow-sm p-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-slate-600 dark:text-slate-400">成功率</p>
+                    <p class="text-3xl font-bold text-slate-900 dark:text-white mt-2">@successRate.ToString("F1")%</p>
+                </div>
+                <div class="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 rounded-lg flex items-center justify-center">
+                    <span class="material-symbols-outlined text-purple-600 dark:text-purple-400 text-3xl">check_circle</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 每日转换量图表 -->
+    <div class="bg-white dark:bg-slate-800 rounded-lg shadow-sm p-6 mb-8">
+        <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-4">每日转换量趋势（最近30天）</h2>
+        <div style="height: 400px;">
+            <canvas id="dailyChart"></canvas>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+        <!-- 热门语言统计 -->
+        <div class="bg-white dark:bg-slate-800 rounded-lg shadow-sm p-6">
+            <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-4">热门语言 TOP 10</h2>
+            <div style="height: 400px;">
+                <canvas id="languageChart"></canvas>
+            </div>
+        </div>
+
+        <!-- 热门音色统计 -->
+        <div class="bg-white dark:bg-slate-800 rounded-lg shadow-sm p-6">
+            <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-4">热门音色 TOP 10</h2>
+            <div style="height: 400px;">
+                <canvas id="voiceChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- IP访问频率统计 -->
+    <div class="bg-white dark:bg-slate-800 rounded-lg shadow-sm p-6">
+        <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-4">IP 访问频率 TOP 20</h2>
+        <div class="overflow-x-auto">
+            <table class="w-full">
+                <thead class="bg-slate-50 dark:bg-slate-700">
+                    <tr>
+                        <th class="px-4 py-3 text-left text-sm font-semibold text-slate-700 dark:text-slate-300">排名</th>
+                        <th class="px-4 py-3 text-left text-sm font-semibold text-slate-700 dark:text-slate-300">IP地址</th>
+                        <th class="px-4 py-3 text-left text-sm font-semibold text-slate-700 dark:text-slate-300">访问次数</th>
+                        <th class="px-4 py-3 text-left text-sm font-semibold text-slate-700 dark:text-slate-300">最后访问</th>
+                        <th class="px-4 py-3 text-left text-sm font-semibold text-slate-700 dark:text-slate-300">占比</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-200 dark:divide-slate-700">
+                    @if (ipStats != null && ipStats.Count > 0)
+                    {
+                        int rank = 1;
+                        int totalCount = ipStats.Sum(x => (int)x.Count);
+                        foreach (var stat in ipStats)
+                        {
+                            double percentage = totalCount > 0 ? ((int)stat.Count * 100.0 / totalCount) : 0;
+                            <tr class="hover:bg-slate-50 dark:hover:bg-slate-700/50">
+                                <td class="px-4 py-3 text-sm text-slate-900 dark:text-white font-semibold">@rank</td>
+                                <td class="px-4 py-3 text-sm text-slate-700 dark:text-slate-300 font-mono">@stat.IpAddress</td>
+                                <td class="px-4 py-3 text-sm text-slate-900 dark:text-white font-semibold">@stat.Count</td>
+                                <td class="px-4 py-3 text-sm text-slate-700 dark:text-slate-300">@stat.LastAccess.ToString("yyyy-MM-dd HH:mm")</td>
+                                <td class="px-4 py-3">
+                                    <div class="flex items-center gap-2">
+                                        <div class="flex-1 bg-slate-200 dark:bg-slate-700 rounded-full h-2">
+                                            <div class="bg-blue-600 h-2 rounded-full" style="width: @percentage.ToString("F1")%"></div>
+                                        </div>
+                                        <span class="text-sm text-slate-700 dark:text-slate-300">@percentage.ToString("F1")%</span>
+                                    </div>
+                                </td>
+                            </tr>
+                            rank++;
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="5" class="px-4 py-8 text-center text-slate-500 dark:text-slate-400">暂无数据</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+<script>
+    // 每日转换量图表
+    const dailyData = @Html.Raw(Json.Serialize(dailyStats));
+    const dailyCtx = document.getElementById('dailyChart').getContext('2d');
+    new Chart(dailyCtx, {
+        type: 'line',
+        data: {
+            labels: dailyData.map(d => d.date),
+            datasets: [
+                {
+                    label: '总转换量',
+                    data: dailyData.map(d => d.count),
+                    borderColor: 'rgb(59, 130, 246)',
+                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                },
+                {
+                    label: '成功',
+                    data: dailyData.map(d => d.successCount),
+                    borderColor: 'rgb(34, 197, 94)',
+                    backgroundColor: 'rgba(34, 197, 94, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                },
+                {
+                    label: '失败',
+                    data: dailyData.map(d => d.failCount),
+                    borderColor: 'rgb(239, 68, 68)',
+                    backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                tooltip: {
+                    mode: 'index',
+                    intersect: false,
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        precision: 0
+                    }
+                }
+            }
+        }
+    });
+
+    // 热门语言图表
+    const languageData = @Html.Raw(Json.Serialize(languageStats));
+    const languageCtx = document.getElementById('languageChart').getContext('2d');
+    new Chart(languageCtx, {
+        type: 'doughnut',
+        data: {
+            labels: languageData.map(d => d.language),
+            datasets: [{
+                data: languageData.map(d => d.count),
+                backgroundColor: [
+                    'rgb(59, 130, 246)',
+                    'rgb(34, 197, 94)',
+                    'rgb(168, 85, 247)',
+                    'rgb(251, 146, 60)',
+                    'rgb(236, 72, 153)',
+                    'rgb(14, 165, 233)',
+                    'rgb(132, 204, 22)',
+                    'rgb(234, 179, 8)',
+                    'rgb(239, 68, 68)',
+                    'rgb(156, 163, 175)'
+                ]
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'right',
+                }
+            }
+        }
+    });
+
+    // 热门音色图表
+    const voiceData = @Html.Raw(Json.Serialize(voiceStats));
+    const voiceCtx = document.getElementById('voiceChart').getContext('2d');
+    new Chart(voiceCtx, {
+        type: 'bar',
+        data: {
+            labels: voiceData.map(d => d.voice),
+            datasets: [{
+                label: '使用次数',
+                data: voiceData.map(d => d.count),
+                backgroundColor: 'rgba(59, 130, 246, 0.8)',
+                borderColor: 'rgb(59, 130, 246)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            indexAxis: 'y',
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                x: {
+                    beginAtZero: true,
+                    ticks: {
+                        precision: 0
+                    }
+                }
+            }
+        }
+    });
+</script>

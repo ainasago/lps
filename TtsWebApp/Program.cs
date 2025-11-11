@@ -6,6 +6,7 @@ using TtsWebApp.Models;
 using WebOptimizer;
 using Serilog;
 using Serilog.Events;
+using FreeSql;
 
 // 配置 Serilog
 Log.Logger = new LoggerConfiguration()
@@ -47,7 +48,19 @@ builder.Services.AddWebOptimizer(pipeline =>
     pipeline.MinifyCssFiles("css/**/*.css");
 });
 
-// 添加数据库
+// 添加 FreeSql（仅用于自动同步数据库结构）
+var freeSql = new FreeSqlBuilder()
+    .UseConnectionString(FreeSql.DataType.Sqlite, builder.Configuration.GetConnectionString("DefaultConnection"))
+    .UseAutoSyncStructure(true) // 自动同步实体结构到数据库
+    .Build();
+
+freeSql.CodeFirst.SyncStructure<AdminUser>();
+freeSql.CodeFirst.SyncStructure<SiteConfig>();
+freeSql.CodeFirst.SyncStructure<Article>();
+freeSql.CodeFirst.SyncStructure<TtsConversionRecord>();
+builder.Services.AddSingleton<IFreeSql>(freeSql);
+
+// 添加 EF Core DbContext（用于数据操作）
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
@@ -74,11 +87,49 @@ var app = builder.Build();
 // 初始化数据库
 using (var scope = app.Services.CreateScope())
 {
+    var freeSqlInstance = scope.ServiceProvider.GetRequiredService<IFreeSql>();
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
     
     logger.LogInformation("开始初始化数据库...");
+    
+    // FreeSql 自动同步表结构（已在配置时启用 UseAutoSyncStructure）
+    logger.LogInformation("FreeSql 自动同步数据库结构完成");
+    
+    // 确保数据库已创建
     db.Database.EnsureCreated();
+    
+    // 初始化默认管理员账号
+    if (!db.AdminUsers.Any())
+    {
+        logger.LogInformation("初始化默认管理员账号...");
+        var passwordHash = BCrypt.Net.BCrypt.HashPassword("admin123");
+        db.AdminUsers.Add(new AdminUser
+        {
+            Username = "admin",
+            PasswordHash = passwordHash,
+            CreatedAt = new DateTime(2025, 1, 1)
+        });
+        db.SaveChanges();
+        logger.LogInformation("默认管理员账号创建成功 (用户名: admin, 密码: admin123)");
+    }
+    
+    // 初始化默认配置
+    if (!db.SiteConfigs.Any())
+    {
+        logger.LogInformation("初始化默认配置...");
+        var configs = new List<SiteConfig>
+        {
+            new SiteConfig { Key = "SiteName", Value = "安妮语音转换", Description = "网站名称（中文）" },
+            new SiteConfig { Key = "SiteNameEn", Value = "Annie TTS", Description = "网站名称（英文）" },
+            new SiteConfig { Key = "ContactEmail", Value = "contact@annietts.com", Description = "联系邮箱" },
+            new SiteConfig { Key = "SiteDescription", Value = "免费在线AI文字转语音工具，支持多种语言和自然人声", Description = "网站描述" },
+            new SiteConfig { Key = "SiteUrl", Value = "https://www.annietts.com", Description = "网站URL" }
+        };
+        db.SiteConfigs.AddRange(configs);
+        db.SaveChanges();
+        logger.LogInformation("默认配置初始化成功");
+    }
     
     // 检查是否需要初始化页面数据
     if (!db.Articles.Any(a => a.Type == ArticleType.Page))

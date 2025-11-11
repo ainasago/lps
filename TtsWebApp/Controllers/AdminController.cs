@@ -112,6 +112,7 @@ public class AdminController : Controller
         ViewBag.ArticleCount = await _context.Articles.CountAsync(a => a.Type == ArticleType.Article);
         ViewBag.PublishedCount = await _context.Articles.CountAsync(a => a.Type == ArticleType.Article && a.IsPublished);
         ViewBag.PageCount = await _context.Articles.CountAsync(a => a.Type == ArticleType.Page);
+        ViewBag.TtsRecordCount = await _context.TtsConversionRecords.CountAsync();
         return View();
     }
     
@@ -447,5 +448,175 @@ public class AdminController : Controller
     {
         // 临时简单验证，实际应使用 BCrypt.Net.BCrypt.Verify
         return BCrypt.Net.BCrypt.Verify(password, hash);
+    }
+    
+    // ==================== TTS 转换记录管理 ====================
+    
+    // TTS 记录列表
+    public async Task<IActionResult> TtsRecords(int page = 1, string? search = null, int pageSize = 20)
+    {
+        var query = _context.TtsConversionRecords.AsQueryable();
+        
+        // 搜索
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            query = query.Where(r => r.Text.Contains(search) || 
+                                    r.IpAddress.Contains(search) ||
+                                    r.Language.Contains(search) ||
+                                    r.Voice.Contains(search));
+        }
+        
+        // 总数
+        var total = await query.CountAsync();
+        
+        // 分页
+        var records = await query
+            .OrderByDescending(r => r.CreatedAt)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+        
+        ViewBag.Page = page;
+        ViewBag.PageSize = pageSize;
+        ViewBag.Total = total;
+        ViewBag.TotalPages = (int)Math.Ceiling(total / (double)pageSize);
+        ViewBag.Search = search;
+        
+        return View(records);
+    }
+    
+    // 查看 TTS 记录详情
+    public async Task<IActionResult> TtsRecordDetail(int id)
+    {
+        var record = await _context.TtsConversionRecords.FindAsync(id);
+        
+        if (record == null)
+        {
+            return NotFound();
+        }
+        
+        return View(record);
+    }
+    
+    // 删除 TTS 记录
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> DeleteTtsRecord(int id)
+    {
+        var record = await _context.TtsConversionRecords.FindAsync(id);
+        
+        if (record == null)
+        {
+            return NotFound();
+        }
+        
+        _context.TtsConversionRecords.Remove(record);
+        await _context.SaveChangesAsync();
+        
+        TempData["Success"] = "记录已删除";
+        return RedirectToAction(nameof(TtsRecords));
+    }
+    
+    // 批量删除 TTS 记录
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> BatchDeleteTtsRecords(int[] ids)
+    {
+        if (ids == null || ids.Length == 0)
+        {
+            TempData["Error"] = "请选择要删除的记录";
+            return RedirectToAction(nameof(TtsRecords));
+        }
+        
+        var records = await _context.TtsConversionRecords
+            .Where(r => ids.Contains(r.Id))
+            .ToListAsync();
+        
+        _context.TtsConversionRecords.RemoveRange(records);
+        await _context.SaveChangesAsync();
+        
+        TempData["Success"] = $"已删除 {records.Count} 条记录";
+        return RedirectToAction(nameof(TtsRecords));
+    }
+    
+    // TTS 数据统计
+    public async Task<IActionResult> TtsStatistics()
+    {
+        // 获取最近30天的数据
+        var thirtyDaysAgo = DateTime.Now.AddDays(-30);
+        var records = await _context.TtsConversionRecords
+            .Where(r => r.CreatedAt >= thirtyDaysAgo)
+            .ToListAsync();
+        
+        // 每日转换量统计
+        var dailyStats = records
+            .GroupBy(r => r.CreatedAt.Date)
+            .Select(g => new
+            {
+                Date = g.Key.ToString("yyyy-MM-dd"),
+                Count = g.Count(),
+                SuccessCount = g.Count(r => r.IsSuccess),
+                FailCount = g.Count(r => !r.IsSuccess)
+            })
+            .OrderBy(x => x.Date)
+            .ToList();
+        
+        // 热门语言统计
+        var languageStats = records
+            .Where(r => !string.IsNullOrEmpty(r.Language))
+            .GroupBy(r => r.Language)
+            .Select(g => new
+            {
+                Language = g.Key,
+                Count = g.Count()
+            })
+            .OrderByDescending(x => x.Count)
+            .Take(10)
+            .ToList();
+        
+        // 热门音色统计
+        var voiceStats = records
+            .Where(r => !string.IsNullOrEmpty(r.Voice))
+            .GroupBy(r => r.Voice)
+            .Select(g => new
+            {
+                Voice = g.Key,
+                Count = g.Count()
+            })
+            .OrderByDescending(x => x.Count)
+            .Take(10)
+            .ToList();
+        
+        // IP访问频率统计
+        var ipStats = records
+            .Where(r => !string.IsNullOrEmpty(r.IpAddress))
+            .GroupBy(r => r.IpAddress)
+            .Select(g => new
+            {
+                IpAddress = g.Key,
+                Count = g.Count(),
+                LastAccess = g.Max(r => r.CreatedAt)
+            })
+            .OrderByDescending(x => x.Count)
+            .Take(20)
+            .ToList();
+        
+        // 总体统计
+        var totalRecords = await _context.TtsConversionRecords.CountAsync();
+        var todayRecords = await _context.TtsConversionRecords
+            .CountAsync(r => r.CreatedAt.Date == DateTime.Today);
+        var successRate = totalRecords > 0 
+            ? (await _context.TtsConversionRecords.CountAsync(r => r.IsSuccess) * 100.0 / totalRecords) 
+            : 0;
+        
+        ViewBag.DailyStats = dailyStats;
+        ViewBag.LanguageStats = languageStats;
+        ViewBag.VoiceStats = voiceStats;
+        ViewBag.IpStats = ipStats;
+        ViewBag.TotalRecords = totalRecords;
+        ViewBag.TodayRecords = todayRecords;
+        ViewBag.SuccessRate = successRate;
+        
+        return View();
     }
 }

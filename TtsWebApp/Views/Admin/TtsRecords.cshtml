@@ -1,0 +1,209 @@
+@model List<TtsWebApp.Models.TtsConversionRecord>
+@{
+    ViewData["Title"] = "TTS 转换记录";
+    var page = ViewBag.Page;
+    var pageSize = ViewBag.PageSize;
+    var total = ViewBag.Total;
+    var totalPages = ViewBag.TotalPages;
+    var search = ViewBag.Search;
+}
+
+<div class="container mx-auto px-4 py-8">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-3xl font-bold text-slate-900 dark:text-white">TTS 转换记录</h1>
+        <div class="flex gap-2">
+            <button onclick="deleteSelected()" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">
+                <span class="material-symbols-outlined text-sm align-middle">delete</span>
+                批量删除
+            </button>
+        </div>
+    </div>
+
+    <!-- 搜索栏 -->
+    <div class="bg-white dark:bg-slate-800 rounded-lg shadow-sm p-4 mb-6">
+        <form method="get" class="flex gap-4">
+            <input type="text" name="search" value="@search" placeholder="搜索文本、IP、语言或音色..." 
+                   class="flex-1 px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-primary dark:bg-slate-700 dark:text-white">
+            <button type="submit" class="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary/90">
+                <span class="material-symbols-outlined text-sm align-middle">search</span>
+                搜索
+            </button>
+            @if (!string.IsNullOrEmpty(search))
+            {
+                <a href="@Url.Action("TtsRecords")" class="px-6 py-2 bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-lg hover:bg-slate-300 dark:hover:bg-slate-600">
+                    清除
+                </a>
+            }
+        </form>
+    </div>
+
+    <!-- 统计信息 -->
+    <div class="bg-white dark:bg-slate-800 rounded-lg shadow-sm p-4 mb-6">
+        <div class="text-sm text-slate-600 dark:text-slate-400">
+            共 <span class="font-bold text-primary">@total</span> 条记录
+        </div>
+    </div>
+
+    <!-- 记录列表 -->
+    <div class="bg-white dark:bg-slate-800 rounded-lg shadow-sm overflow-hidden">
+        <table class="w-full">
+            <thead class="bg-slate-50 dark:bg-slate-700">
+                <tr>
+                    <th class="px-4 py-3 text-left">
+                        <input type="checkbox" id="selectAll" onchange="toggleSelectAll(this)" 
+                               class="rounded border-slate-300 text-primary focus:ring-primary">
+                    </th>
+                    <th class="px-4 py-3 text-left text-sm font-semibold text-slate-700 dark:text-slate-300">ID</th>
+                    <th class="px-4 py-3 text-left text-sm font-semibold text-slate-700 dark:text-slate-300">文本内容</th>
+                    <th class="px-4 py-3 text-left text-sm font-semibold text-slate-700 dark:text-slate-300">语言</th>
+                    <th class="px-4 py-3 text-left text-sm font-semibold text-slate-700 dark:text-slate-300">音色</th>
+                    <th class="px-4 py-3 text-left text-sm font-semibold text-slate-700 dark:text-slate-300">IP地址</th>
+                    <th class="px-4 py-3 text-left text-sm font-semibold text-slate-700 dark:text-slate-300">状态</th>
+                    <th class="px-4 py-3 text-left text-sm font-semibold text-slate-700 dark:text-slate-300">创建时间</th>
+                    <th class="px-4 py-3 text-left text-sm font-semibold text-slate-700 dark:text-slate-300">操作</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-200 dark:divide-slate-700">
+                @if (Model.Count == 0)
+                {
+                    <tr>
+                        <td colspan="9" class="px-4 py-8 text-center text-slate-500 dark:text-slate-400">
+                            暂无记录
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    foreach (var record in Model)
+                    {
+                        <tr class="hover:bg-slate-50 dark:hover:bg-slate-700/50">
+                            <td class="px-4 py-3">
+                                <input type="checkbox" name="recordIds" value="@record.Id" 
+                                       class="record-checkbox rounded border-slate-300 text-primary focus:ring-primary">
+                            </td>
+                            <td class="px-4 py-3 text-sm text-slate-900 dark:text-white">@record.Id</td>
+                            <td class="px-4 py-3 text-sm text-slate-700 dark:text-slate-300">
+                                <div class="max-w-md" style="max-height: 100px; overflow-y: auto; white-space: pre-wrap; word-break: break-word;">
+                                    @record.Text
+                                </div>
+                            </td>
+                            <td class="px-4 py-3 text-sm text-slate-700 dark:text-slate-300">@record.Language</td>
+                            <td class="px-4 py-3 text-sm text-slate-700 dark:text-slate-300">@record.Voice</td>
+                            <td class="px-4 py-3 text-sm text-slate-700 dark:text-slate-300">@record.IpAddress</td>
+                            <td class="px-4 py-3">
+                                @if (record.IsSuccess)
+                                {
+                                    <span class="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">
+                                        成功
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400">
+                                        失败
+                                    </span>
+                                }
+                            </td>
+                            <td class="px-4 py-3 text-sm text-slate-700 dark:text-slate-300">
+                                @record.CreatedAt.ToString("yyyy-MM-dd HH:mm:ss")
+                            </td>
+                            <td class="px-4 py-3">
+                                <div class="flex gap-2">
+                                    <a href="@Url.Action("TtsRecordDetail", new { id = record.Id })" 
+                                       class="text-primary hover:text-primary/80">
+                                        <span class="material-symbols-outlined text-sm">visibility</span>
+                                    </a>
+                                    <form method="post" action="@Url.Action("DeleteTtsRecord", new { id = record.Id })" 
+                                          onsubmit="return confirm('确定要删除这条记录吗？')" class="inline">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="text-red-600 hover:text-red-800">
+                                            <span class="material-symbols-outlined text-sm">delete</span>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <!-- 分页 -->
+    @if (totalPages > 1)
+    {
+        <div class="mt-6 flex justify-center">
+            <nav class="flex gap-2">
+                @if (page > 1)
+                {
+                    <a href="@Url.Action("TtsRecords", new { page = page - 1, search })" 
+                       class="px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300">
+                        上一页
+                    </a>
+                }
+                
+                @for (int i = Math.Max(1, page - 2); i <= Math.Min(totalPages, page + 2); i++)
+                {
+                    if (i == page)
+                    {
+                        <span class="px-4 py-2 bg-primary text-white rounded-lg">@i</span>
+                    }
+                    else
+                    {
+                        <a href="@Url.Action("TtsRecords", new { page = i, search })" 
+                           class="px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300">
+                            @i
+                        </a>
+                    }
+                }
+                
+                @if (page < totalPages)
+                {
+                    <a href="@Url.Action("TtsRecords", new { page = page + 1, search })" 
+                       class="px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300">
+                        下一页
+                    </a>
+                }
+            </nav>
+        </div>
+    }
+</div>
+
+<!-- 批量删除表单 -->
+<form id="batchDeleteForm" method="post" action="@Url.Action("BatchDeleteTtsRecords")" style="display:none;">
+    @Html.AntiForgeryToken()
+    <div id="batchDeleteIds"></div>
+</form>
+
+<script>
+    function toggleSelectAll(checkbox) {
+        const checkboxes = document.querySelectorAll('.record-checkbox');
+        checkboxes.forEach(cb => cb.checked = checkbox.checked);
+    }
+
+    function deleteSelected() {
+        const checkboxes = document.querySelectorAll('.record-checkbox:checked');
+        if (checkboxes.length === 0) {
+            alert('请选择要删除的记录');
+            return;
+        }
+
+        if (!confirm(`确定要删除选中的 ${checkboxes.length} 条记录吗？`)) {
+            return;
+        }
+
+        const form = document.getElementById('batchDeleteForm');
+        const idsContainer = document.getElementById('batchDeleteIds');
+        idsContainer.innerHTML = '';
+
+        checkboxes.forEach(cb => {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'ids';
+            input.value = cb.value;
+            idsContainer.appendChild(input);
+        });
+
+        form.submit();
+    }
+</script>

@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Diagnostics;
 using TtsWebApp.Models;
+using TtsWebApp.Data;
 
 namespace TtsWebApp.Controllers
 {
@@ -10,14 +11,16 @@ namespace TtsWebApp.Controllers
         private readonly ILogger<TtsController> _logger;
         private readonly HttpClient _httpClient;
         private readonly IConfiguration _configuration;
+        private readonly AppDbContext _context;
         private readonly string _apiBaseUrl;
         private readonly string _apiReferer;
 
-        public TtsController(ILogger<TtsController> logger, HttpClient httpClient, IConfiguration configuration)
+        public TtsController(ILogger<TtsController> logger, HttpClient httpClient, IConfiguration configuration, AppDbContext context)
         {
             _logger = logger;
             _httpClient = httpClient;
             _configuration = configuration;
+            _context = context;
             _apiBaseUrl = _configuration["AppSettings:TtsApiUrl"] ?? "http://localhost:5275/api/tts";
             _apiReferer = _configuration["AppSettings:TtsApiReferer"] ?? "http://localhost:5128/";
         }
@@ -126,6 +129,32 @@ namespace TtsWebApp.Controllers
                         _logger.LogInformation($"字幕前100字符: {subtitles.Substring(0, Math.Min(100, subtitles.Length))}");
                     }
                     
+                    // 保存转换记录到数据库
+                    try
+                    {
+                        var record = new TtsConversionRecord
+                        {
+                            Text = request.Text,
+                            Language = request.Language,
+                            Voice = request.Voice,
+                            Speed = request.Rate,
+                            Pitch = request.Pitch,
+                            IpAddress = HttpContext.Connection.RemoteIpAddress?.ToString(),
+                            UserAgent = HttpContext.Request.Headers["User-Agent"].ToString(),
+                            CreatedAt = DateTime.Now,
+                            IsSuccess = true
+                        };
+                        
+                        _context.TtsConversionRecords.Add(record);
+                        await _context.SaveChangesAsync();
+                        _logger.LogInformation($"转换记录已保存，ID: {record.Id}");
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex, "保存转换记录失败");
+                        // 不影响主流程，继续返回结果
+                    }
+                    
                     // 转换API响应为前端响应格式
                     var result = new TtsResponse 
                     { 
@@ -138,6 +167,31 @@ namespace TtsWebApp.Controllers
                         IsPreview = isPreview
                     };
                     return Json(result);
+                }
+                
+                // API调用失败，保存失败记录
+                try
+                {
+                    var record = new TtsConversionRecord
+                    {
+                        Text = request.Text,
+                        Language = request.Language,
+                        Voice = request.Voice,
+                        Speed = request.Rate,
+                        Pitch = request.Pitch,
+                        IpAddress = HttpContext.Connection.RemoteIpAddress?.ToString(),
+                        UserAgent = HttpContext.Request.Headers["User-Agent"].ToString(),
+                        CreatedAt = DateTime.Now,
+                        IsSuccess = false,
+                        ErrorMessage = "API调用失败"
+                    };
+                    
+                    _context.TtsConversionRecords.Add(record);
+                    await _context.SaveChangesAsync();
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "保存失败记录时出错");
                 }
                 
                 return Json(new TtsResponse { Success = false, ErrorMessage = "API调用失败" });
