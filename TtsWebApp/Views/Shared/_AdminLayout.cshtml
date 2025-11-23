@@ -369,10 +369,12 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a asp-area="" asp-controller="Admin" asp-action="Logout" class="nav-link">
-                                <i class="nav-icon fas fa-sign-out-alt"></i>
-                                <p>退出登录</p>
-                            </a>
+                            <form asp-area="" asp-controller="Admin" asp-action="Logout" method="post" id="logoutForm">
+                                <button type="submit" class="nav-link" style="background: none; border: none; width: 100%; text-align: left; padding: 0.5rem 1rem;">
+                                    <i class="nav-icon fas fa-sign-out-alt"></i>
+                                    <p>退出登录</p>
+                                </button>
+                            </form>
                         </li>
                     </ul>
                 </nav>
