@@ -3,7 +3,7 @@
 <Project>
   <PropertyGroup>
     <_PublishTargetUrl>D:\1Dev\dev\webs\tts_turi\TtsWebApi\bin\Release\net9.0\publish\</_PublishTargetUrl>
-    <History>True|2025-11-06T13:42:34.0011168Z||;True|2025-11-06T21:32:07.7250314+08:00||;True|2025-11-06T21:24:32.7578319+08:00||;True|2025-11-06T20:06:04.1820221+08:00||;True|2025-11-06T13:53:56.3202426+08:00||;</History>
+    <History>True|2025-11-23T09:41:24.3580903Z||;True|2025-11-06T21:42:34.0011168+08:00||;True|2025-11-06T21:32:07.7250314+08:00||;True|2025-11-06T21:24:32.7578319+08:00||;True|2025-11-06T20:06:04.1820221+08:00||;True|2025-11-06T13:53:56.3202426+08:00||;</History>
     <LastFailureDetails />
   </PropertyGroup>
 </Project>

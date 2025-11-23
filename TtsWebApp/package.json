@@ -1,0 +1,15 @@
+{
+  "name": "tts-webapp",
+  "version": "1.0.0",
+  "description": "TTS Web Application - JavaScript Obfuscation",
+  "scripts": {
+    "obfuscate": "node obfuscate.js",
+    "obfuscate:prod": "node obfuscate-production.js",
+    "restore": "node restore-js.js",
+    "publish": "npm run obfuscate:prod && dotnet publish -c Release"
+  },
+  "devDependencies": {
+    "javascript-obfuscator": "^4.1.0"
+  }
+}
+

@@ -51,10 +51,10 @@ const translations = {
         'usecases.marketingDesc': '在几分钟内制作引人注目的音频广告和宣传内容',
         
         // Footer
-        'footer.brand': '安妮语音转换',
         'footer.brandDesc': '免费在线AI文字转语音工具<br/>支持多种语言和自然人声',
         'footer.products': '产品服务',
         'footer.onlineTts': '在线配音',
+        'footer.articleList': '文章列表',
         'footer.about': '关于',
         'footer.aboutUs': '关于我们',
         'footer.contactUs': '联系我们',
@@ -63,7 +63,6 @@ const translations = {
         'footer.contact': '联系方式',
         'footer.email': '邮箱: contact@annietts.com',
         'footer.onlineMessage': '在线留言',
-        'footer.copyright': '© 2025 安妮语音转换. 保留所有权利.',
         'footer.disclaimer': '免责声明',
         
         // Messages
@@ -130,10 +129,10 @@ const translations = {
         'usecases.marketingDesc': 'Craft compelling audio ads and promotional content in minutes',
         
         // Footer
-        'footer.brand': 'Annie TTS',
         'footer.brandDesc': 'Free online AI text-to-speech tool<br/>Multiple languages and natural voices',
         'footer.products': 'Products',
         'footer.onlineTts': 'Online TTS',
+        'footer.articleList': 'Article List',
         'footer.about': 'About',
         'footer.aboutUs': 'About Us',
         'footer.contactUs': 'Contact Us',
@@ -142,7 +141,6 @@ const translations = {
         'footer.contact': 'Contact',
         'footer.email': 'Email: contact@annietts.com',
         'footer.onlineMessage': 'Leave a Message',
-        'footer.copyright': '© 2025 Annie TTS. All rights reserved.',
         'footer.disclaimer': 'Disclaimer',
         
         // Messages
@@ -212,16 +210,27 @@ function updatePageLanguage() {
     // 更新所有带 data-i18n 属性的元素
     document.querySelectorAll('[data-i18n]').forEach(el => {
         const key = el.getAttribute('data-i18n');
-        const text = t(key);
         
-        if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
-            if (el.hasAttribute('placeholder')) {
-                el.placeholder = text;
-            } else {
-                el.value = text;
-            }
+        // 检查元素是否有 data-zh 和 data-en 属性
+        const zhText = el.getAttribute('data-zh');
+        const enText = el.getAttribute('data-en');
+        
+        if (zhText && enText) {
+            // 如果有 data-zh 和 data-en 属性，使用它们
+            el.textContent = currentLang === 'zh-CN' ? zhText : enText;
         } else {
-            el.innerHTML = text;
+            // 否则使用翻译表
+            const text = t(key);
+            
+            if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+                if (el.hasAttribute('placeholder')) {
+                    el.placeholder = text;
+                } else {
+                    el.value = text;
+                }
+            } else {
+                el.innerHTML = text;
+            }
         }
     });
     

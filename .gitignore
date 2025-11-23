@@ -478,3 +478,8 @@ tmp/
 temp/
 /TtsWebApp/output/TtsWebApp
 /ttsweb
+
+# JavaScript Obfuscation
+/TtsWebApp/wwwroot/js/obfuscated/
+/TtsWebApp/wwwroot/js/backup/
+package-lock.json
