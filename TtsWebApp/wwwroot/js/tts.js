@@ -54,14 +54,14 @@ function loadVoices() {
         voices = data;
         populateLanguageSelect();
     }).fail(function() {
-        alert('加载语音列表失败');
+        alert(t('msg.loadVoicesFailed'));
     });
 }
 
 function populateLanguageSelect() {
     const languages = [...new Set(voices.map(v => v.locale))];
     const languageSelect = $('#languageSelect');
-    languageSelect.empty().append('<option value="">选择语言...</option>');
+    languageSelect.empty().append(`<option value="">${t('tts.selectLanguage')}</option>`);
     languages.sort();
     const localeNameMap = {};
     voices.forEach(voice => {
@@ -169,7 +169,7 @@ function autoSelectLanguage() {
 
 function updateVoiceList(selectedLanguage) {
     const voiceSelect = $('#voiceSelect');
-    voiceSelect.empty().append('<option value="">选择配音员...</option>');
+    voiceSelect.empty().append(`<option value="">${t('tts.selectVoice')}</option>`);
     if (selectedLanguage) {
         const filteredVoices = voices.filter(v => v.locale === selectedLanguage);
         filteredVoices.forEach(voice => {
@@ -196,11 +196,12 @@ function convertText() {
     const maxCharsPerChunk = parseInt($('#maxCharsPerChunk').val()) || 500;
     
     if (!text) {
-        alert('请输入要转换的文本');
+        alert(t('msg.enterText'));
         return;
     }
+    
     if (!voiceId) {
-        alert('请选择配音员');
+        alert(t('msg.selectVoice'));
         return;
     }
     
@@ -221,7 +222,7 @@ function convertText() {
     };
     
     const $convertBtn = $('#convertBtn');
-    $convertBtn.prop('disabled', true).find('span.truncate').text('转换中...');
+    $convertBtn.prop('disabled', true).find('span.truncate').text(t('msg.converting'));
     
     $.ajax({
         url: '/Tts/ConvertText',
@@ -249,7 +250,7 @@ function convertText() {
                 const audioPlayer = document.getElementById('audioPlayer');
                 audioPlayer.src = 'data:audio/mpeg;base64,' + currentAudioData;
                 audioPlayer.onerror = function(e) {
-                    alert('音频加载失败');
+                    alert(t('msg.audioLoadError'));
                 };
                 audioPlayer.onloadedmetadata = function() {
                     updateTimeDisplay();
@@ -263,14 +264,14 @@ function convertText() {
                     $('#subtitlesContainer').hide();
                 }
             } else {
-                alert('转换失败: ' + response.errorMessage);
+                alert(t('msg.convertError') + response.errorMessage);
             }
         },
         error: function(xhr, status, error) {
-            alert('转换请求失败');
+            alert(t('msg.convertRequestFailed'));
         },
         complete: function() {
-            $convertBtn.prop('disabled', false).find('span.truncate').text('生成语音');
+            $convertBtn.prop('disabled', false).find('span.truncate').text(t('msg.generateSpeech'));
         }
     });
 }

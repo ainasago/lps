@@ -7,7 +7,7 @@
 <div class="container mx-auto flex flex-col items-center text-center gap-6 max-w-4xl">
 <div class="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 dark:bg-primary/20 rounded-full">
 <span class="material-symbols-outlined text-primary text-xl">auto_awesome</span>
-<span class="text-primary font-semibold text-sm">神经网络语音合成</span>
+<span class="text-primary font-semibold text-sm" data-i18n="home.neuralNetworkTts">神经网络语音合成</span>
 </div>
 <h1 class="text-slate-900 dark:text-white text-4xl md:text-6xl font-extrabold leading-tight tracking-tight" data-i18n="home.title">
 让文字发声，<br/>让创意无限
@@ -48,7 +48,7 @@
 <span data-i18n="home.language">语言</span>
 </label>
 <select class="form-select w-full rounded-lg text-slate-900 dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary/50 border-2 border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 py-2.5 px-4 transition-all" id="languageSelect">
-<option value="">选择语言...</option>
+<option value="" data-i18n="tts.selectLanguage">选择语言...</option>
 </select>
 </div>
 
@@ -59,7 +59,7 @@
 <span data-i18n="home.voice">配音员</span>
 </label>
 <select class="form-select w-full rounded-lg text-slate-900 dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary/50 border-2 border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 py-2.5 px-4 transition-all" id="voiceSelect">
-<option value="">选择配音员...</option>
+<option value="" data-i18n="tts.selectVoice">选择配音员...</option>
 </select>
 </div>
 </div>
@@ -116,35 +116,35 @@
 <summary class="flex items-center gap-2 cursor-pointer text-slate-700 dark:text-slate-300 font-semibold text-sm mb-4 hover:text-primary transition-colors">
 <span class="material-symbols-outlined text-lg group-open:rotate-90 transition-transform">chevron_right</span>
 <span class="material-symbols-outlined text-lg text-purple-500">settings_suggest</span>
-<span>高级选项</span>
+<span data-i18n="tts.advancedOptions">高级选项</span>
 </summary>
 <div class="pl-8 space-y-4 pb-4">
 <!-- 试听模式 -->
 <div class="flex items-center gap-3 flex-wrap">
 <label class="flex items-center gap-2 cursor-pointer">
 <input type="checkbox" id="previewMode" class="w-4 h-4 text-primary bg-slate-100 dark:bg-slate-800 border-2 border-slate-300 dark:border-slate-600 rounded focus:ring-2 focus:ring-primary/50">
-<span class="text-slate-700 dark:text-slate-300 text-sm font-medium">试听模式（前</span>
+<span class="text-slate-700 dark:text-slate-300 text-sm font-medium" data-i18n="tts.previewMode">试听模式（前</span>
 </label>
 <input type="number" id="previewSentences" class="w-16 px-3 py-1.5 text-sm border-2 border-slate-200 dark:border-slate-600 rounded-lg bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary/50 focus:border-primary" value="3" min="1" max="10">
-<span class="text-slate-700 dark:text-slate-300 text-sm font-medium">句）</span>
+<span class="text-slate-700 dark:text-slate-300 text-sm font-medium" data-i18n="tts.sentences">句）</span>
 </div>
 
 <!-- 停顿间隔 -->
 <div class="flex items-center gap-3 flex-wrap">
-<label class="text-slate-700 dark:text-slate-300 text-sm font-medium">句间停顿：</label>
+<label class="text-slate-700 dark:text-slate-300 text-sm font-medium" data-i18n="tts.sentencePause">句间停顿：</label>
 <input type="number" id="breakTime" class="w-24 px-3 py-1.5 text-sm border-2 border-slate-200 dark:border-slate-600 rounded-lg bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary/50 focus:border-primary" value="0" min="0" max="2000" step="100">
-<span class="text-slate-700 dark:text-slate-300 text-sm font-medium">毫秒</span>
-<span class="text-slate-500 dark:text-slate-400 text-xs">(0=无停顿)</span>
+<span class="text-slate-700 dark:text-slate-300 text-sm font-medium" data-i18n="tts.milliseconds">毫秒</span>
+<span class="text-slate-500 dark:text-slate-400 text-xs" data-i18n="tts.noPause">(0=无停顿)</span>
 </div>
 
 <!-- 长文本切片 -->
 <div class="flex items-center gap-3 flex-wrap">
 <label class="flex items-center gap-2 cursor-pointer">
 <input type="checkbox" id="enableLongTextSplit" class="w-4 h-4 text-primary bg-slate-100 dark:bg-slate-800 border-2 border-slate-300 dark:border-slate-600 rounded focus:ring-2 focus:ring-primary/50">
-<span class="text-slate-700 dark:text-slate-300 text-sm font-medium">长文本切片（每片</span>
+<span class="text-slate-700 dark:text-slate-300 text-sm font-medium" data-i18n="tts.longTextSlice">长文本切片（每片</span>
 </label>
 <input type="number" id="maxCharsPerChunk" class="w-20 px-3 py-1.5 text-sm border-2 border-slate-200 dark:border-slate-600 rounded-lg bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary/50 focus:border-primary" value="500" min="100" max="2000" step="100">
-<span class="text-slate-700 dark:text-slate-300 text-sm font-medium">字）</span>
+<span class="text-slate-700 dark:text-slate-300 text-sm font-medium" data-i18n="tts.characters">字）</span>
 </div>
 </div>
 </details>
@@ -171,7 +171,7 @@
 <p class="text-sm font-medium text-slate-700 dark:text-slate-300" id="timeDisplay">0:00 / 0:00</p>
 <button type="button" id="downloadAudioBtn" class="flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-800 text-primary hover:bg-primary hover:text-white border-2 border-primary rounded-lg font-semibold text-sm transition-all transform hover:scale-105">
 <span class="material-symbols-outlined text-lg">download</span>
-<span>下载音频</span>
+<span data-i18n="tts.downloadAudio">下载音频</span>
 </button>
 </div>
 </div>
@@ -184,11 +184,11 @@
 <div class="flex justify-between items-center mb-4">
 <h4 class="flex items-center gap-2 text-slate-900 dark:text-white text-lg font-bold">
 <span class="material-symbols-outlined text-amber-600">subtitles</span>
-<span>字幕内容</span>
+<span data-i18n="tts.subtitlesContent">字幕内容</span>
 </h4>
 <button type="button" id="downloadSubtitlesBtn" class="flex items-center gap-2 px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white text-sm font-semibold rounded-lg transition-all transform hover:scale-105">
-<span class="material-symbols-outlined text-lg">download</span>
-<span>下载字幕</span>
+<span class="material-symbols-outlined">download</span>
+<span data-i18n="tts.downloadSubtitles">下载字幕</span>
 </button>
 </div>
 <div id="subtitlesContent" class="text-slate-700 dark:text-slate-300 text-sm leading-relaxed whitespace-pre-wrap max-h-64 overflow-y-auto p-4 bg-white dark:bg-slate-800/50 rounded-lg border border-amber-200 dark:border-amber-800"></div>

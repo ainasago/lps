@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using TtsWebApp.Data;
 using TtsWebApp.Models;
+using TtsWebApp.Resources;
 using TtsWebApp.Services;
 
 namespace TtsWebApp.Controllers;

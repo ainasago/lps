@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TtsWebApp.Models;
+using TtsWebApp.Resources;
 
 namespace TtsWebApp.Controllers
 {
@@ -34,7 +35,7 @@ namespace TtsWebApp.Controllers
             _logger.LogInformation($"Settings saved: SavePath={settings.SavePath}, OpenFolders={settings.OpenFolders}, SaveTTSOptions={settings.SaveTTSOptions}");
             
             // 返回成功状态
-            return Json(new { success = true, message = "设置保存成功" });
+            return Json(new { success = true, message = ErrorMessages.SettingsSavedSuccessfully });
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TtsWebApp.Models;
 using TtsWebApp.Services;
+using TtsWebApp.Resources;
 
 namespace TtsWebApp.Controllers;
 
@@ -36,7 +37,7 @@ public class FileManagerController : Controller
 
             if (!_fileManager.IsPathSafe(path))
             {
-                TempData["Error"] = "路径不安全";
+                TempData["Error"] = ErrorMessages.UnsafePath;
                 return RedirectToAction(nameof(Index));
             }
 
@@ -51,11 +52,11 @@ public class FileManagerController : Controller
             return View(files);
         }
         catch (Exception ex)
-        {
-            _logger.LogError(ex, "浏览文件失败: {Path}", path);
-            TempData["Error"] = "浏览文件失败";
-            return RedirectToAction(nameof(Index));
-        }
+            {
+                _logger.LogError(ex, "浏览文件失败: {Path}", path);
+                TempData["Error"] = ErrorMessages.BrowseFileFailed;
+                return RedirectToAction(nameof(Index));
+            }
     }
 
     /// <summary>
@@ -67,13 +68,13 @@ public class FileManagerController : Controller
         {
             if (string.IsNullOrEmpty(path))
             {
-                TempData["Error"] = "文件路径不能为空";
+                TempData["Error"] = ErrorMessages.FilePathCannotBeEmpty;
                 return RedirectToAction(nameof(Index));
             }
 
             if (!_fileManager.IsPathSafe(path))
             {
-                TempData["Error"] = "路径不安全";
+                TempData["Error"] = ErrorMessages.UnsafePath;
                 return RedirectToAction(nameof(Index));
             }
 
@@ -94,7 +95,7 @@ public class FileManagerController : Controller
 
                 if (!result.IsTextFile)
                 {
-                    TempData["Error"] = result.ErrorMessage ?? "无法编辑此文件";
+                    TempData["Error"] = result.ErrorMessage ?? ErrorMessages.CannotEditFile;
                     return RedirectToAction(nameof(Index), new { path = GetParentPath(path) });
                 }
             }
@@ -110,7 +111,7 @@ public class FileManagerController : Controller
         catch (Exception ex)
         {
             _logger.LogError(ex, "打开文件失败: {Path}", path);
-            TempData["Error"] = "打开文件失败";
+            TempData["Error"] = ErrorMessages.OpenFileFailed;
             return RedirectToAction(nameof(Index));
         }
     }
@@ -129,7 +130,7 @@ public class FileManagerController : Controller
                 return Json(new FileOperationResult
                 {
                     Success = false,
-                    Message = "文件路径不能为空"
+                    Message = ErrorMessages.FilePathCannotBeEmpty
                 });
             }
 
@@ -142,7 +143,7 @@ public class FileManagerController : Controller
             return Json(new FileOperationResult
             {
                 Success = false,
-                Message = $"保存失败: {ex.Message}"
+                Message = $"{ErrorMessages.SaveFileFailed}: {ex.Message}"
             });
         }
     }
@@ -163,7 +164,7 @@ public class FileManagerController : Controller
                 return Json(new FileOperationResult
                 {
                     Success = false,
-                    Message = "路径不安全"
+                    Message = ErrorMessages.UnsafePath
                 });
             }
 
@@ -176,7 +177,7 @@ public class FileManagerController : Controller
             return Json(new FileOperationResult
             {
                 Success = false,
-                Message = $"上传失败: {ex.Message}"
+                Message = $"{ErrorMessages.UploadFileFailed}: {ex.Message}"
             });
         }
     }
@@ -202,7 +203,7 @@ public class FileManagerController : Controller
             return Json(new FileOperationResult
             {
                 Success = false,
-                Message = $"创建失败: {ex.Message}"
+                Message = $"{ErrorMessages.CreateFolderFailed}: {ex.Message}"
             });
         }
     }
@@ -221,7 +222,7 @@ public class FileManagerController : Controller
                 return Json(new FileOperationResult
                 {
                     Success = false,
-                    Message = "路径不能为空"
+                    Message = ErrorMessages.PathCannotBeEmpty
                 });
             }
 
@@ -234,7 +235,7 @@ public class FileManagerController : Controller
             return Json(new FileOperationResult
             {
                 Success = false,
-                Message = $"删除失败: {ex.Message}"
+                Message = $"{ErrorMessages.DeleteFailed}: {ex.Message}"
             });
         }
     }
@@ -253,7 +254,7 @@ public class FileManagerController : Controller
                 return Json(new FileOperationResult
                 {
                     Success = false,
-                    Message = "参数不能为空"
+                    Message = ErrorMessages.ParametersCannotBeEmpty
                 });
             }
 
@@ -266,7 +267,7 @@ public class FileManagerController : Controller
             return Json(new FileOperationResult
             {
                 Success = false,
-                Message = $"重命名失败: {ex.Message}"
+                Message = $"{ErrorMessages.RenameFailed}: {ex.Message}"
             });
         }
     }
@@ -280,13 +281,13 @@ public class FileManagerController : Controller
         {
             if (string.IsNullOrEmpty(path))
             {
-                TempData["Error"] = "文件路径不能为空";
+                TempData["Error"] = ErrorMessages.FilePathCannotBeEmpty;
                 return RedirectToAction(nameof(Index));
             }
 
             if (!_fileManager.IsPathSafe(path))
             {
-                TempData["Error"] = "路径不安全";
+                TempData["Error"] = ErrorMessages.UnsafePath;
                 return RedirectToAction(nameof(Index));
             }
 
@@ -294,7 +295,7 @@ public class FileManagerController : Controller
 
             if (!System.IO.File.Exists(physicalPath))
             {
-                TempData["Error"] = "文件不存在";
+                TempData["Error"] = ErrorMessages.FileDoesNotExist;
                 return RedirectToAction(nameof(Index));
             }
 
@@ -307,7 +308,7 @@ public class FileManagerController : Controller
         catch (Exception ex)
         {
             _logger.LogError(ex, "下载文件失败: {Path}", path);
-            TempData["Error"] = "下载文件失败";
+            TempData["Error"] = ErrorMessages.DownloadFileFailed;
             return RedirectToAction(nameof(Index));
         }
     }
@@ -324,7 +325,7 @@ public class FileManagerController : Controller
                 return Json(new FileContentResponse
                 {
                     IsTextFile = false,
-                    ErrorMessage = "文件路径不能为空"
+                    ErrorMessage = ErrorMessages.FilePathCannotBeEmpty
                 });
             }
 
@@ -333,7 +334,7 @@ public class FileManagerController : Controller
                 return Json(new FileContentResponse
                 {
                     IsTextFile = false,
-                    ErrorMessage = "路径不安全"
+                    ErrorMessage = ErrorMessages.UnsafePath
                 });
             }
 
@@ -346,7 +347,7 @@ public class FileManagerController : Controller
             return Json(new FileContentResponse
             {
                 IsTextFile = false,
-                ErrorMessage = $"获取失败: {ex.Message}"
+                ErrorMessage = $"{ErrorMessages.GetFileContentFailed}: {ex.Message}"
             });
         }
     }
@@ -360,13 +361,13 @@ public class FileManagerController : Controller
         {
             if (string.IsNullOrEmpty(path))
             {
-                TempData["Error"] = "文件路径不能为空";
+                TempData["Error"] = ErrorMessages.FilePathCannotBeEmpty;
                 return RedirectToAction(nameof(Index));
             }
 
             if (!_fileManager.IsPathSafe(path))
             {
-                TempData["Error"] = "路径不安全";
+                TempData["Error"] = ErrorMessages.UnsafePath;
                 return RedirectToAction(nameof(Index));
             }
 
@@ -374,7 +375,7 @@ public class FileManagerController : Controller
 
             if (!System.IO.File.Exists(physicalPath))
             {
-                TempData["Error"] = "文件不存在";
+                TempData["Error"] = ErrorMessages.FileDoesNotExist;
                 return RedirectToAction(nameof(Index));
             }
 
@@ -393,7 +394,7 @@ public class FileManagerController : Controller
         catch (Exception ex)
         {
             _logger.LogError(ex, "预览图片失败: {Path}", path);
-            TempData["Error"] = "预览图片失败";
+            TempData["Error"] = ErrorMessages.PreviewImageFailed;
             return RedirectToAction(nameof(Index));
         }
     }

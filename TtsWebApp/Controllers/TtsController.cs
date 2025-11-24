@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using System.Diagnostics;
 using TtsWebApp.Models;
 using TtsWebApp.Data;
+using TtsWebApp.Resources;
 
 namespace TtsWebApp.Controllers
 {
@@ -35,26 +36,26 @@ namespace TtsWebApp.Controllers
         {
             try
             {
-                _logger.LogInformation($"正在调用API: {_apiBaseUrl}/voices");
+                _logger.LogInformation($"Calling API: {_apiBaseUrl}/voices");
                 
                 // 创建请求并添加 Referer 头
                 var request = new HttpRequestMessage(HttpMethod.Get, $"{_apiBaseUrl}/voices");
                 request.Headers.Add("Referer", _apiReferer);
                 
                 var response = await _httpClient.SendAsync(request);
-                _logger.LogInformation($"API响应状态码: {response.StatusCode}");
+                _logger.LogInformation($"API response status code: {response.StatusCode}");
                 
                 if (response.IsSuccessStatusCode)
                 {
                     var content = await response.Content.ReadAsStringAsync();
-                    _logger.LogInformation($"API响应内容长度: {content.Length}");
+                    _logger.LogInformation($"API response content length: {content.Length}");
                     var voices = JsonConvert.DeserializeObject<List<VoiceInfo>>(content);
-                    _logger.LogInformation($"反序列化成功，语音数量: {voices?.Count ?? 0}");
+                    _logger.LogInformation($"Deserialization successful, voice count: {voices?.Count ?? 0}");
                     return Json(voices);
                 }
                 else
                 {
-                    _logger.LogWarning($"API调用失败，状态码: {response.StatusCode}");
+                    _logger.LogWarning($"API call failed, status code: {response.StatusCode}");
                     return Json(new List<VoiceInfo>());
                 }
             }
@@ -70,7 +71,7 @@ namespace TtsWebApp.Controllers
         {
             try
             {
-                _logger.LogInformation($"收到转换请求，GenerateSubtitles: {request.GenerateSubtitles}");
+                    _logger.LogInformation($"Received conversion request, GenerateSubtitles: {request.GenerateSubtitles}");
                 
                 // 创建API请求对象
                 var apiRequest = new
@@ -93,10 +94,10 @@ namespace TtsWebApp.Controllers
                     MaxCharsPerChunk = request.MaxCharsPerChunk
                 };
                 
-                _logger.LogInformation($"API请求对象，GenerateSubtitles: {apiRequest.GenerateSubtitles}");
+                _logger.LogInformation($"API request object, GenerateSubtitles: {apiRequest.GenerateSubtitles}");
                 
                 var jsonContent = JsonConvert.SerializeObject(apiRequest);
-                _logger.LogInformation($"发送到API的JSON: {jsonContent}");
+                _logger.LogInformation($"JSON sent to API: {jsonContent}");
                 var content = new StringContent(jsonContent, System.Text.Encoding.UTF8, "application/json");
                 
                 // 创建请求并添加 Referer 头
@@ -108,7 +109,7 @@ namespace TtsWebApp.Controllers
                 if (response.IsSuccessStatusCode)
                 {
                     var responseContent = await response.Content.ReadAsStringAsync();
-                    _logger.LogInformation($"API响应内容长度: {responseContent.Length}");
+                    _logger.LogInformation($"API response content length: {responseContent.Length}");
                     
                     var apiResult = JsonConvert.DeserializeObject<dynamic>(responseContent);
                     
@@ -121,12 +122,12 @@ namespace TtsWebApp.Controllers
                     double processingTimeMs = apiResult.processingTimeMs ?? apiResult.ProcessingTimeMs ?? 0.0;
                     bool isPreview = apiResult.isPreview ?? apiResult.IsPreview ?? false;
                     
-                    _logger.LogInformation($"音频Base64长度: {audioBase64?.Length ?? 0}");
-                    _logger.LogInformation($"字幕长度: {subtitles?.Length ?? 0}");
-                    _logger.LogInformation($"元数据 - 切片数: {chunkCount}, 字符数: {totalCharacters}, 处理时间: {processingTimeMs}ms, 试听: {isPreview}");
+                    _logger.LogInformation($"Audio Base64 length: {audioBase64?.Length ?? 0}");
+                    _logger.LogInformation($"Subtitle length: {subtitles?.Length ?? 0}");
+                    _logger.LogInformation($"Metadata - Chunks: {chunkCount}, Characters: {totalCharacters}, Processing time: {processingTimeMs}ms, Preview: {isPreview}");
                     if (!string.IsNullOrEmpty(subtitles))
                     {
-                        _logger.LogInformation($"字幕前100字符: {subtitles.Substring(0, Math.Min(100, subtitles.Length))}");
+                        _logger.LogInformation($"First 100 characters of subtitles: {subtitles.Substring(0, Math.Min(100, subtitles.Length))}");
                     }
                     
                     // 保存转换记录到数据库
@@ -147,11 +148,11 @@ namespace TtsWebApp.Controllers
                         
                         _context.TtsConversionRecords.Add(record);
                         await _context.SaveChangesAsync();
-                        _logger.LogInformation($"转换记录已保存，ID: {record.Id}");
+                        _logger.LogInformation($"Conversion record saved, ID: {record.Id}");
                     }
                     catch (Exception ex)
                     {
-                        _logger.LogError(ex, "保存转换记录失败");
+                        _logger.LogError(ex, Resources.ErrorMessages.SaveConversionRecordFailed);
                         // 不影响主流程，继续返回结果
                     }
                     
@@ -183,7 +184,7 @@ namespace TtsWebApp.Controllers
                         UserAgent = HttpContext.Request.Headers["User-Agent"].ToString(),
                         CreatedAt = DateTime.Now,
                         IsSuccess = false,
-                        ErrorMessage = "API调用失败"
+                        ErrorMessage = Resources.ErrorMessages.ApiCallFailed
                     };
                     
                     _context.TtsConversionRecords.Add(record);
@@ -191,15 +192,15 @@ namespace TtsWebApp.Controllers
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, "保存失败记录时出错");
+                    _logger.LogError(ex, Resources.ErrorMessages.SaveFailureRecordError);
                 }
                 
-                return Json(new TtsResponse { Success = false, ErrorMessage = "API调用失败" });
+                return Json(new TtsResponse { Success = false, ErrorMessage = Resources.ErrorMessages.ApiCallFailed });
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error converting text");
-                return Json(new TtsResponse { Success = false, ErrorMessage = ex.Message });
+                return Json(new TtsResponse { Success = false, ErrorMessage = string.Format(Resources.ErrorMessages.ConversionError, ex.Message) });
             }
         }
 

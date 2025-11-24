@@ -10,6 +10,7 @@ const translations = {
         // 首页
         'home.title': '安妮语音转换 - 免费AI文字转语音工具',
         'home.subtitle': '支持多种语言和自然人声，为您的视频、播客和演示文稿创建高质量音频',
+        'home.neuralNetworkTts': '神经网络语音合成',
         'home.inputLabel': '在此输入您的文本',
         'home.charCount': '{0} / 5000',
         'home.placeholder': '粘贴或输入您的文本...',
@@ -61,7 +62,7 @@ const translations = {
         'footer.privacy': '隐私政策',
         'footer.terms': '服务条款',
         'footer.contact': '联系方式',
-        'footer.email': '邮箱: contact@annietts.com',
+        'footer.email': '邮箱',
         'footer.onlineMessage': '在线留言',
         'footer.disclaimer': '免责声明',
         
@@ -72,11 +73,31 @@ const translations = {
         'msg.audioLoadFailed': '音频加载失败，请检查控制台日志',
         'msg.audioLoaded': '音频元数据加载完成，时长',
         'msg.loadVoicesFailed': '加载语音列表失败',
+        'msg.converting': '转换中...',
+        'msg.generateSpeech': '生成语音',
+        'msg.audioLoadError': '音频加载失败',
+        'msg.convertError': '转换失败: ',
+        'msg.convertRequestFailed': '转换请求失败',
         
         // Article
         'article.backToList': '返回文章列表',
         'article.viewChinese': '查看中文版',
-        'article.viewEnglish': 'View English Version'
+        'article.viewEnglish': 'View English Version',
+        
+        // TTS Page
+        'tts.selectLanguage': '选择语言...',
+        'tts.selectVoice': '选择配音员...',
+        'tts.advancedOptions': '高级选项',
+        'tts.previewMode': '试听模式（前',
+        'tts.sentences': '句）',
+        'tts.sentencePause': '句间停顿：',
+        'tts.milliseconds': '毫秒',
+        'tts.noPause': '(0=无停顿)',
+        'tts.longTextSlice': '长文本切片（每片',
+        'tts.characters': '字）',
+        'tts.subtitlesContent': '字幕内容',
+        'tts.downloadAudio': '下载音频',
+        'tts.downloadSubtitles': '下载字幕'
     },
     'en-US': {
         // Navigation
@@ -88,6 +109,7 @@ const translations = {
         // Home
         'home.title': 'Annie TTS - Free AI Text to Speech Tool',
         'home.subtitle': 'Create high-quality audio for your videos, podcasts, and presentations with multiple languages and natural voices',
+        'home.neuralNetworkTts': 'Neural Network Speech Synthesis',
         'home.inputLabel': 'Enter your text here',
         'home.charCount': '{0} / 5000',
         'home.placeholder': 'Paste or type your text here...',
@@ -139,7 +161,7 @@ const translations = {
         'footer.privacy': 'Privacy Policy',
         'footer.terms': 'Terms of Service',
         'footer.contact': 'Contact',
-        'footer.email': 'Email: contact@annietts.com',
+        'footer.email': 'Email',
         'footer.onlineMessage': 'Leave a Message',
         'footer.disclaimer': 'Disclaimer',
         
@@ -150,11 +172,31 @@ const translations = {
         'msg.audioLoadFailed': 'Audio loading failed, please check console',
         'msg.audioLoaded': 'Audio metadata loaded, duration',
         'msg.loadVoicesFailed': 'Failed to load voice list',
+        'msg.converting': 'Converting...',
+        'msg.generateSpeech': 'Generate Speech',
+        'msg.audioLoadError': 'Audio loading failed',
+        'msg.convertError': 'Conversion failed: ',
+        'msg.convertRequestFailed': 'Conversion request failed',
         
         // Article
         'article.backToList': 'Back to Article List',
         'article.viewChinese': '查看中文版',
-        'article.viewEnglish': 'View English Version'
+        'article.viewEnglish': 'View English Version',
+        
+        // TTS Page
+        'tts.selectLanguage': 'Select language...',
+        'tts.selectVoice': 'Select voice...',
+        'tts.advancedOptions': 'Advanced Options',
+        'tts.previewMode': 'Preview mode (first',
+        'tts.sentences': ' sentences)',
+        'tts.sentencePause': 'Sentence pause: ',
+        'tts.milliseconds': 'ms',
+        'tts.noPause': '(0=no pause)',
+        'tts.longTextSlice': 'Long text slicing (per',
+        'tts.characters': ' characters)',
+        'tts.subtitlesContent': 'Subtitles',
+        'tts.downloadAudio': 'Download Audio',
+        'tts.downloadSubtitles': 'Download Subtitles'
     }
 };
 
