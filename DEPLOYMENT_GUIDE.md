@@ -94,7 +94,14 @@ mkdir -p /opt/supervisor
 3. 运行初始化脚本：
 ```bash
 chmod +x /opt/supervisor/deploy-supervisor.sh
+
+# 对于Ubuntu系统
 sudo /opt/supervisor/deploy-supervisor.sh init
+
+# 对于Debian系统（特别是Debian Trixie）
+# 使用我们提供的特殊脚本
+chmod +x /opt/supervisor/deploy-debian.sh
+sudo /opt/supervisor/deploy-debian.sh init
 ```
 
 ### 手动部署步骤
@@ -183,7 +190,13 @@ mkdir -p /opt/docker
 3. 运行初始化脚本：
 ```bash
 chmod +x /opt/docker/deploy-docker.sh
+
+# 对于Ubuntu系统
 sudo /opt/docker/deploy-docker.sh init
+
+# 对于Debian系统（特别是Debian Trixie）
+# 使用我们提供的脚本
+sudo /opt/docker/deploy-docker.sh init-debian
 ```
 
 4. 修改docker-compose.yml中的镜像仓库地址：

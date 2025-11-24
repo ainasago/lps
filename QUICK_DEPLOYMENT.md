@@ -40,7 +40,12 @@ sudo cp /tmp/tts_turi/deploy/supervisor/* /opt/supervisor/
 sudo chmod +x /opt/supervisor/deploy-supervisor.sh
 
 # 3. 运行初始化
+# 对于Ubuntu系统
 sudo /opt/supervisor/deploy-supervisor.sh init
+
+# 对于Debian系统（特别是Debian Trixie）
+# 使用我们提供的特殊脚本
+sudo /opt/supervisor/deploy-debian.sh init
 ```
 
 #### Docker模式
@@ -57,6 +62,11 @@ sudo cp /tmp/tts_turi/nginx/nginx.conf /opt/nginx/
 sudo chmod +x /opt/docker/deploy-docker.sh
 
 # 3. 运行初始化
+# 对于Ubuntu系统
+sudo /opt/docker/deploy-docker.sh init
+
+# 对于Debian系统（特别是Debian Trixie）
+# 使用我们提供的脚本
 sudo /opt/docker/deploy-docker.sh init
 
 # 4. 修改docker-compose.yml中的REPO_OWNER为你的GitHub用户名

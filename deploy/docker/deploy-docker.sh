@@ -34,34 +34,91 @@ create_directories() {
     chown -R root:root $DEPLOY_PATH
 }
 
-# 安装Docker和Docker Compose
-install_docker() {
-    echo "安装Docker和Docker Compose..."
+# 安装依赖
+install_dependencies() {
+    echo "检查系统依赖..."
     
-    # 安装Docker
-    apt-get update
-    apt-get install -y apt-transport-https ca-certificates curl gnupg lsb-release
+    # 检查并安装基础工具
+    for pkg in curl wget unzip git; do
+        if ! dpkg -l | grep -q $pkg; then
+            echo "安装$pkg..."
+            apt-get install -y $pkg
+        else
+            echo "$pkg已安装"
+        fi
+    done
     
-    # 添加Docker官方GPG密钥
-    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+    # 检查Docker
+    if command -v docker &> /dev/null; then
+        echo "Docker已安装"
+        docker --version
+    else
+        echo "安装Docker..."
+        # 检测系统类型
+        if [ -f /etc/debian_version ]; then
+            echo "检测到Debian系统，使用Debian安装方式..."
+            # 安装依赖
+            apt-get install -y ca-certificates curl gnupg lsb-release
+            
+            # 添加Docker官方GPG密钥
+            install -m 0755 -d /etc/apt/keyrings
+            curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+            chmod a+r /etc/apt/keyrings/docker.gpg
+            
+            # 添加Docker软件源
+            echo \
+              "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian \\
+              $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \\
+              tee /etc/apt/sources.list.d/docker.list > /dev/null
+            apt-get update
+            apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+        elif [ -f /etc/lsb-release ]; then
+            echo "检测到Ubuntu系统，使用Ubuntu安装方式..."
+            # 安装依赖
+            apt-get install -y ca-certificates curl gnupg lsb-release
+            
+            # 添加Docker官方GPG密钥
+            install -m 0755 -d /etc/apt/keyrings
+            curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+            chmod a+r /etc/apt/keyrings/docker.gpg
+            
+            # 添加Docker软件源
+            echo \
+              "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \\
+              $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \\
+              tee /etc/apt/sources.list.d/docker.list > /dev/null
+            apt-get update
+            apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+        else
+            echo "不支持的系统，尝试使用通用安装脚本..."
+            # 使用Docker官方安装脚本
+            curl -fsSL https://get.docker.com -o get-docker.sh
+            sh get-docker.sh
+        fi
+        
+        # 启动Docker服务
+        systemctl start docker
+        systemctl enable docker
+        
+        # 添加当前用户到docker组
+        usermod -aG docker $USER
+    fi
     
-    # 添加Docker仓库
-    echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
-    
-    # 安装Docker Engine
-    apt-get update
-    apt-get install -y docker-ce docker-ce-cli containerd.io
-    
-    # 安装Docker Compose
-    curl -L "https://github.com/docker/compose/releases/download/v2.12.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-    chmod +x /usr/local/bin/docker-compose
-    
-    # 启动Docker服务
-    systemctl enable docker
-    systemctl start docker
-    
-    # 添加当前用户到docker组
-    usermod -aG docker $USER
+    # 检查Docker Compose
+    if command -v docker-compose &> /dev/null || docker compose version &> /dev/null; then
+        echo "Docker Compose已安装"
+        if command -v docker-compose &> /dev/null; then
+            docker-compose --version
+        else
+            docker compose version
+        fi
+    else
+        echo "安装Docker Compose..."
+        # 对于新版本的Docker，docker compose是内置插件
+        # 如果没有，则单独安装
+        curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+        chmod +x /usr/local/bin/docker-compose
+    fi
 }
 
 # 生成自签名SSL证书
@@ -81,10 +138,10 @@ init_deployment() {
     echo "初始化Docker部署..."
     
     create_directories
-    install_docker
+    install_dependencies
     generate_ssl_cert
     
-    echo "初始化完成。请将docker-compose.yml文件复制到 $DEPLOY_PATH 目录，然后运行 '$0 update' 完成部署。"
+    echo "初始化完成。请将应用程序文件复制到 $DEPLOY_PATH 目录，然后运行 '$0 update' 完成部署。"
 }
 
 # 更新部署

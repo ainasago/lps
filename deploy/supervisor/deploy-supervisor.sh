@@ -38,14 +38,31 @@ install_dependencies() {
     apt-get update
     apt-get install -y supervisor nginx curl wget unzip
     
-    # 安装.NET运行时
-    wget https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
-    dpkg -i packages-microsoft-prod.deb
-    apt-get update
-    apt-get install -y aspnetcore-runtime-9.0
+    # 检测系统版本并安装.NET运行时
+    if [ -f /etc/debian_version ]; then
+        echo "检测到Debian系统，使用Debian软件源安装.NET..."
+        # 添加Microsoft GPG密钥和Debian软件源
+        wget https://packages.microsoft.com/config/debian/12/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
+        dpkg -i packages-microsoft-prod.deb
+        apt-get update
+        apt-get install -y aspnetcore-runtime-9.0
+    elif [ -f /etc/lsb-release ]; then
+        echo "检测到Ubuntu系统，使用Ubuntu软件源安装.NET..."
+        # 添加Microsoft GPG密钥和Ubuntu软件源
+        wget https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
+        dpkg -i packages-microsoft-prod.deb
+        apt-get update
+        apt-get install -y aspnetcore-runtime-9.0
+    else
+        echo "不支持的系统，尝试使用通用安装方法..."
+        # 使用snap安装.NET作为备选方案
+        apt-get install -y snapd
+        snap install dotnet-sdk --classic
+        snap install dotnet-runtime-90 --classic
+    fi
     
     # 清理
-    rm packages-microsoft-prod.deb
+    rm -f packages-microsoft-prod.deb
 }
 
 # 配置Nginx
