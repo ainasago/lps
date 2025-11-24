@@ -118,6 +118,9 @@ jobs:
         username: ${{ secrets.SERVER_USERNAME }}
         key: ${{ secrets.SERVER_SSH_KEY }}
         port: ${{ secrets.SERVER_PORT || 22 }}
+        timeout: 300s
+        command_timeout: 60s
+        debug: true
         script: |
           # 创建部署目录
           mkdir -p ${{ secrets.DEPLOY_PATH }}
@@ -139,6 +142,7 @@ jobs:
         username: ${{ secrets.SERVER_USERNAME }}
         key: ${{ secrets.SERVER_SSH_KEY }}
         port: ${{ secrets.SERVER_PORT || 22 }}
+        timeout: 300s
         source: "publish/*"
         target: "${{ secrets.DEPLOY_PATH }}/new-version/"
         strip_components: 1
@@ -150,6 +154,9 @@ jobs:
         username: ${{ secrets.SERVER_USERNAME }}
         key: ${{ secrets.SERVER_SSH_KEY }}
         port: ${{ secrets.SERVER_PORT || 22 }}
+        timeout: 300s
+        command_timeout: 60s
+        debug: true
         script: |
           cd ${{ secrets.DEPLOY_PATH }}
           
@@ -197,6 +204,9 @@ jobs:
         username: ${{ secrets.DOCKER_SERVER_USERNAME }}
         key: ${{ secrets.DOCKER_SERVER_SSH_KEY }}
         port: ${{ secrets.DOCKER_SERVER_PORT || 22 }}
+        timeout: 300s
+        command_timeout: 60s
+        debug: true
         script: |
           # 创建部署目录
           mkdir -p ${{ secrets.DOCKER_DEPLOY_PATH }}
